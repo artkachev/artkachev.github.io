@@ -39,6 +39,9 @@ img{max-width:100%;display:block}
 /* логотип занимает место имени: высота как у набранного текста */
 .lockup{display:inline-flex;align-items:center;gap:.42em}
 .logomark{height:1.16em;width:auto;flex:none;color:var(--ink)}
+/* встроенный svg красится темой; у него своя заливка на случай,
+   если файл откроют отдельно */
+.logomark path{fill:currentColor}
 .tagline{color:var(--ink-dim);font-size:15px;letter-spacing:.01em;margin:10px 0 0}
 .facts{display:flex;gap:18px;flex-wrap:wrap;margin:14px 0 0;padding:0;list-style:none;
   font-size:12px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-dim)}

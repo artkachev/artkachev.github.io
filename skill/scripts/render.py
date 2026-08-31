@@ -163,19 +163,43 @@ def head(site, *, title, description, canonical, image=None, extra=""):
         f'</head><body>')
 
 
+def load_logo_svg(site, project):
+    """Содержимое логотипа, если это svg рядом с проектом.
+
+    Встраиваем его в страницу, а не подключаем через <img>: картинка в теге
+    img — отдельный документ, внутри неё currentColor не видит страницу и
+    падает в чёрный. Встроенный svg красится обычным CSS.
+    """
+    logo = site.get("logo") or ""
+    if not logo.endswith(".svg") or logo.startswith("http"):
+        return None
+    path = Path(project) / logo.lstrip("/")
+    if not path.exists():
+        return None
+    svg = path.read_text(encoding="utf-8").strip()
+    return svg if svg.startswith("<svg") else None
+
+
 def brand_mark(site):
     """Знак плюс имя. Без логотипа — просто имя, набранное шрифтом.
 
-    Когда logo_wordmark выключен, знак остаётся один, а имя уходит в alt:
-    без него шапка теряет и текст для поиска, и подпись для читалок.
+    Когда logo_wordmark выключен, знак остаётся один, а имя уходит в подпись:
+    без него шапка теряет и текст для поиска, и озвучку для читалок с экрана.
     """
     name = esc(site["name"])
     logo = site.get("logo")
     if not logo:
         return name
     with_word = site.get("logo_wordmark", True)
-    alt = "" if with_word else name
-    mark = f'<img class="logomark" src="{esc(logo)}" alt="{alt}">'
+    svg = site.get("logo_svg")
+    if svg:
+        label = ("aria-hidden=\"true\"" if with_word
+                 else f'role="img" aria-label="{name}"')
+        mark = svg.replace("<svg", f'<svg class="logomark" focusable="false" '
+                                   f'{label}', 1)
+    else:
+        mark = f'<img class="logomark" src="{esc(logo)}" '\
+               f'alt="{"" if with_word else name}">'
     if not with_word:
         return mark
     return f'<span class="lockup">{mark}<span>{name}</span></span>'
@@ -687,7 +711,8 @@ def render_robots(site):
 def render_site(site, data, out_dir, faq=None):
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
-    site = dict(site, has_faq=bool(faq))
+    site = dict(site, has_faq=bool(faq),
+                logo_svg=load_logo_svg(site, out_dir))
     entries = track_entries(site, data)
     (out / "index.html").write_text(render_index(site, data), encoding="utf-8")
     track_dir = out / "track"
