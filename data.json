@@ -83,6 +83,7 @@
    "year": "2026",
    "genre": "POP",
    "roles": [
+    "prod",
     "mix"
    ],
    "cover": "abb7d694e109d8bd0f99a5fc",
@@ -396,7 +397,8 @@
    "year": "2024",
    "genre": "ALT",
    "roles": [
-    "mix"
+    "mix",
+    "master"
    ],
    "cover": "baf86c5661354a44bb14e3ef",
    "hidden": false,
@@ -597,7 +599,7 @@
    "year": "2023",
    "genre": "POP",
    "roles": [
-    "mix"
+    "prod"
    ],
    "cover": "824f9bf8719b7698d158d592",
    "hidden": false,
@@ -735,7 +737,9 @@
    "year": "2026",
    "genre": "POP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "ddfe2584de4a09e14441d020",
    "hidden": false,
@@ -931,7 +935,8 @@
    "year": "2024",
    "genre": "POP",
    "roles": [
-    "mix"
+    "mix",
+    "master"
    ],
    "cover": "740da9c5587c7ddd1d343e44",
    "hidden": false,

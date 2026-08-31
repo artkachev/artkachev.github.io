@@ -39,6 +39,7 @@ WORDS = {
            "albums_word": ("альбом", "альбома", "альбомов"),
            "album_word": "Альбом", "singles_word": "Синглы",
            "by_letter": "По алфавиту", "faq": "Вопросы", "pause": "Пауза",
+           "genre_word": "Жанр", "role_word": "Роль", "all_word": "Все",
            "catalog_lead": "Полный каталог работ",
            "among_them": "среди них",
            "catalog_hint": "Ищите по артисту, альбому или названию трека."},
@@ -49,6 +50,7 @@ WORDS = {
            "albums_word": ("album", "albums", "albums"),
            "album_word": "Album", "singles_word": "Singles",
            "by_letter": "By letter", "faq": "FAQ", "pause": "Pause",
+           "genre_word": "Genre", "role_word": "Role", "all_word": "All",
            "catalog_lead": "Full catalogue of works",
            "among_them": "among them",
            "catalog_hint": "Search by artist, album or track title."},
@@ -212,6 +214,7 @@ def _tile(site, rel, album_index=None):
     artist = esc(rel["artist"])
     title = esc(rel["title"])
     genre = esc(rel.get("genre") or "")
+    roles = " ".join(release_roles(rel))
     if rel["type"] == "album":
         n = len(rel.get("tracks", []))
         tw = words(site)["tracks_word"]
@@ -227,28 +230,61 @@ def _tile(site, rel, album_index=None):
                   f'aria-label="{esc(words(site)["listen"])}: {artist} — {title}">'
                   f'{PLAY_ICON}{PAUSE_ICON}</button>')
     return (f'<li class="cell"><button type="button" class="{cls}" '
-            f'data-g="{genre}" {attrs}>'
+            f'data-g="{genre}" data-r="{esc(roles)}" {attrs}>'
             f'<img src="{cover}" alt="{artist} — {title}" loading="lazy" '
             f'width="640" height="640">{badge}'
             f'<span class="tmeta"><span class="tartist">{artist}</span>'
             f'<span class="ttitle">{title}</span></span></button>{button}</li>')
 
 
-def _filters(site, releases):
-    if not site.get("genres"):
-        return ""
-    codes = ["ALL"] + list(site["genres"])
+def release_roles(rel):
+    """Роли релиза. У альбома — объединение ролей его треков."""
+    if rel["type"] != "album":
+        return [k for k in config.ROLE_ORDER if k in (rel.get("roles") or [])]
+    found = set()
+    for tr in rel.get("tracks", []):
+        found |= set(tr.get("roles") or [])
+    if not found:
+        found = set(rel.get("roles") or [])
+    return [k for k in config.ROLE_ORDER if k in found]
+
+
+def _filter_row(site, releases, *, dim, label, codes, name_of, match):
+    """Одна строка фильтров: «Все» плюс те значения, которые реально есть."""
     out = []
-    for code in codes:
+    for code in ["ALL"] + list(codes):
         n = len(releases) if code == "ALL" else sum(
-            1 for r in releases if r.get("genre") == code)
+            1 for r in releases if match(r, code))
         if n == 0 and code != "ALL":
             continue
         pressed = "true" if code == "ALL" else "false"
         out.append(f'<button type="button" data-f="{esc(code)}" '
-                   f'aria-pressed="{pressed}">{esc(genre_label(site, code))}'
+                   f'aria-pressed="{pressed}">{esc(name_of(code))}'
                    f'<span class="fc">{n}</span></button>')
-    return f'<div class="filters">{"".join(out)}</div>'
+    if len(out) < 3:                      # «Все» плюс один вариант — не фильтр
+        return ""
+    return (f'<div class="filters" data-dim="{esc(dim)}" '
+            f'role="group" aria-label="{esc(label)}">'
+            f'<span class="flabel">{esc(label)}</span>{"".join(out)}</div>')
+
+
+def _filters(site, releases):
+    w = words(site)
+    rows = []
+    if site.get("genres"):
+        rows.append(_filter_row(
+            site, releases, dim="g", label=w["genre_word"],
+            codes=site["genres"],
+            name_of=lambda c: w["all_word"] if c == "ALL" else genre_label(site, c),
+            match=lambda r, c: r.get("genre") == c))
+    roles = [k for k in config.ROLE_ORDER if k in (site.get("roles") or {})]
+    rows.append(_filter_row(
+        site, releases, dim="r", label=w["role_word"], codes=roles,
+        name_of=lambda c: (w["all_word"] if c == "ALL"
+                           else site["roles"][c]["word"]),
+        match=lambda r, c: c in release_roles(r)))
+    rows = [r for r in rows if r]
+    return f'<div class="filterbar">{"".join(rows)}</div>' if rows else ""
 
 
 def render_index(site, data):

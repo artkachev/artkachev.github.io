@@ -16,21 +16,31 @@
   var grid = document.querySelector(".grid");
   var panel = document.getElementById("player");
 
-  /* ── фильтры ─────────────────────────────────────────────── */
-  var filters = document.querySelector(".filters");
-  if (filters) {
-    filters.addEventListener("click", function (e) {
+  /* ── фильтры: жанр и роль, работают вместе ───────────────── */
+  var bar = document.querySelector(".filterbar");
+  var picked = { g: "ALL", r: "ALL" };
+
+  function applyFilters() {
+    document.querySelectorAll(".grid > li").forEach(function (li) {
+      var tile = li.querySelector(".tile");
+      if (!tile) return;
+      var okGenre = picked.g === "ALL" || tile.dataset.g === picked.g;
+      var roles = (tile.dataset.r || "").split(" ");
+      var okRole = picked.r === "ALL" || roles.indexOf(picked.r) !== -1;
+      li.hidden = !(okGenre && okRole);
+    });
+  }
+
+  if (bar) {
+    bar.addEventListener("click", function (e) {
       var btn = e.target.closest("button[data-f]");
       if (!btn) return;
-      var f = btn.dataset.f;
-      filters.querySelectorAll("button").forEach(function (b) {
+      var row = btn.closest(".filters");
+      picked[row.dataset.dim] = btn.dataset.f;
+      row.querySelectorAll("button").forEach(function (b) {
         b.setAttribute("aria-pressed", String(b === btn));
       });
-      document.querySelectorAll(".grid > li").forEach(function (li) {
-        var tile = li.querySelector(".tile");
-        var show = f === "ALL" || (tile && tile.dataset.g === f);
-        li.hidden = !show;
-      });
+      applyFilters();
     });
   }
 
