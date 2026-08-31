@@ -38,7 +38,7 @@ WORDS = {
            "artists_word": ("артист", "артиста", "артистов"),
            "albums_word": ("альбом", "альбома", "альбомов"),
            "album_word": "Альбом", "singles_word": "Синглы",
-           "by_letter": "По алфавиту", "faq": "Вопросы",
+           "by_letter": "По алфавиту", "faq": "Вопросы", "pause": "Пауза",
            "catalog_lead": "Полный каталог работ",
            "among_them": "среди них",
            "catalog_hint": "Ищите по артисту, альбому или названию трека."},
@@ -48,7 +48,7 @@ WORDS = {
            "artists_word": ("artist", "artists", "artists"),
            "albums_word": ("album", "albums", "albums"),
            "album_word": "Album", "singles_word": "Singles",
-           "by_letter": "By letter", "faq": "FAQ",
+           "by_letter": "By letter", "faq": "FAQ", "pause": "Pause",
            "catalog_lead": "Full catalogue of works",
            "among_them": "among them",
            "catalog_hint": "Search by artist, album or track title."},
@@ -195,26 +195,43 @@ def player_and_modal(site):
 
 # ── главная ─────────────────────────────────────────────────────────
 
+PLAY_ICON = ('<svg class="ico play" viewBox="0 0 24 24" aria-hidden="true">'
+             '<path d="M8 5.2v13.6L19 12z"/></svg>')
+PAUSE_ICON = ('<svg class="ico pause" viewBox="0 0 24 24" aria-hidden="true">'
+              '<path d="M6.5 5h3.6v14H6.5zM13.9 5h3.6v14h-3.6z"/></svg>')
+
+
 def _tile(site, rel, album_index=None):
+    """Плитка работы.
+
+    У сингла обложка только выбирает трек, а играет отдельная кнопка рядом —
+    она лежит соседом, а не внутри плитки: кнопка в кнопке невалидна и её
+    не достать с клавиатуры.
+    """
     cover = f'/covers/{esc(rel["cover"])}.jpg'
     artist = esc(rel["artist"])
     title = esc(rel["title"])
     genre = esc(rel.get("genre") or "")
     if rel["type"] == "album":
         n = len(rel.get("tracks", []))
-        w = words(site)["tracks_word"]
-        badge = f'<span class="tbadge">{n} {plural(n, w)}</span>'
-        action = f'onclick="openAlbum({album_index})"'
-        cls = "tile album"
+        tw = words(site)["tracks_word"]
+        badge = f'<span class="tbadge">{n} {plural(n, tw)}</span>'
+        attrs = f'data-album="{album_index}"'
+        cls, button = "tile album", ""
     else:
         badge = ""
-        action = f"onclick=\"play(this)\" data-id=\"{esc(rel['id'])}\""
+        attrs = f'data-id="{esc(rel["id"])}"'
         cls = "tile"
-    return (f'<li><button type="button" class="{cls}" data-g="{genre}" {action}>'
+        button = (f'<button type="button" class="pbtn" hidden '
+                  f'data-label="{artist} — {title}" '
+                  f'aria-label="{esc(words(site)["listen"])}: {artist} — {title}">'
+                  f'{PLAY_ICON}{PAUSE_ICON}</button>')
+    return (f'<li class="cell"><button type="button" class="{cls}" '
+            f'data-g="{genre}" {attrs}>'
             f'<img src="{cover}" alt="{artist} — {title}" loading="lazy" '
             f'width="640" height="640">{badge}'
             f'<span class="tmeta"><span class="tartist">{artist}</span>'
-            f'<span class="ttitle">{title}</span></span></button></li>')
+            f'<span class="ttitle">{title}</span></span></button>{button}</li>')
 
 
 def _filters(site, releases):
@@ -255,7 +272,7 @@ def render_index(site, data):
         f'{head(site, title=title, description=desc, canonical=canonical)}'
         f'<div class="pf">{nav(site, home=True)}'
         f'{_filters(site, releases)}'
-        f'<ul class="grid">{"".join(tiles)}</ul></div>'
+        f'<ul class="grid" data-listen="{esc(words(site)["listen"])}" data-pause="{esc(words(site)["pause"])}">{"".join(tiles)}</ul></div>'
         f'{footer(site)}{player_and_modal(site)}'
         # именно var: const на верхнем уровне не попадает в window,
         # а app.js читает список как window.ALBUMS

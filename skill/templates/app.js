@@ -1,11 +1,20 @@
-/* Фильтры, плеер Spotify и окно альбома. Без библиотек. */
+/* Фильтры, плеер Spotify и окно альбома. Без библиотек.
+
+   Плитка сингла работает в два шага: нажатие на обложку только выбирает
+   трек и зажигает кнопку плей, а звук запускает уже она. Так ничего не
+   начинает играть само от случайного касания. */
 (function () {
   "use strict";
 
   var ctrl = null;          // контроллер Spotify iFrame API
-  var current = null;       // активная плитка
+  var current = null;       // плитка, загруженная в плеер
+  var armed = null;         // плитка, выбранная но ещё не запущенная
+  var isPaused = true;
   var wantPlay = false;     // сафари на айфоне глушит автостарт
   var pendingUri = null;
+
+  var grid = document.querySelector(".grid");
+  var panel = document.getElementById("player");
 
   /* ── фильтры ─────────────────────────────────────────────── */
   var filters = document.querySelector(".filters");
@@ -25,22 +34,56 @@
     });
   }
 
-  /* ── плеер ───────────────────────────────────────────────── */
-  var panel = document.getElementById("player");
+  /* ── состояние плиток ────────────────────────────────────── */
+  function playBtn(tile) {
+    return tile.parentElement.querySelector(".pbtn");
+  }
 
+  function refresh() {
+    if (!grid) return;
+    grid.querySelectorAll(".tile[data-id]").forEach(function (tile) {
+      var btn = playBtn(tile);
+      if (!btn) return;
+      var isCurrent = tile === current;
+      var show = tile === armed || isCurrent;
+      btn.hidden = !show;
+      var playing = isCurrent && !isPaused;
+      btn.classList.toggle("on", playing);
+      tile.classList.toggle("armed", tile === armed && !isCurrent);
+      tile.classList.toggle("playing", isCurrent);
+      var word = playing ? grid.dataset.pause : grid.dataset.listen;
+      btn.setAttribute("aria-label", word + ": " + btn.dataset.label);
+    });
+  }
+
+  function arm(tile) {
+    armed = tile;
+    refresh();
+    var btn = playBtn(tile);
+    if (btn) btn.focus();
+  }
+
+  function disarm() {
+    if (!armed) return;
+    armed = null;
+    refresh();
+  }
+
+  /* ── плеер ───────────────────────────────────────────────── */
   window.onSpotifyIframeApiReady = function (IFrameAPI) {
     var el = document.getElementById("pframe");
     IFrameAPI.createController(el, { width: "100%", height: 80 }, function (c) {
       ctrl = c;
       c.addListener("playback_update", function (ev) {
         if (!current) return;
-        var paused = ev && ev.data && ev.data.isPaused;
-        if (wantPlay && paused) {
+        isPaused = !!(ev && ev.data && ev.data.isPaused);
+        if (wantPlay && isPaused) {
           try { c.resume(); } catch (err) { current.classList.add("retap"); }
-        } else if (!paused) {
+        } else if (!isPaused) {
           wantPlay = false;
           current.classList.remove("retap");
         }
+        refresh();
       });
       if (pendingUri) { start(pendingUri); pendingUri = null; }
     });
@@ -51,18 +94,44 @@
     ctrl.play();
   }
 
-  window.play = function (el) {
-    var id = el.dataset.id;
+  /* Запускает трек плитки. Повторный вызов на той же плитке — пауза. */
+  window.play = function (tile) {
+    var id = tile.dataset.id;
     if (!id) return;
-    if (current === el && ctrl) { ctrl.togglePlay(); return; }
-    if (current) current.classList.remove("playing", "retap");
-    current = el;
-    el.classList.add("playing");
+    if (current === tile && ctrl) { ctrl.togglePlay(); return; }
+    if (current && current !== tile) current.classList.remove("playing", "retap");
+    current = tile;
+    armed = null;
+    isPaused = false;
     wantPlay = true;
     panel.classList.add("on");
+    refresh();
     var uri = "spotify:track:" + id;
     if (ctrl) { start(uri); } else { pendingUri = uri; }
   };
+
+  /* ── клики по сетке ──────────────────────────────────────── */
+  if (grid) {
+    grid.addEventListener("click", function (e) {
+      var btn = e.target.closest(".pbtn");
+      if (btn) {                       // второй шаг: играем
+        window.play(btn.parentElement.querySelector(".tile"));
+        return;
+      }
+      var tile = e.target.closest(".tile");
+      if (!tile) return;
+      if (tile.dataset.album !== undefined) {
+        window.openAlbum(Number(tile.dataset.album));
+      } else if (tile === current) {   // играющую плитку не сбрасываем
+        window.play(tile);
+      } else {                         // первый шаг: только выбираем
+        arm(tile);
+      }
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") disarm();
+    });
+  }
 
   /* ── окно альбома ────────────────────────────────────────── */
   var modal = document.getElementById("amodal");
