@@ -113,36 +113,55 @@ def cmd_import(args):
 
 
 def cmd_roles(args):
-    """Строки вида: Название — артист — продакшн, сведение"""
+    """Строки вида: Название — Артист — продакшн, сведение
+
+    Читаем с конца: последний кусок — роли, предпоследний — артист,
+    всё остальное склеивается обратно в название. Иначе трек вроде
+    «Я не отдам тебя никому - Bonus track» разваливается по своему же тире.
+    """
     proj = _project(args)
     site, data = _load(proj)
     words = {v["word"].lower(): k for k, v in site["roles"].items()}
     words.update({k: k for k in site["roles"]})
-    index = {}
+
+    by_pair, by_title = {}, {}
     for rel in data["releases"]:
-        if rel["type"] == "album":
-            for tr in rel.get("tracks", []):
-                index[tr["title"].strip().lower()] = tr
-        else:
-            index[rel["title"].strip().lower()] = rel
+        targets = (rel.get("tracks", []) if rel["type"] == "album" else [rel])
+        for tr in targets:
+            title = tr["title"].strip().lower()
+            artist = (tr.get("artist") or rel["artist"]).strip().lower()
+            by_pair[(title, artist)] = tr
+            by_pair[(title, artist.split(",")[0].strip())] = tr
+            by_title.setdefault(title, []).append(tr)
+
+    def find(title, artist):
+        """Сначала по паре название+артист, потом по одному названию."""
+        if artist:
+            hit = by_pair.get((title, artist)) or by_pair.get(
+                (title, artist.split(",")[0].strip()))
+            if hit:
+                return hit
+        same = by_title.get(title) or []
+        return same[0] if len(same) == 1 else None
 
     applied, unmatched = 0, []
     for line in Path(args.file).read_text(encoding="utf-8").splitlines():
-        if not line.strip():
+        line = line.strip()
+        if not line or line.startswith("#"):
             continue
         parts = [p.strip() for p in line.replace("—", "-").split(" - ")]
         if len(parts) < 2:
-            unmatched.append(line.strip())
+            unmatched.append(line)
             continue
-        title, role_text = parts[0], parts[-1]
-        target = index.get(title.lower())
-        if not target:
-            unmatched.append(line.strip())
-            continue
+        role_text = parts[-1]
+        artist = parts[-2] if len(parts) > 2 else ""
+        title = " - ".join(parts[:-2]) if len(parts) > 2 else parts[0]
+
+        target = find(title.lower(), artist.lower())
         roles = [words[r.strip().lower()] for r in role_text.split(",")
                  if r.strip().lower() in words]
-        if not roles:
-            unmatched.append(line.strip())
+        if not target or not roles:
+            unmatched.append(line)
             continue
         target["roles"] = roles
         applied += 1

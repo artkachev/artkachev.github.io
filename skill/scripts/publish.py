@@ -9,7 +9,7 @@ MANAGED_PATHS = (
     "index.html", "track", "faq", "covers", "assets", "sitemap.xml", "robots.txt",
     ".nojekyll", ".github/workflows/deploy.yml",
     ".github/workflows/fetch-covers.yml", "site.json", "data.json", "faq.json",
-    "artist_genres.json", "skill", "CLAUDE.md", "README.md",
+    "artist_genres.json", "roles.txt", "skill", "CLAUDE.md", "README.md",
 )
 
 TEMPLATES = Path(__file__).resolve().parent.parent / "templates"

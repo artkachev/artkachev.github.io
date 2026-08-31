@@ -8,6 +8,7 @@
    "year": "2026",
    "genre": "POP",
    "roles": [
+    "prod",
     "mix"
    ],
    "cover": "022ad1a1c44ee60bf1a487b3",
@@ -22,6 +23,7 @@
    "year": "2025",
    "genre": "POP",
    "roles": [
+    "prod",
     "mix"
    ],
    "cover": "c90b5cd16167cd1dd4f4c9f3",
@@ -36,6 +38,7 @@
    "year": "2026",
    "genre": "POP",
    "roles": [
+    "prod",
     "mix"
    ],
    "cover": "e8410295e1d15d293799a9ee",
@@ -50,6 +53,7 @@
    "year": "2026",
    "genre": "POP",
    "roles": [
+    "prod",
     "mix"
    ],
    "cover": "73be536fffaebea28656d644",
@@ -64,6 +68,7 @@
    "year": "2025",
    "genre": "POP",
    "roles": [
+    "prod",
     "mix"
    ],
    "cover": "ccd0ead88f69cf7af583821c",
@@ -88,6 +93,7 @@
      "title": "Дружить в губы",
      "artist": "Klava Koka",
      "roles": [
+      "prod",
       "mix"
      ]
     },
@@ -96,6 +102,7 @@
      "title": "В моём сердце",
      "artist": "Klava Koka",
      "roles": [
+      "prod",
       "mix"
      ]
     },
@@ -104,6 +111,7 @@
      "title": "Как я люблю тебя",
      "artist": "Klava Koka",
      "roles": [
+      "prod",
       "mix"
      ]
     },
@@ -112,10 +120,12 @@
      "title": "Я не отдам тебя никому - Вonus track",
      "artist": "Klava Koka",
      "roles": [
+      "prod",
       "mix"
      ]
     }
-   ]
+   ],
+   "feat": []
   },
   {
    "type": "single",
@@ -125,7 +135,8 @@
    "year": "2024",
    "genre": "POP",
    "roles": [
-    "mix"
+    "mix",
+    "master"
    ],
    "cover": "928e2c985fe31162dee7fbe1",
    "feat": [],
@@ -140,7 +151,9 @@
    "year": "2025",
    "genre": "POP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "f7a4f8386d5dda60360213ff",
    "feat": [],
@@ -168,7 +181,7 @@
    "year": "2026",
    "genre": "POP",
    "roles": [
-    "mix"
+    "prod"
    ],
    "cover": "8eac402385eea047c5dbebc7",
    "feat": [],
@@ -182,6 +195,7 @@
    "year": "2026",
    "genre": "POP",
    "roles": [
+    "prod",
     "mix"
    ],
    "cover": "4507ed429251509d53264120",
@@ -196,7 +210,8 @@
    "year": "2024",
    "genre": "POP",
    "roles": [
-    "mix"
+    "mix",
+    "master"
    ],
    "cover": "70fbc2347ade8eb1afd6d8f6",
    "feat": [],
@@ -210,7 +225,7 @@
    "year": "2022",
    "genre": "POP",
    "roles": [
-    "mix"
+    "prod"
    ],
    "cover": "7f690c0eebf2d7e24c5313ce",
    "feat": [],
@@ -224,7 +239,8 @@
    "year": "2026",
    "genre": "HIPHOP",
    "roles": [
-    "mix"
+    "mix",
+    "master"
    ],
    "cover": "7ee54d19c2586e7cbd09db8c",
    "feat": [],
@@ -238,7 +254,9 @@
    "year": "2026",
    "genre": "ELECTRONIC",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "3c1710c7fdd5cfb664c0e952",
    "feat": [],
@@ -252,7 +270,8 @@
    "year": "2026",
    "genre": "ELECTRONIC",
    "roles": [
-    "mix"
+    "mix",
+    "master"
    ],
    "cover": "9c1d5c995c607c09fc1e8dda",
    "feat": [],
@@ -266,7 +285,9 @@
    "year": "2026",
    "genre": "POP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "a5d790a9db4feb3cdcec6468",
    "feat": [],
@@ -280,7 +301,9 @@
    "year": "2025",
    "genre": "POP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "98f135e642b58f50177d1461",
    "feat": [],
@@ -294,7 +317,8 @@
    "year": "2025",
    "genre": "HIPHOP",
    "roles": [
-    "mix"
+    "mix",
+    "master"
    ],
    "cover": "3506b16b90a1022574d8e0cb",
    "feat": [],
@@ -308,7 +332,9 @@
    "year": "2025",
    "genre": "ELECTRONIC",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "2205cd3061f57f845e7942f8",
    "feat": [],
@@ -322,7 +348,9 @@
    "year": "2026",
    "genre": "POP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "efe11c6fa16bf31f2ce84bcf",
    "feat": [],
@@ -336,7 +364,9 @@
    "year": "2026",
    "genre": "POP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "1efcdb7a5694fc9a618a5199",
    "feat": [],
@@ -350,7 +380,9 @@
    "year": "2024",
    "genre": "ALT",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "37cff7b75d4c0c3644fd8c55",
    "feat": [],
@@ -374,7 +406,8 @@
      "title": "Не выноси",
      "artist": "PUSSYKILLER",
      "roles": [
-      "mix"
+      "mix",
+      "master"
      ]
     },
     {
@@ -382,7 +415,8 @@
      "title": "На пьяную голову",
      "artist": "PUSSYKILLER",
      "roles": [
-      "mix"
+      "mix",
+      "master"
      ]
     },
     {
@@ -390,10 +424,12 @@
      "title": "Время",
      "artist": "PUSSYKILLER",
      "roles": [
-      "mix"
+      "mix",
+      "master"
      ]
     }
-   ]
+   ],
+   "feat": []
   },
   {
    "type": "single",
@@ -403,7 +439,8 @@
    "year": "2024",
    "genre": "ALT",
    "roles": [
-    "mix"
+    "mix",
+    "master"
    ],
    "cover": "65af787baef42d79758d9b46",
    "feat": [],
@@ -417,7 +454,8 @@
    "year": "2024",
    "genre": "ALT",
    "roles": [
-    "mix"
+    "mix",
+    "master"
    ],
    "cover": "976cabd454275e3607488394",
    "feat": [],
@@ -431,7 +469,9 @@
    "year": "2026",
    "genre": "POP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "c21b3ada6b1176510a1bcec3",
    "feat": [],
@@ -445,7 +485,9 @@
    "year": "2025",
    "genre": "ROCK",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "2a1ce24ca5579fa055a3c420",
    "feat": [],
@@ -459,7 +501,9 @@
    "year": "2025",
    "genre": "POP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "210dd024e74dfa66226f8132",
    "feat": [],
@@ -473,7 +517,9 @@
    "year": "2025",
    "genre": "POP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "4fb455304e86ded1b2b9281d",
    "feat": [],
@@ -487,7 +533,9 @@
    "year": "2024",
    "genre": "POP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "bbb6cecb03c8047aae38ddff",
    "feat": [],
@@ -501,7 +549,9 @@
    "year": "2024",
    "genre": "POP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "51ac06d99d32d9491280c505",
    "feat": [],
@@ -515,7 +565,9 @@
    "year": "2025",
    "genre": "POP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "1e51e1147ab05a818116bf30",
    "feat": [],
@@ -529,7 +581,9 @@
    "year": "2024",
    "genre": "POP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "5aa42a8985e0ce87d1dc344b",
    "feat": [],
@@ -553,7 +607,7 @@
      "title": "Я не злюсь, милый",
      "artist": "Асия",
      "roles": [
-      "mix"
+      "prod"
      ]
     },
     {
@@ -561,7 +615,7 @@
      "title": "Молчу",
      "artist": "Асия",
      "roles": [
-      "mix"
+      "prod"
      ]
     },
     {
@@ -569,7 +623,7 @@
      "title": "Как ты",
      "artist": "Асия, Slame",
      "roles": [
-      "mix"
+      "prod"
      ]
     },
     {
@@ -577,10 +631,11 @@
      "title": "Второй том (Bonus Track)",
      "artist": "Асия",
      "roles": [
-      "mix"
+      "prod"
      ]
     }
-   ]
+   ],
+   "feat": []
   },
   {
    "type": "single",
@@ -590,7 +645,7 @@
    "year": "2024",
    "genre": "POP",
    "roles": [
-    "mix"
+    "prod"
    ],
    "cover": "76d9d598bd09dea3b699d846",
    "feat": [],
@@ -604,7 +659,7 @@
    "year": "2023",
    "genre": "POP",
    "roles": [
-    "mix"
+    "prod"
    ],
    "cover": "bcf31e3e4c13d4884e2c07c1",
    "feat": [],
@@ -618,7 +673,9 @@
    "year": "2022",
    "genre": "POP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "54e751d4b70d6f367fa5c04b",
    "feat": [],
@@ -632,7 +689,7 @@
    "year": "2026",
    "genre": "POP",
    "roles": [
-    "mix"
+    "prod"
    ],
    "cover": "5d7c1674fafdc8ec6eafb1a6",
    "feat": [],
@@ -646,7 +703,9 @@
    "year": "2026",
    "genre": "POP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "451a7567b1e151c7be7230fe",
    "feat": [],
@@ -660,7 +719,9 @@
    "year": "2026",
    "genre": "POP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "9810dccd722a01243577b687",
    "feat": [],
@@ -684,7 +745,9 @@
      "title": "Танцуй с моей тенью",
      "artist": "Марфа",
      "roles": [
-      "mix"
+      "prod",
+      "mix",
+      "master"
      ]
     },
     {
@@ -692,7 +755,9 @@
      "title": "Темнота",
      "artist": "Марфа",
      "roles": [
-      "mix"
+      "prod",
+      "mix",
+      "master"
      ]
     },
     {
@@ -700,7 +765,9 @@
      "title": "Есть на свете человек",
      "artist": "Марфа",
      "roles": [
-      "mix"
+      "prod",
+      "mix",
+      "master"
      ]
     },
     {
@@ -708,10 +775,13 @@
      "title": "Ты со мной",
      "artist": "Марфа",
      "roles": [
-      "mix"
+      "prod",
+      "mix",
+      "master"
      ]
     }
-   ]
+   ],
+   "feat": []
   },
   {
    "type": "single",
@@ -721,7 +791,9 @@
    "year": "2025",
    "genre": "ALT",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "202965fc0eb5fdd2b3ffead6",
    "feat": [],
@@ -735,7 +807,9 @@
    "year": "2025",
    "genre": "ALT",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "04d5a5c34f0815b387c856b3",
    "feat": [],
@@ -749,7 +823,8 @@
    "year": "2025",
    "genre": "POP",
    "roles": [
-    "mix"
+    "mix",
+    "master"
    ],
    "cover": "59dea8bc354e6877626b97ec",
    "feat": [],
@@ -763,7 +838,8 @@
    "year": "2025",
    "genre": "POP",
    "roles": [
-    "mix"
+    "mix",
+    "master"
    ],
    "cover": "4b25edca81460638ac427677",
    "feat": [],
@@ -777,7 +853,8 @@
    "year": "2025",
    "genre": "POP",
    "roles": [
-    "mix"
+    "mix",
+    "master"
    ],
    "cover": "8cdd945ee9ca55ee44a0ab13",
    "feat": [],
@@ -791,7 +868,8 @@
    "year": "2024",
    "genre": "POP",
    "roles": [
-    "mix"
+    "mix",
+    "master"
    ],
    "cover": "b8b0d7cd6ceeb64f833428c9",
    "feat": [],
@@ -805,7 +883,9 @@
    "year": "2024",
    "genre": "POP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "a0013b7322cf06872e3c5f51",
    "feat": [],
@@ -819,7 +899,9 @@
    "year": "2024",
    "genre": "POP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "d6bb19245cd0b1b11cd06e96",
    "feat": [],
@@ -833,7 +915,9 @@
    "year": "2024",
    "genre": "POP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "0a543cbb95b77a9576044057",
    "feat": [],
@@ -857,7 +941,8 @@
      "title": "Расклад",
      "artist": "VERBEE",
      "roles": [
-      "mix"
+      "mix",
+      "master"
      ]
     },
     {
@@ -865,7 +950,8 @@
      "title": "Истерика",
      "artist": "VERBEE, Анетта",
      "roles": [
-      "mix"
+      "mix",
+      "master"
      ]
     },
     {
@@ -873,7 +959,8 @@
      "title": "Ярче",
      "artist": "VERBEE",
      "roles": [
-      "mix"
+      "mix",
+      "master"
      ]
     },
     {
@@ -881,10 +968,12 @@
      "title": "Просто болит",
      "artist": "VERBEE",
      "roles": [
-      "mix"
+      "mix",
+      "master"
      ]
     }
-   ]
+   ],
+   "feat": []
   },
   {
    "type": "single",
@@ -894,7 +983,9 @@
    "year": "2026",
    "genre": "POP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "09e740d2182ad741f45b6ca3",
    "feat": [],
@@ -908,7 +999,8 @@
    "year": "2026",
    "genre": "POP",
    "roles": [
-    "mix"
+    "mix",
+    "master"
    ],
    "cover": "d8716339be88cbb43717441d",
    "feat": [],
@@ -922,7 +1014,8 @@
    "year": "2026",
    "genre": "POP",
    "roles": [
-    "mix"
+    "mix",
+    "master"
    ],
    "cover": "55b69b00453dbd77fdf1f652",
    "feat": [],
@@ -936,7 +1029,8 @@
    "year": "2026",
    "genre": "POP",
    "roles": [
-    "mix"
+    "mix",
+    "master"
    ],
    "cover": "336043bca6d71112b7388289",
    "feat": [],
@@ -950,7 +1044,8 @@
    "year": "2026",
    "genre": "POP",
    "roles": [
-    "mix"
+    "mix",
+    "master"
    ],
    "cover": "19e5f8700dfc3cb2605894ba",
    "feat": [],
@@ -964,7 +1059,9 @@
    "year": "2021",
    "genre": "POP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "10e53bb9958943d1246b9089",
    "feat": [],
@@ -978,7 +1075,9 @@
    "year": "2022",
    "genre": "POP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "0ede52060722f85e944afbe1",
    "feat": [],
@@ -992,7 +1091,9 @@
    "year": "2022",
    "genre": "POP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "6c59184c1d8cd2a3ab5e7f09",
    "feat": [],
@@ -1006,7 +1107,7 @@
    "year": "2021",
    "genre": "POP",
    "roles": [
-    "mix"
+    "prod"
    ],
    "cover": "4b302bf7bf435fe6f4a2cb20",
    "feat": [],
@@ -1020,7 +1121,9 @@
    "year": "2023",
    "genre": "POP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "0a65891872da57abed261f13",
    "feat": [],
@@ -1034,7 +1137,9 @@
    "year": "2024",
    "genre": "POP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "16e95c03e8938e681091ccf1",
    "feat": [],
@@ -1048,7 +1153,9 @@
    "year": "2023",
    "genre": "POP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "a0bbd98f9fd19da254e21e4b",
    "feat": [],
@@ -1062,7 +1169,9 @@
    "year": "2022",
    "genre": "POP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "3df6370ef438c2cf9e514388",
    "feat": [],
@@ -1076,7 +1185,9 @@
    "year": "2025",
    "genre": "ALT",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "8a4f1155d8f5c84c7a9f5dfd",
    "feat": [],
@@ -1090,7 +1201,9 @@
    "year": "2025",
    "genre": "ALT",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "444f71bf627f331a28881f2d",
    "feat": [],
@@ -1104,7 +1217,9 @@
    "year": "2025",
    "genre": "ALT",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "6aca7aad22a31e175878ae8c",
    "feat": [],
@@ -1118,7 +1233,9 @@
    "year": "2025",
    "genre": "HIPHOP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "eeec5c4c10149a347a3d1b30",
    "feat": [],
@@ -1132,7 +1249,9 @@
    "year": "2025",
    "genre": "HIPHOP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "3e52ad0672b5f8afd40adeb0",
    "feat": [],
@@ -1146,7 +1265,9 @@
    "year": "2025",
    "genre": "HIPHOP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "e6467563d499985e58f014da",
    "feat": [],
@@ -1160,7 +1281,9 @@
    "year": "2026",
    "genre": "HIPHOP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "1283379c3b176dc3d4e2a441",
    "feat": [],
@@ -1174,7 +1297,9 @@
    "year": "2024",
    "genre": "HIPHOP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "924e1f3480affb059efdfd89",
    "feat": [],
@@ -1188,7 +1313,9 @@
    "year": "2025",
    "genre": "HIPHOP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "80190aa7bc221275e533c7df",
    "feat": [],
@@ -1202,7 +1329,9 @@
    "year": "2024",
    "genre": "HIPHOP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "b2b7c48de39bf0b74a24984d",
    "feat": [],
@@ -1216,7 +1345,9 @@
    "year": "2023",
    "genre": "HIPHOP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "3850895cbf6291a88cfbaaef",
    "feat": [],
@@ -1230,7 +1361,9 @@
    "year": "2026",
    "genre": "POP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "d5c7399fa0feec2ebefc41b9",
    "feat": [],
@@ -1244,7 +1377,9 @@
    "year": "2024",
    "genre": "POP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "6e015afd63b17fa31f2f0ee9",
    "feat": [],
@@ -1258,7 +1393,9 @@
    "year": "2026",
    "genre": "POP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "fa753cb9f34f0cae3b42d78f",
    "feat": [],
@@ -1272,7 +1409,9 @@
    "year": "2025",
    "genre": "POP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "381050406a14f6fea78843ac",
    "feat": [],
@@ -1286,7 +1425,9 @@
    "year": "2025",
    "genre": "POP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "a46d871296121a8a9776bfe0",
    "feat": [],
@@ -1300,7 +1441,9 @@
    "year": "2025",
    "genre": "POP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "c6336b9a7c7e89930ddd1d9b",
    "feat": [],
@@ -1314,7 +1457,9 @@
    "year": "2021",
    "genre": "POP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "cf36e95cac5520bb99400fa3",
    "feat": [],
@@ -1328,7 +1473,9 @@
    "year": "2022",
    "genre": "HIPHOP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "10ba2be8190df6ad9853b979",
    "feat": [],
@@ -1342,7 +1489,9 @@
    "year": "2022",
    "genre": "HIPHOP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "1e6006955f02af085a8c1d35",
    "feat": [],
@@ -1356,7 +1505,9 @@
    "year": "2022",
    "genre": "HIPHOP",
    "roles": [
-    "mix"
+    "prod",
+    "mix",
+    "master"
    ],
    "cover": "b05889bf3f424513f2f9349d",
    "feat": [],
