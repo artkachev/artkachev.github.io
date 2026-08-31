@@ -166,10 +166,20 @@ img{max-width:100%;height:auto;display:block}
   min-width:44px;min-height:44px}
 
 /* ── страница трека ─────────────────────────────────────────────── */
-.trk{display:grid;gap:38px;grid-template-columns:minmax(0,300px) minmax(0,1fr);
-  align-items:start;margin:26px 0 60px}
-.trk .cover{width:100%;aspect-ratio:1;object-fit:cover;
+/* обложка тянется на всю высоту правой колонки и остаётся квадратной:
+   ширину она берёт от высоты, поэтому под ней не остаётся пустоты */
+.trk{display:flex;gap:38px;align-items:stretch;margin:26px 0 60px}
+/* :not обязателен — обёртка обложки тоже div, и без него это правило
+   перебивало её собственное по специфичности */
+.trk > div:not(.coverbox){flex:1 1 auto;min-width:0}
+/* Обложке задаём долю ширины, а не тянем её по высоте: у флекс-элемента
+   пропорция не считается от растянутой высоты, и квадрат разъезжался.
+   Так высоту строки задаёт обложка, и под ней пустоты не остаётся. */
+.coverbox{flex-grow:0;flex-shrink:0;
+  flex-basis:clamp(300px,46%,540px);   /* clamp внутри shorthand браузер не берёт */
+  align-self:flex-start;aspect-ratio:1;overflow:hidden;
   border-radius:3px;box-shadow:var(--shadow)}
+.coverbox .cover{width:100%;height:100%;object-fit:cover}
 .trk h1{font-family:var(--font-head);font-weight:700;text-transform:uppercase;
   font-size:clamp(27px,4.2vw,46px);line-height:1.02;margin:0 0 16px;letter-spacing:.004em}
 .lead{font-size:17px;line-height:1.65;max-width:68ch;margin:0 0 20px;color:var(--ink)}
@@ -302,9 +312,9 @@ img{max-width:100%;height:auto;display:block}
 .foot .small a{color:var(--ink-dim)}
 
 /* ── адаптив ────────────────────────────────────────────────────── */
-@media (max-width:760px){
-  .trk{grid-template-columns:1fr;gap:24px}
-  .trk .cover{max-width:290px}
+@media (max-width:1000px){
+  .trk{flex-direction:column;gap:24px}
+  .coverbox{align-self:flex-start;width:min(290px,100%);max-width:290px;min-width:0}
   .grid{grid-template-columns:repeat(auto-fill,minmax(min(158px,47%),1fr))}
   .pbtn{width:54px;height:54px}
   .pbtn .ico{width:23px;height:23px}
@@ -330,4 +340,4 @@ img{max-width:100%;height:auto;display:block}
 c-2 -36 -8 -70 -13 -77 -6 -7 -20 -32 -32 -55 -31 -62 -51 -57 -51 12 0 55 30
 135 67 177 24 27 32 13 29 -57z"/>
 </g>
-</svg><span>КАССА</span></span></a></h1><p class="tagline">звукорежиссёр и продюсер</p></div><nav class="navlinks"><a href="/">Работы</a><a href="/track/">Все треки</a><a href="/faq/">Вопросы</a><a href="https://www.instagram.com/freekacca/" target="_blank" rel="noopener">Instagram</a></nav></header><a class="back" href="/">← Все работы</a><article class="trk"><img class="cover" src="/covers/022ad1a1c44ee60bf1a487b3.jpg" alt="Klava Koka, JONY — Журавли" width="640" height="640"><div><h1>Кто спродюсировал «Журавли» — Klava Koka, JONY</h1><p class="lead">«Журавли» — Klava Koka, JONY, 2026 год. Продакшн, сведение: КАССА.</p><ul class="roles"><li>Продакшн</li><li>Сведение</li></ul><iframe class="embed" title="Журавли — Spotify" loading="lazy" src="https://open.spotify.com/embed/track/6MEXliAScCaD1srRHkwsPW?theme=0" allow="encrypted-media"></iframe><p><a class="back" href="/track/">Все треки →</a></p></div></article></div><footer class="foot"><div class="pf"><h2>Связаться</h2><ul class="cts"><li><a class="primary" href="https://t.me/fkacca" target="_blank" rel="noopener">Telegram</a></li><li><a class="" href="mailto:freekacca@gmail.com" target="_blank" rel="noopener">Почта</a></li></ul><p class="small">КАССА · 2026</p></div></footer><script type="application/ld+json">{"@context": "https://schema.org", "@type": "MusicRecording", "name": "Журавли", "byArtist": {"@type": "MusicGroup", "name": "Klava Koka, JONY"}, "url": "https://artkachev.github.io/track/klava-koka-jony-zhuravli/", "image": "https://artkachev.github.io/covers/022ad1a1c44ee60bf1a487b3.jpg", "contributor": {"@type": "Person", "name": "КАССА", "url": "https://artkachev.github.io/", "jobTitle": "Продакшн, Сведение"}, "datePublished": "2026"}</script></body></html>
+</svg><span>КАССА</span></span></a></h1><p class="tagline">звукорежиссёр и продюсер</p></div><nav class="navlinks"><a href="/">Работы</a><a href="/track/">Все треки</a><a href="/faq/">Вопросы</a><a href="https://www.instagram.com/freekacca/" target="_blank" rel="noopener">Instagram</a></nav></header><a class="back" href="/">← Все работы</a><article class="trk"><div class="coverbox"><img class="cover" src="/covers/022ad1a1c44ee60bf1a487b3.jpg" alt="Klava Koka, JONY — Журавли" width="640" height="640"></div><div><h1>Кто спродюсировал «Журавли» — Klava Koka, JONY</h1><p class="lead">«Журавли» — Klava Koka, JONY, 2026 год. Продакшн, сведение: КАССА.</p><ul class="roles"><li>Продакшн</li><li>Сведение</li></ul><iframe class="embed" title="Журавли — Spotify" loading="lazy" src="https://open.spotify.com/embed/track/6MEXliAScCaD1srRHkwsPW?theme=0" allow="encrypted-media"></iframe><p><a class="back" href="/track/">Все треки →</a></p></div></article></div><footer class="foot"><div class="pf"><h2>Связаться</h2><ul class="cts"><li><a class="primary" href="https://t.me/fkacca" target="_blank" rel="noopener">Telegram</a></li><li><a class="" href="mailto:freekacca@gmail.com" target="_blank" rel="noopener">Почта</a></li></ul><p class="small">КАССА · 2026</p></div></footer><script type="application/ld+json">{"@context": "https://schema.org", "@type": "MusicRecording", "name": "Журавли", "byArtist": {"@type": "MusicGroup", "name": "Klava Koka, JONY"}, "url": "https://artkachev.github.io/track/klava-koka-jony-zhuravli/", "image": "https://artkachev.github.io/covers/022ad1a1c44ee60bf1a487b3.jpg", "contributor": {"@type": "Person", "name": "КАССА", "url": "https://artkachev.github.io/", "jobTitle": "Продакшн, Сведение"}, "datePublished": "2026"}</script></body></html>
