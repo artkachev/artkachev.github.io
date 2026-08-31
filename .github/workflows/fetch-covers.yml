@@ -1,0 +1,36 @@
+name: fetch-covers
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download covers from Spotify CDN
+        run: |
+          cd covers
+          missing=0
+          while read -r h; do
+            [ -z "$h" ] && continue
+            if [ ! -s "$h.jpg" ]; then
+              curl -sf --retry 3 -o "$h.jpg" "https://i.scdn.co/image/ab67616d0000b273$h" \
+                || { echo "FAIL $h"; missing=$((missing+1)); rm -f "$h.jpg"; }
+            fi
+          done < ids.txt
+          echo "скачано: $(ls *.jpg 2>/dev/null | wc -l), не вышло: $missing"
+          [ "$missing" -eq 0 ]
+
+      - name: Commit covers
+        run: |
+          git config user.name "cover-fetch-bot"
+          git config user.email "actions@github.com"
+          git add covers
+          git diff --cached --quiet && echo "новых нет" && exit 0
+          git commit -m "covers: обложки в репозиторий (скачаны с Spotify CDN)"
+          git push
