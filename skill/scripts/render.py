@@ -126,7 +126,21 @@ def head(site, *, title, description, canonical, image=None, extra=""):
               f'<script>window.dataLayer=window.dataLayer||[];function gtag(){{dataLayer.push(arguments);}}'
               f'gtag("js",new Date());gtag("config","{tag}");</script>')
     og_img = f'<meta property="og:image" content="{esc(img_abs)}">' if img_abs else ""
+    # размеры знаем только у общей картинки сайта; у страницы трека
+    # превью — квадратная обложка, и подписывать ей 1200×630 нельзя
+    size = [] if image else (site.get("og_image_size") or [])
+    if img_abs and len(size) == 2:
+        og_img += (f'<meta property="og:image:width" content="{int(size[0])}">'
+                   f'<meta property="og:image:height" content="{int(size[1])}">')
     tw = "summary_large_image" if img_abs else "summary"
+    icons = site.get("icons") or {}
+    ico = ""
+    if icons.get("svg"):
+        ico += f'<link rel="icon" href="{esc(icons["svg"])}" type="image/svg+xml">'
+    if icons.get("png"):
+        ico += f'<link rel="icon" href="{esc(icons["png"])}" sizes="32x32" type="image/png">'
+    if icons.get("apple"):
+        ico += f'<link rel="apple-touch-icon" href="{esc(icons["apple"])}">'
     return (
         f'<!doctype html><html lang="{esc(site["lang"])}"><head>'
         f'<meta charset="utf-8">'
@@ -142,15 +156,34 @@ def head(site, *, title, description, canonical, image=None, extra=""):
         f'<meta property="og:url" content="{esc(canonical)}">'
         f'{og_img}'
         f'<meta name="twitter:card" content="{tw}">'
+        f'{ico}'
         f'{theme.font_link(site)}'
         f'<style>{theme.stylesheet(site)}</style>'
         f'{ga}{extra}'
         f'</head><body>')
 
 
+def brand_mark(site):
+    """Знак плюс имя. Без логотипа — просто имя, набранное шрифтом.
+
+    Когда logo_wordmark выключен, знак остаётся один, а имя уходит в alt:
+    без него шапка теряет и текст для поиска, и подпись для читалок.
+    """
+    name = esc(site["name"])
+    logo = site.get("logo")
+    if not logo:
+        return name
+    with_word = site.get("logo_wordmark", True)
+    alt = "" if with_word else name
+    mark = f'<img class="logomark" src="{esc(logo)}" alt="{alt}">'
+    if not with_word:
+        return mark
+    return f'<span class="lockup">{mark}<span>{name}</span></span>'
+
+
 def nav(site, *, home=False):
     w = words(site)
-    brand = esc(site["name"])
+    brand = brand_mark(site)
     title = brand if home else f'<a href="/">{brand}</a>'
     links = "".join(
         f'<a href="{esc(l["url"])}" target="_blank" rel="noopener">{esc(l["label"])}</a>'

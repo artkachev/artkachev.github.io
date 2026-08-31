@@ -36,6 +36,9 @@ img{max-width:100%;display:block}
 .brand{font-family:var(--font-head);font-weight:700;text-transform:uppercase;
   font-size:clamp(34px,6.4vw,64px);line-height:.9;letter-spacing:.005em;margin:0}
 .brand a{text-decoration:none}
+/* логотип занимает место имени: высота как у набранного текста */
+.lockup{display:inline-flex;align-items:center;gap:.42em}
+.logomark{height:1.16em;width:auto;flex:none;color:var(--ink)}
 .tagline{color:var(--ink-dim);font-size:15px;letter-spacing:.01em;margin:10px 0 0}
 .facts{display:flex;gap:18px;flex-wrap:wrap;margin:14px 0 0;padding:0;list-style:none;
   font-size:12px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-dim)}
