@@ -96,6 +96,17 @@ def genre_label(site, code):
     return GENRE_LABELS.get(site["lang"], GENRE_LABELS["ru"]).get(code, code)
 
 
+def credit_name(site):
+    """Как подписывать авторство: «КАССА (Артём Ткачев)».
+
+    Настоящее имя берётся из site.json → real_name. Без него остаётся
+    только рабочее имя, и строка не ломается.
+    """
+    if site.get("real_name"):
+        return f'{site["name"]} ({site["real_name"]})'
+    return site["name"]
+
+
 def primary_role(site, roles):
     """Главная роль — первая по важности из объявленных в настройках."""
     for key in config.ROLE_ORDER:
@@ -448,9 +459,14 @@ def render_track_page(site, entry):
     who = ", ".join(role_words).lower()
     lead = (f'«{entry["title"]}» — {entry["artist"]}'
             + (f', {entry["year"]} год' if entry.get("year") else "")
-            + f'. {who.capitalize()}: {site["name"]}.')
+            + f'. {who.capitalize()}: {credit_name(site)}.')
     if entry.get("album"):
         lead += f' Из альбома «{entry["album"]}».'
+    person = {"@type": "Person", "name": site["name"],
+              "url": f'{site["url"]}/', "jobTitle": ", ".join(role_words)}
+    if site.get("real_name"):
+        # рабочее имя и настоящее — один человек, пусть поиск это знает
+        person["alternateName"] = site["real_name"]
     jsonld = {
         "@context": "https://schema.org",
         "@type": "MusicRecording",
@@ -458,9 +474,7 @@ def render_track_page(site, entry):
         "byArtist": {"@type": "MusicGroup", "name": entry["artist"]},
         "url": canonical,
         "image": f'{site["url"]}{cover}',
-        "contributor": {
-            "@type": "Person", "name": site["name"], "url": f'{site["url"]}/',
-            "jobTitle": ", ".join(role_words)},
+        "contributor": person,
     }
     if entry.get("year"):
         jsonld["datePublished"] = str(entry["year"])

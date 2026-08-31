@@ -24,6 +24,10 @@
   ],
   "links": [
     {
+      "label": "Telegram",
+      "url": "https://t.me/fkacca"
+    },
+    {
       "label": "Instagram",
       "url": "https://www.instagram.com/freekacca/"
     }
@@ -67,5 +71,6 @@
     "svg": "/assets/favicon.svg",
     "png": "/assets/favicon-32.png",
     "apple": "/assets/apple-touch-icon.png"
-  }
+  },
+  "real_name": "Артём Ткачев"
 }
