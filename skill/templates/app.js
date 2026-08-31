@@ -256,12 +256,40 @@
       list.appendChild(li);
     });
     modal.classList.add("on");
+    background(true);
     modal.querySelector(".close").focus();
   };
 
   function closeAlbum() {
     modal.classList.remove("on");
+    background(false);
     if (openerTile && openerTile.focus) openerTile.focus();
+  }
+
+  /* Пока открыто окно альбома, страница под ним не должна принимать ни
+     клики, ни фокус: иначе Tab уходит на плитки за окном, а скринридер
+     читает каталог поверх диалога. inert делает и то, и другое. */
+  function background(off) {
+    [].forEach.call(document.body.children, function (el) {
+      if (el === modal || el.tagName === "SCRIPT") return;
+      if (off) { el.setAttribute("inert", ""); el.setAttribute("aria-hidden", "true"); }
+      else { el.removeAttribute("inert"); el.removeAttribute("aria-hidden"); }
+    });
+  }
+
+  var FOCUSABLE = 'a[href],button:not([disabled]),[tabindex]:not([tabindex="-1"])';
+
+  /* Запасной круг для браузеров без inert: Tab с последнего элемента
+     возвращается на первый, а не улетает в адресную строку. */
+  function keepFocus(e) {
+    var items = modal.querySelectorAll(FOCUSABLE);
+    if (!items.length) return;
+    var first = items[0], last = items[items.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault(); last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault(); first.focus();
+    }
   }
 
   if (modal) {
@@ -269,7 +297,9 @@
       if (e.target === modal || e.target.closest(".close")) closeAlbum();
     });
     document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && modal.classList.contains("on")) closeAlbum();
+      if (!modal.classList.contains("on")) return;
+      if (e.key === "Escape") closeAlbum();
+      else if (e.key === "Tab") keepFocus(e);
     });
   }
 })();

@@ -178,20 +178,41 @@ def cmd_build(args):
     return 0
 
 
+def cmd_check(args):
+    """Только проверки: сборка без заливки, чтобы посмотреть находки."""
+    proj = _project(args)
+    site, data = _load(proj)
+    summary = render.render_site(site, data, proj, faq=_faq(proj))
+    _out({"checks": summary["checks"] or ["чисто"],
+          "blocking": summary["blocking"]}, args)
+    return 1 if summary["blocking"] else 0
+
+
 def cmd_publish(args):
     proj = _project(args)
     site, data = _load(proj)
-    render.render_site(site, data, proj, faq=_faq(proj))
+    summary = render.render_site(site, data, proj, faq=_faq(proj))
+    # находки уровня «стоп» — это то, что уже один раз уехало на живой сайт
+    # (кириллическая «В» в «Вonus», описание, обрезанное посреди имени)
+    if summary["blocking"] and not args.ignore_checks:
+        _out({"checks": summary["checks"],
+              "status": "не залито: сначала почини найденное или --ignore-checks"}, args)
+        return 1
     result = publish_mod.publish(proj, site, args.message, confirmed=args.confirm)
-    _out(result, args)
+    _out({**result, "checks": summary["checks"]}, args)
     return 0
 
 
 def _out(payload, args):
     if getattr(args, "json", False):
         print(json.dumps(payload, ensure_ascii=False, indent=1))
-    else:
-        for key, value in payload.items():
+        return
+    for key, value in payload.items():
+        if isinstance(value, list):
+            print(f"{key}:")
+            for line in value:
+                print(f"  {line}")
+        else:
             print(f"{key}: {value}")
 
 
@@ -215,9 +236,14 @@ def main(argv=None):
     bld = sub.add_parser("build", help="собрать сайт")
     bld.set_defaults(func=cmd_build)
 
+    chk = sub.add_parser("check", help="собрать и показать, что не так")
+    chk.set_defaults(func=cmd_check)
+
     pub = sub.add_parser("publish", help="собрать и залить на GitHub")
     pub.add_argument("--message", default="Обновить сайт")
     pub.add_argument("--confirm", action="store_true")
+    pub.add_argument("--ignore-checks", action="store_true",
+                     help="залить, несмотря на находки уровня «стоп»")
     pub.set_defaults(func=cmd_publish)
 
     args = ap.parse_args(argv)

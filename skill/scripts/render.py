@@ -9,6 +9,7 @@ import re
 from datetime import date
 from pathlib import Path
 
+import checks
 import config
 import theme
 
@@ -135,7 +136,13 @@ def order_releases(site, releases):
 
 # ── общие куски страницы ────────────────────────────────────────────
 
+#: что сборщик выдал на каждой странице — для проверок перед публикацией.
+#: собирается здесь, а не разбором готового HTML: вёрстка не источник истины
+_PAGES = []
+
+
 def head(site, *, title, description, canonical, image=None, extra=""):
+    _PAGES.append({"url": canonical, "title": title, "description": description})
     img = image or site.get("og_image")
     img_abs = img if not img or img.startswith("http") else f"{site['url']}{img}"
     ga = ""
@@ -396,6 +403,7 @@ def render_index(site, data, entries):
         else:
             tiles.append(_tile(site, rel, slug=slug_of.get(rel["id"])))
     desc = site.get("description") or f'{site["name"]} — {site["tagline"]}'
+    desc = clamp(desc)
     title = f'{site["name"]} — {site["tagline"]}'
     app_js = (TEMPLATES / "app.js").read_text(encoding="utf-8")
     canonical = f"{site['url']}/"
@@ -482,7 +490,7 @@ def render_track_page(site, entry):
     roles_html = "".join(f"<li>{esc(word)}</li>" for word in role_words)
     page_title = f'{title_line} · {site["name"]}'
     return (
-        f'{head(site, title=page_title, description=lead, canonical=canonical, image=cover)}'
+        f'{head(site, title=page_title, description=clamp(lead), canonical=canonical, image=cover)}'
         f'<div class="pf">{nav(site)}'
         f'<a class="back" href="/">{esc(w["back"])}</a>'
         f'<article class="trk">'
@@ -629,7 +637,8 @@ def render_hub(site, data, entries):
             f'{esc(w["catalog_hint"])}')
 
     desc = (f'{w["hub_title"]} — {site["name"]}, {site["tagline"]}. '
-            f'{w["catalog_lead"]}: {scope}. {w["catalog_hint"]}')[:300]
+            f'{w["catalog_lead"]}: {scope}. {w["catalog_hint"]}')
+    desc = clamp(desc)
     page_title = f'{w["hub_title"]} — {site["name"]}'
     canonical = f"{site['url']}/track/"
     jsonld = {
@@ -701,6 +710,29 @@ def plain(text):
     return BOLD_RE.sub(lambda m: m.group(1), out)
 
 
+#: сколько символов поисковик показывает в описании, дальше — многоточие
+META_MAX = 160
+
+
+def clamp(text, limit=META_MAX):
+    """Описание не длиннее limit, но обрезанное по-человечески.
+
+    Сначала пробуем закончить на точке — тогда описание выглядит как
+    законченная мысль, а не как оборванная строка. Если целого предложения
+    не помещается, режем по границе слова и ставим многоточие. Раньше здесь
+    был срез [:300], и описание FAQ обрывалось посреди имени: «VERBEE, Kla».
+    """
+    out = " ".join(str(text or "").split())
+    if len(out) <= limit:
+        return out
+    head = out[:limit + 1]
+    stop = max(head.rfind(". "), head.rfind("! "), head.rfind("? "))
+    if stop >= limit * 0.55:
+        return head[:stop + 1].strip()
+    cut = head.rfind(" ")
+    return head[:cut].rstrip(" ,;:—-") + "…"
+
+
 def render_faq(site, faq):
     sections = faq.get("sections") or []
     items = [(s, it) for s in sections for it in s.get("items") or []]
@@ -723,7 +755,7 @@ def render_faq(site, faq):
 
     canonical = f"{site['url']}/faq/"
     title = faq.get("title") or f'{site["name"]} — вопросы и ответы'
-    desc = plain(faq.get("summary") or "")[:300]
+    desc = clamp(plain(faq.get("summary") or ""))
     jsonld = {
         "@context": "https://schema.org",
         "@type": "FAQPage",
@@ -783,6 +815,7 @@ def render_robots(site):
 def render_site(site, data, out_dir, faq=None):
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
+    _PAGES.clear()
     site = dict(site, has_faq=bool(faq),
                 logo_svg=load_logo_svg(site, out_dir))
     entries = track_entries(site, data)
@@ -807,6 +840,10 @@ def render_site(site, data, out_dir, faq=None):
         render_sitemap(site, entries, extra), encoding="utf-8")
     (out / "robots.txt").write_text(render_robots(site), encoding="utf-8")
     (out / ".nojekyll").write_text("", encoding="utf-8")
+    found = checks.run(site, data, faq, _PAGES, out_dir=out,
+                       slugs=[e["slug"] for e in entries])
     return {"tracks": len(entries),
             "releases": len([r for r in data["releases"] if not r.get("hidden")]),
-            "faq": sum(len(s.get("items") or []) for s in (faq or {}).get("sections") or [])}
+            "faq": sum(len(s.get("items") or []) for s in (faq or {}).get("sections") or []),
+            "checks": checks.report(found),
+            "blocking": len(checks.blocking(found))}

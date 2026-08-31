@@ -98,12 +98,6 @@ def publish(proj, site, message, confirmed):
             "заливка в чужой репозиторий требует явного подтверждения (--confirm)")
     ensure_workflow(proj)
     _git_ok(proj, "fetch", "origin")
-    if _git(proj, "rev-parse", "--verify", "-q", "origin/main").returncode == 0:
-        res = _git(proj, "rebase", "origin/main")
-        if res.returncode != 0:
-            _git(proj, "rebase", "--abort")
-            raise PublishRefused(
-                "в репозитории есть чужие изменения, которые не наложились автоматически")
     present = [p for p in MANAGED_PATHS if (proj / p).exists()]
     if not present:
         raise PublishRefused("нечего заливать: файлы сайта не собраны")
@@ -112,6 +106,17 @@ def publish(proj, site, message, confirmed):
     if not staged:
         return {"status": "нечего публиковать", "paths": present}
     _git_ok(proj, "commit", "-m", message)
+    # Ребейз только после коммита: до него в дереве всегда лежит несохранённая
+    # сборка, и git отказывается ребейзить, жалуясь на unstaged changes.
+    # Раньше это происходило до add и выдавалось за «чужие изменения»,
+    # хотя чужого в репозитории могло не быть вовсе.
+    if _git(proj, "rev-parse", "--verify", "-q", "origin/main").returncode == 0:
+        res = _git(proj, "rebase", "origin/main")
+        if res.returncode != 0:
+            _git(proj, "rebase", "--abort")
+            raise PublishRefused(
+                "в репозитории есть чужие изменения, которые не наложились "
+                "автоматически. Коммит уже сделан — разберите конфликт руками")
     _git_ok(proj, "push", "origin", "HEAD:main")
     return {"status": "залито", "files": len(staged.splitlines()), "paths": present}
 

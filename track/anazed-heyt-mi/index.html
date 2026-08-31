@@ -18,7 +18,7 @@ body{
   -webkit-font-smoothing:antialiased;
   padding-bottom:96px;               /* место под панель плеера */
 }
-::selection{background:var(--accent);color:#fff}
+::selection{background:var(--accent);color:var(--bg)}
 :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
 html{scrollbar-color:var(--accent) var(--bg)}
 ::-webkit-scrollbar{width:11px;height:11px}
@@ -112,7 +112,7 @@ img{max-width:100%;height:auto;display:block}
 .cell:hover .acts,.cell:focus-within .acts,.cell.on .acts{
   opacity:1;visibility:visible}
 .pbtn{width:62px;height:62px;border:0;padding:0;flex:none;
-  border-radius:50%;cursor:pointer;background:var(--accent);color:#fff;
+  border-radius:50%;cursor:pointer;background:var(--accent);color:var(--bg);
   display:grid;place-items:center;box-shadow:0 10px 26px -8px rgba(0,0,0,.8)}
 .pbtn:hover{filter:brightness(1.12)}
 .ibtn{display:inline-flex;align-items:center;justify-content:center;
@@ -122,7 +122,7 @@ img{max-width:100%;height:auto;display:block}
   border-radius:99px;font-family:var(--font-head);font-weight:500;
   font-size:11px;letter-spacing:.11em;text-transform:uppercase;
   white-space:nowrap;transition:background .16s,border-color .16s}
-.ibtn:hover{background:var(--accent);border-color:var(--accent)}
+.ibtn:hover{background:var(--accent);border-color:var(--accent);color:var(--bg)}
 .pbtn .ico{width:26px;height:26px;fill:currentColor;display:block}
 .pbtn .play{margin-left:3px}          /* треугольник кажется смещённым влево */
 .pbtn .pause{display:none}
@@ -323,8 +323,8 @@ img{max-width:100%;height:auto;display:block}
   font-family:var(--font-head);font-weight:500;text-transform:uppercase;
   letter-spacing:.09em;font-size:13px;transition:border-color .18s,color .18s}
 .cts a:hover{border-color:var(--accent);color:var(--accent)}
-.cts a.primary{background:var(--accent);border-color:var(--accent);color:#fff}
-.cts a.primary:hover{filter:brightness(1.1);color:#fff}
+.cts a.primary{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.cts a.primary:hover{filter:brightness(1.1);color:var(--bg)}
 .foot .small{color:var(--ink-dim);font-size:13px;margin:0}
 .foot .small a{color:var(--ink-dim)}
 
