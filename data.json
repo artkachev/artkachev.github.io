@@ -71,36 +71,8 @@
    "hidden": false
   },
   {
-   "type": "single",
-   "id": "65ldI90T8BtC6FNH7Z8jlg",
-   "artist": "Klava Koka",
-   "title": "Дружить в губы",
-   "year": "2026",
-   "genre": "POP",
-   "roles": [
-    "mix"
-   ],
-   "cover": "abb7d694e109d8bd0f99a5fc",
-   "feat": [],
-   "hidden": false
-  },
-  {
-   "type": "single",
-   "id": "0apdLsc0ay2lG05hG0Wq7r",
-   "artist": "Klava Koka",
-   "title": "В моём сердце",
-   "year": "2026",
-   "genre": "POP",
-   "roles": [
-    "mix"
-   ],
-   "cover": "abb7d694e109d8bd0f99a5fc",
-   "feat": [],
-   "hidden": false
-  },
-  {
-   "type": "single",
-   "id": "5wBxpKuUdjZnHXuxFbhdZZ",
+   "type": "album",
+   "album_id": "deezer:953457721",
    "artist": "Klava Koka",
    "title": "Как я люблю тебя",
    "year": "2026",
@@ -109,22 +81,41 @@
     "mix"
    ],
    "cover": "abb7d694e109d8bd0f99a5fc",
-   "feat": [],
-   "hidden": false
-  },
-  {
-   "type": "single",
-   "id": "22nVYJmEJjrH5ynEM78wNh",
-   "artist": "Klava Koka",
-   "title": "Я не отдам тебя никому - Вonus track",
-   "year": "2026",
-   "genre": "POP",
-   "roles": [
-    "mix"
-   ],
-   "cover": "abb7d694e109d8bd0f99a5fc",
-   "feat": [],
-   "hidden": false
+   "hidden": false,
+   "tracks": [
+    {
+     "id": "65ldI90T8BtC6FNH7Z8jlg",
+     "title": "Дружить в губы",
+     "artist": "Klava Koka",
+     "roles": [
+      "mix"
+     ]
+    },
+    {
+     "id": "0apdLsc0ay2lG05hG0Wq7r",
+     "title": "В моём сердце",
+     "artist": "Klava Koka",
+     "roles": [
+      "mix"
+     ]
+    },
+    {
+     "id": "5wBxpKuUdjZnHXuxFbhdZZ",
+     "title": "Как я люблю тебя",
+     "artist": "Klava Koka",
+     "roles": [
+      "mix"
+     ]
+    },
+    {
+     "id": "22nVYJmEJjrH5ynEM78wNh",
+     "title": "Я не отдам тебя никому - Вonus track",
+     "artist": "Klava Koka",
+     "roles": [
+      "mix"
+     ]
+    }
+   ]
   },
   {
    "type": "single",
@@ -138,7 +129,8 @@
    ],
    "cover": "928e2c985fe31162dee7fbe1",
    "feat": [],
-   "hidden": false
+   "hidden": false,
+   "album": "luvcore (deluxe)"
   },
   {
    "type": "single",
@@ -365,46 +357,43 @@
    "hidden": false
   },
   {
-   "type": "single",
-   "id": "2kIxDpQlngRVYUAT45vOil",
+   "type": "album",
+   "album_id": "deezer:658132541",
    "artist": "PUSSYKILLER",
-   "title": "Не выноси",
+   "title": "Плохой пример",
    "year": "2024",
    "genre": "ALT",
    "roles": [
     "mix"
    ],
    "cover": "baf86c5661354a44bb14e3ef",
-   "feat": [],
-   "hidden": false
-  },
-  {
-   "type": "single",
-   "id": "6uNTSxQZsJxMW6dn9UUN5G",
-   "artist": "PUSSYKILLER",
-   "title": "На пьяную голову",
-   "year": "2024",
-   "genre": "ALT",
-   "roles": [
-    "mix"
-   ],
-   "cover": "baf86c5661354a44bb14e3ef",
-   "feat": [],
-   "hidden": false
-  },
-  {
-   "type": "single",
-   "id": "3EvyeCMdWERZWN8i3TQgfd",
-   "artist": "PUSSYKILLER",
-   "title": "Время",
-   "year": "2024",
-   "genre": "ALT",
-   "roles": [
-    "mix"
-   ],
-   "cover": "baf86c5661354a44bb14e3ef",
-   "feat": [],
-   "hidden": false
+   "hidden": false,
+   "tracks": [
+    {
+     "id": "2kIxDpQlngRVYUAT45vOil",
+     "title": "Не выноси",
+     "artist": "PUSSYKILLER",
+     "roles": [
+      "mix"
+     ]
+    },
+    {
+     "id": "6uNTSxQZsJxMW6dn9UUN5G",
+     "title": "На пьяную голову",
+     "artist": "PUSSYKILLER",
+     "roles": [
+      "mix"
+     ]
+    },
+    {
+     "id": "3EvyeCMdWERZWN8i3TQgfd",
+     "title": "Время",
+     "artist": "PUSSYKILLER",
+     "roles": [
+      "mix"
+     ]
+    }
+   ]
   },
   {
    "type": "single",
@@ -547,60 +536,51 @@
    "hidden": false
   },
   {
-   "type": "single",
-   "id": "4NHekgdl6eicmzg0CJOkor",
+   "type": "album",
+   "album_id": "deezer:408561047",
    "artist": "Асия",
-   "title": "Я не злюсь, милый",
+   "title": "ударение на А",
    "year": "2023",
    "genre": "POP",
    "roles": [
     "mix"
    ],
    "cover": "824f9bf8719b7698d158d592",
-   "feat": [],
-   "hidden": false
-  },
-  {
-   "type": "single",
-   "id": "4tifsl9u8ZxYFf4LEzNfRQ",
-   "artist": "Асия",
-   "title": "Молчу",
-   "year": "2023",
-   "genre": "POP",
-   "roles": [
-    "mix"
-   ],
-   "cover": "824f9bf8719b7698d158d592",
-   "feat": [],
-   "hidden": false
-  },
-  {
-   "type": "single",
-   "id": "71cVD3Zs8lj8iZizQ6zWLR",
-   "artist": "Асия, Slame",
-   "title": "Как ты",
-   "year": "2023",
-   "genre": "POP",
-   "roles": [
-    "mix"
-   ],
-   "cover": "824f9bf8719b7698d158d592",
-   "feat": [],
-   "hidden": false
-  },
-  {
-   "type": "single",
-   "id": "1maFgPX4y16tGKKr9b11b5",
-   "artist": "Асия",
-   "title": "Второй том (Bonus Track)",
-   "year": "2023",
-   "genre": "POP",
-   "roles": [
-    "mix"
-   ],
-   "cover": "824f9bf8719b7698d158d592",
-   "feat": [],
-   "hidden": false
+   "hidden": false,
+   "tracks": [
+    {
+     "id": "4NHekgdl6eicmzg0CJOkor",
+     "title": "Я не злюсь, милый",
+     "artist": "Асия",
+     "roles": [
+      "mix"
+     ]
+    },
+    {
+     "id": "4tifsl9u8ZxYFf4LEzNfRQ",
+     "title": "Молчу",
+     "artist": "Асия",
+     "roles": [
+      "mix"
+     ]
+    },
+    {
+     "id": "71cVD3Zs8lj8iZizQ6zWLR",
+     "title": "Как ты",
+     "artist": "Асия, Slame",
+     "roles": [
+      "mix"
+     ]
+    },
+    {
+     "id": "1maFgPX4y16tGKKr9b11b5",
+     "title": "Второй том (Bonus Track)",
+     "artist": "Асия",
+     "roles": [
+      "mix"
+     ]
+    }
+   ]
   },
   {
    "type": "single",
@@ -687,8 +667,8 @@
    "hidden": false
   },
   {
-   "type": "single",
-   "id": "4po3ub9fmp85MP6LNHQDYh",
+   "type": "album",
+   "album_id": "deezer:943666091",
    "artist": "Марфа",
    "title": "Танцуй с моей тенью",
    "year": "2026",
@@ -697,50 +677,41 @@
     "mix"
    ],
    "cover": "ddfe2584de4a09e14441d020",
-   "feat": [],
-   "hidden": false
-  },
-  {
-   "type": "single",
-   "id": "6lBXXgbs2aU83MRkHaxPpF",
-   "artist": "Марфа",
-   "title": "Темнота",
-   "year": "2026",
-   "genre": "POP",
-   "roles": [
-    "mix"
-   ],
-   "cover": "ddfe2584de4a09e14441d020",
-   "feat": [],
-   "hidden": false
-  },
-  {
-   "type": "single",
-   "id": "2FgGTDNYW10lWuOrLVBKJB",
-   "artist": "Марфа",
-   "title": "Есть на свете человек",
-   "year": "2026",
-   "genre": "POP",
-   "roles": [
-    "mix"
-   ],
-   "cover": "ddfe2584de4a09e14441d020",
-   "feat": [],
-   "hidden": false
-  },
-  {
-   "type": "single",
-   "id": "3Twq6zbBOFIbs6ePrCOSUz",
-   "artist": "Марфа",
-   "title": "Ты со мной",
-   "year": "2026",
-   "genre": "POP",
-   "roles": [
-    "mix"
-   ],
-   "cover": "ddfe2584de4a09e14441d020",
-   "feat": [],
-   "hidden": false
+   "hidden": false,
+   "tracks": [
+    {
+     "id": "4po3ub9fmp85MP6LNHQDYh",
+     "title": "Танцуй с моей тенью",
+     "artist": "Марфа",
+     "roles": [
+      "mix"
+     ]
+    },
+    {
+     "id": "6lBXXgbs2aU83MRkHaxPpF",
+     "title": "Темнота",
+     "artist": "Марфа",
+     "roles": [
+      "mix"
+     ]
+    },
+    {
+     "id": "2FgGTDNYW10lWuOrLVBKJB",
+     "title": "Есть на свете человек",
+     "artist": "Марфа",
+     "roles": [
+      "mix"
+     ]
+    },
+    {
+     "id": "3Twq6zbBOFIbs6ePrCOSUz",
+     "title": "Ты со мной",
+     "artist": "Марфа",
+     "roles": [
+      "mix"
+     ]
+    }
+   ]
   },
   {
    "type": "single",
@@ -869,60 +840,51 @@
    "hidden": false
   },
   {
-   "type": "single",
-   "id": "3aNbBcLOS50mEpxPYemK4g",
+   "type": "album",
+   "album_id": "deezer:683277911",
    "artist": "VERBEE",
-   "title": "Расклад",
+   "title": "Простой. Часть 2",
    "year": "2024",
    "genre": "POP",
    "roles": [
     "mix"
    ],
    "cover": "740da9c5587c7ddd1d343e44",
-   "feat": [],
-   "hidden": false
-  },
-  {
-   "type": "single",
-   "id": "7DkAui4Fah1RpcR1sOo7ah",
-   "artist": "VERBEE, Анетта",
-   "title": "Истерика",
-   "year": "2024",
-   "genre": "POP",
-   "roles": [
-    "mix"
-   ],
-   "cover": "740da9c5587c7ddd1d343e44",
-   "feat": [],
-   "hidden": false
-  },
-  {
-   "type": "single",
-   "id": "3QBcqjya0wgIF2HCcKyqf8",
-   "artist": "VERBEE",
-   "title": "Ярче",
-   "year": "2024",
-   "genre": "POP",
-   "roles": [
-    "mix"
-   ],
-   "cover": "740da9c5587c7ddd1d343e44",
-   "feat": [],
-   "hidden": false
-  },
-  {
-   "type": "single",
-   "id": "30f2EMEngxYVKtdCjw7OlY",
-   "artist": "VERBEE",
-   "title": "Просто болит",
-   "year": "2024",
-   "genre": "POP",
-   "roles": [
-    "mix"
-   ],
-   "cover": "740da9c5587c7ddd1d343e44",
-   "feat": [],
-   "hidden": false
+   "hidden": false,
+   "tracks": [
+    {
+     "id": "3aNbBcLOS50mEpxPYemK4g",
+     "title": "Расклад",
+     "artist": "VERBEE",
+     "roles": [
+      "mix"
+     ]
+    },
+    {
+     "id": "7DkAui4Fah1RpcR1sOo7ah",
+     "title": "Истерика",
+     "artist": "VERBEE, Анетта",
+     "roles": [
+      "mix"
+     ]
+    },
+    {
+     "id": "3QBcqjya0wgIF2HCcKyqf8",
+     "title": "Ярче",
+     "artist": "VERBEE",
+     "roles": [
+      "mix"
+     ]
+    },
+    {
+     "id": "30f2EMEngxYVKtdCjw7OlY",
+     "title": "Просто болит",
+     "artist": "VERBEE",
+     "roles": [
+      "mix"
+     ]
+    }
+   ]
   },
   {
    "type": "single",

@@ -1,0 +1,255 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>КАССА: вопросы и ответы — сведение, мастеринг и продакшн</title><meta name="description" content="КАССА — Артём Ткачев, звукорежиссёр и продюсер из Москвы, работает в профессии более 10 лет и принимает работу в собственной студии. Делает сведение, мастеринг и продакшн, а также выпускает музыку под своим именем. В открытом каталоге на этом сайте — 100 треков для 28 артистов, среди них VERBEE, Kla"><link rel="canonical" href="https://artkachev.github.io/faq/"><meta name="robots" content="index, follow"><meta property="og:type" content="website"><meta property="og:site_name" content="КАССА"><meta property="og:title" content="КАССА: вопросы и ответы — сведение, мастеринг и продакшн"><meta property="og:description" content="КАССА — Артём Ткачев, звукорежиссёр и продюсер из Москвы, работает в профессии более 10 лет и принимает работу в собственной студии. Делает сведение, мастеринг и продакшн, а также выпускает музыку под своим именем. В открытом каталоге на этом сайте — 100 треков для 28 артистов, среди них VERBEE, Kla"><meta property="og:url" content="https://artkachev.github.io/faq/"><meta name="twitter:card" content="summary"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Golos%20Text:wght@400;500;700&subset=cyrillic,cyrillic-ext,latin,latin-ext&display=swap"><style>:root{--bg: #12100f;--accent: #e0a33c;--font-head: 'Oswald', 'Arial Narrow', system-ui, sans-serif;--font-body: 'Golos Text', system-ui, -apple-system, sans-serif;}
+/* ── основа ─────────────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --ink:#f4f1ee;            /* основной текст */
+  --ink-dim:#a8a19b;        /* второстепенный */
+  --line:rgba(244,241,238,.13);
+  --surface:rgba(244,241,238,.04);
+  --shadow:0 18px 40px -18px rgba(0,0,0,.75);
+  --step:clamp(14px,1.6vw,20px);
+  --maxw:1320px;
+}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:var(--font-body);font-size:16px;line-height:1.6;
+  font-feature-settings:"kern" 1;
+  -webkit-font-smoothing:antialiased;
+  padding-bottom:96px;               /* место под панель плеера */
+}
+::selection{background:var(--accent);color:#fff}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+html{scrollbar-color:var(--accent) var(--bg)}
+::-webkit-scrollbar{width:11px;height:11px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:#3a3431;border-radius:99px;border:3px solid var(--bg)}
+::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+a{color:inherit}
+img{max-width:100%;display:block}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.pf{max-width:var(--maxw);margin:0 auto;padding:0 var(--step)}
+
+/* ── шапка ──────────────────────────────────────────────────────── */
+.pfnav{display:flex;align-items:baseline;justify-content:space-between;
+  gap:20px;padding:34px 0 6px;flex-wrap:wrap}
+.brand{font-family:var(--font-head);font-weight:700;text-transform:uppercase;
+  font-size:clamp(34px,6.4vw,64px);line-height:.9;letter-spacing:.005em;margin:0}
+.brand a{text-decoration:none}
+.tagline{color:var(--ink-dim);font-size:15px;letter-spacing:.01em;margin:10px 0 0}
+.facts{display:flex;gap:18px;flex-wrap:wrap;margin:14px 0 0;padding:0;list-style:none;
+  font-size:12px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-dim)}
+.facts b{color:var(--ink);font-weight:500}
+.navlinks{display:flex;gap:18px;align-items:center;font-family:var(--font-head);
+  font-weight:500;text-transform:uppercase;letter-spacing:.09em;font-size:13px}
+.navlinks a{text-decoration:none;color:var(--ink-dim);padding:12px 2px;transition:color .18s}
+.navlinks a:hover{color:var(--ink)}
+
+/* ── фильтры ────────────────────────────────────────────────────── */
+.filters{display:flex;flex-wrap:wrap;gap:6px 22px;margin:30px 0 22px;
+  border-top:1px solid var(--line);padding-top:20px}
+.filters button{
+  background:none;border:0;padding:11px 0;cursor:pointer;color:var(--ink-dim);
+  font-family:var(--font-head);font-weight:500;font-size:14px;
+  text-transform:uppercase;letter-spacing:.1em;min-height:44px;
+  transition:color .18s}
+.filters button:hover{color:var(--ink)}
+.filters button[aria-pressed="true"]{color:var(--accent)}
+.fc{font-family:var(--font-body);font-size:11px;font-weight:500;
+  letter-spacing:0;vertical-align:super;margin-left:5px;opacity:.65}
+
+/* ── сетка работ ────────────────────────────────────────────────── */
+.grid{display:grid;gap:clamp(10px,1.1vw,16px);
+  grid-template-columns:repeat(auto-fill,minmax(min(230px,100%),1fr));
+  margin:0 0 70px;padding:0;list-style:none}
+.tile{position:relative;display:block;width:100%;padding:0;border:0;cursor:pointer;
+  background:var(--surface);border-radius:3px;overflow:hidden;text-align:left;
+  aspect-ratio:1;color:var(--ink);isolation:isolate}
+.tile img{width:100%;height:100%;object-fit:cover;
+  transition:transform .5s cubic-bezier(.16,.84,.34,1),filter .35s}
+.tile::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(8,7,6,.94) 0,rgba(8,7,6,.72) 26%,rgba(8,7,6,.06) 58%,transparent 100%)}
+.tile:hover img,.tile:focus-visible img{transform:scale(1.045)}
+.tmeta{position:absolute;left:0;right:0;bottom:0;z-index:1;padding:14px 15px 15px}
+.tartist{font-family:var(--font-head);font-weight:700;text-transform:uppercase;
+  font-size:12px;letter-spacing:.08em;color:var(--accent);margin:0 0 3px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ttitle{font-size:15px;font-weight:500;line-height:1.25;margin:0;color:#fff;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tbadge{position:absolute;top:11px;right:11px;z-index:1;
+  font-family:var(--font-head);font-weight:500;font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:#fff;background:rgba(8,7,6,.66);
+  backdrop-filter:blur(6px);padding:5px 8px;border-radius:2px}
+.tile.playing .tartist{color:#fff}
+.tile.playing::before{content:"";position:absolute;inset:0;z-index:2;
+  border:2px solid var(--accent);border-radius:3px;pointer-events:none}
+.tile.retap .tmeta::before{content:"нажми ещё раз";display:block;
+  font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);
+  margin-bottom:5px;animation:retap 1.1s ease-in-out infinite}
+@keyframes retap{0%,100%{opacity:.45}50%{opacity:1}}
+
+/* ── панель плеера ──────────────────────────────────────────────── */
+#player{position:fixed;left:0;right:0;bottom:0;z-index:40;
+  background:rgba(10,9,8,.93);backdrop-filter:blur(14px);
+  border-top:1px solid var(--line);box-shadow:var(--shadow);
+  transform:translateY(105%);transition:transform .42s cubic-bezier(.16,.84,.34,1)}
+#player.on{transform:none}
+#player .inner{max-width:var(--maxw);margin:0 auto;padding:8px var(--step)}
+#player iframe{width:100%;height:80px;border:0;display:block}
+
+/* ── окно альбома ───────────────────────────────────────────────── */
+#amodal{position:fixed;inset:0;z-index:60;display:none;
+  background:rgba(6,5,5,.86);backdrop-filter:blur(3px);
+  align-items:center;justify-content:center;padding:var(--step)}
+#amodal.on{display:flex}
+#amodal .box{background:#191614;border:1px solid var(--line);border-radius:4px;
+  width:min(560px,100%);max-height:82vh;overflow:auto;box-shadow:var(--shadow)}
+#amodal header{display:flex;gap:14px;align-items:center;padding:18px;
+  border-bottom:1px solid var(--line);position:sticky;top:0;background:#191614}
+#amodal header img{width:64px;height:64px;border-radius:2px;flex:none}
+#amodal h2{font-family:var(--font-head);text-transform:uppercase;font-weight:700;
+  font-size:19px;line-height:1.1;margin:0}
+#amodal .who{color:var(--accent);font-size:12px;letter-spacing:.08em;
+  text-transform:uppercase;margin:0 0 4px;font-family:var(--font-head);font-weight:500}
+#amodal ol{list-style:none;margin:0;padding:8px 0 12px}
+#amodal li button{width:100%;background:none;border:0;color:var(--ink);cursor:pointer;
+  text-align:left;padding:13px 18px;font:inherit;min-height:46px;
+  display:flex;gap:12px;align-items:baseline;transition:background .16s}
+#amodal li button:hover{background:var(--surface)}
+#amodal li .n{color:var(--ink-dim);font-size:12px;min-width:20px}
+#amodal .close{position:absolute;top:14px;right:16px;background:none;border:0;
+  color:var(--ink-dim);font-size:26px;line-height:1;cursor:pointer;
+  min-width:44px;min-height:44px}
+
+/* ── страница трека ─────────────────────────────────────────────── */
+.trk{display:grid;gap:38px;grid-template-columns:minmax(0,300px) minmax(0,1fr);
+  align-items:start;margin:26px 0 60px}
+.trk .cover{border-radius:3px;box-shadow:var(--shadow)}
+.trk h1{font-family:var(--font-head);font-weight:700;text-transform:uppercase;
+  font-size:clamp(27px,4.2vw,46px);line-height:1.02;margin:0 0 16px;letter-spacing:.004em}
+.lead{font-size:17px;line-height:1.65;max-width:68ch;margin:0 0 20px;color:var(--ink)}
+.trk p{max-width:68ch}
+.roles{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 24px;padding:0;list-style:none}
+.roles li{font-family:var(--font-head);font-weight:500;text-transform:uppercase;
+  font-size:12px;letter-spacing:.1em;border:1px solid var(--line);
+  padding:8px 11px;border-radius:2px;color:var(--ink-dim)}
+.roles li:first-child{color:var(--accent);border-color:var(--accent)}
+.trk .embed{width:100%;height:152px;border:0;border-radius:12px;margin:6px 0 26px}
+.back{display:inline-block;margin:0 0 6px;color:var(--ink-dim);text-decoration:none;
+  font-family:var(--font-head);font-weight:500;text-transform:uppercase;
+  letter-spacing:.09em;font-size:12px;padding:12px 0}
+.back:hover{color:var(--accent)}
+
+/* ── каталог работ ──────────────────────────────────────────────── */
+.hub h1{font-family:var(--font-head);font-weight:700;text-transform:uppercase;
+  font-size:clamp(28px,5vw,50px);line-height:1;margin:18px 0 18px}
+.hub .lead{font-size:17px;line-height:1.65;max-width:74ch;margin:0 0 14px}
+.hub .counter{font-family:var(--font-head);font-weight:500;font-size:12px;
+  letter-spacing:.11em;text-transform:uppercase;color:var(--ink-dim);margin:0 0 22px}
+
+/* указатель по буквам */
+.alpha{display:flex;flex-wrap:wrap;gap:2px 4px;margin:0 0 44px;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:12px 0}
+.alpha a{font-family:var(--font-head);font-weight:500;font-size:13px;
+  letter-spacing:.06em;color:var(--ink-dim);text-decoration:none;
+  min-width:34px;min-height:34px;display:inline-flex;align-items:center;
+  justify-content:center;border-radius:2px;transition:color .16s,background .16s}
+.alpha a:hover{color:var(--accent);background:var(--surface)}
+
+/* буква-разделитель */
+.hub .ltr{font-family:var(--font-head);font-weight:700;font-size:clamp(40px,7vw,74px);
+  line-height:1;color:var(--line);margin:46px 0 14px;scroll-margin-top:18px;
+  border-bottom:1px solid var(--line);padding-bottom:10px}
+
+/* артист */
+.art{margin:0 0 30px;scroll-margin-top:18px}
+.art h3{font-family:var(--font-head);font-weight:700;text-transform:uppercase;
+  font-size:16px;letter-spacing:.08em;color:var(--accent);margin:0 0 8px;
+  display:flex;align-items:baseline;gap:9px}
+.art .cnt{font-family:var(--font-body);font-weight:500;font-size:11px;
+  letter-spacing:0;color:var(--ink-dim)}
+.hub ul{list-style:none;margin:0;padding:0;
+  display:grid;gap:0 26px;grid-template-columns:repeat(auto-fill,minmax(290px,1fr))}
+.hub li a{display:block;padding:9px 0;text-decoration:none;color:var(--ink);
+  font-size:15px;transition:color .16s}
+.hub li a:hover{color:var(--accent)}
+.hub .yr{color:var(--ink-dim);font-size:13px;margin-left:7px}
+.hub .with{color:var(--ink-dim);font-size:13px}
+
+/* альбом внутри артиста */
+.alb{margin:0 0 14px;border-left:2px solid var(--line);padding-left:15px}
+.albhead{margin:0 0 2px;font-size:15px;font-weight:500;
+  display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
+.albtag{font-family:var(--font-head);font-weight:500;font-size:10px;
+  letter-spacing:.11em;text-transform:uppercase;color:var(--ink-dim);
+  border:1px solid var(--line);padding:2px 6px;border-radius:2px}
+.subhead{font-family:var(--font-head);font-weight:500;font-size:11px;
+  letter-spacing:.11em;text-transform:uppercase;color:var(--ink-dim);margin:12px 0 0}
+
+/* ── вопросы и ответы ───────────────────────────────────────────── */
+.faq h1{font-family:var(--font-head);font-weight:700;text-transform:uppercase;
+  font-size:clamp(26px,4.4vw,46px);line-height:1.04;margin:18px 0 18px;max-width:20ch}
+.faq .lead{font-size:17px;line-height:1.65;max-width:70ch;margin:0 0 24px}
+.tldr{border:1px solid var(--line);border-left:2px solid var(--accent);
+  border-radius:2px;padding:18px 20px;margin:0 0 30px;max-width:78ch;
+  background:var(--surface)}
+.tldr p:last-child{margin:0;font-size:16px;line-height:1.7}
+.tldr .subhead{margin:0 0 8px}
+.num{color:var(--accent);font-weight:500;font-variant-numeric:tabular-nums}
+
+.faqtabs{display:flex;flex-wrap:wrap;gap:4px 20px;margin:0 0 34px;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:6px 0}
+.faqtabs a{font-family:var(--font-head);font-weight:500;font-size:13px;
+  text-transform:uppercase;letter-spacing:.09em;color:var(--ink-dim);
+  text-decoration:none;padding:11px 0;min-height:44px;display:inline-flex;
+  align-items:center;transition:color .16s}
+.faqtabs a:hover{color:var(--accent)}
+
+.faqsec{margin:0 0 34px;scroll-margin-top:18px}
+.faqsec h2{font-family:var(--font-head);font-weight:700;text-transform:uppercase;
+  font-size:15px;letter-spacing:.09em;color:var(--accent);margin:0 0 4px;
+  padding-bottom:9px;border-bottom:1px solid var(--line)}
+.faq details{border-bottom:1px solid var(--line);scroll-margin-top:18px}
+.faq summary{cursor:pointer;padding:16px 34px 16px 0;position:relative;
+  font-size:16px;line-height:1.45;list-style:none;transition:color .16s}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary:hover{color:var(--accent)}
+.faq summary::after{content:"+";position:absolute;right:6px;top:50%;
+  transform:translateY(-50%);color:var(--ink-dim);font-size:20px;line-height:1}
+.faq details[open] summary{color:var(--accent)}
+.faq details[open] summary::after{content:"–";color:var(--accent)}
+.faq .ans{padding:0 0 20px;max-width:74ch;color:var(--ink-dim);
+  font-size:16px;line-height:1.72}
+.faq .ans a{color:var(--ink);text-decoration:underline;
+  text-decoration-color:var(--line);text-underline-offset:3px}
+.faq .ans a:hover{color:var(--accent);text-decoration-color:var(--accent)}
+.faq .upd{color:var(--ink-dim);font-size:13px;margin:26px 0 40px}
+
+/* ── подвал ─────────────────────────────────────────────────────── */
+.foot{border-top:1px solid var(--line);padding:38px 0 46px;margin-top:20px}
+.foot h2{font-family:var(--font-head);font-weight:700;text-transform:uppercase;
+  font-size:clamp(22px,3.4vw,34px);line-height:1.05;margin:0 0 18px}
+.cts{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 26px;padding:0;list-style:none}
+.cts a{display:inline-flex;align-items:center;min-height:46px;padding:0 20px;
+  text-decoration:none;border:1px solid var(--line);border-radius:2px;
+  font-family:var(--font-head);font-weight:500;text-transform:uppercase;
+  letter-spacing:.09em;font-size:13px;transition:border-color .18s,color .18s}
+.cts a:hover{border-color:var(--accent);color:var(--accent)}
+.cts a.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.cts a.primary:hover{filter:brightness(1.1);color:#fff}
+.foot .small{color:var(--ink-dim);font-size:13px;margin:0}
+.foot .small a{color:var(--ink-dim)}
+
+/* ── адаптив ────────────────────────────────────────────────────── */
+@media (max-width:760px){
+  .trk{grid-template-columns:1fr;gap:24px}
+  .trk .cover{max-width:290px}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(min(158px,47%),1fr))}
+  .filters{gap:2px 16px}
+  #player iframe{height:80px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;
+    animation-iteration-count:1!important;transition-duration:.001ms!important}
+}
+</style></head><body><div class="pf faq"><header class="pfnav"><div><h1 class="brand"><a href="/">КАССА</a></h1><p class="tagline">звукорежиссёр и продюсер</p></div><nav class="navlinks"><a href="/">Работы</a><a href="/track/">Все треки</a><a href="/faq/">Вопросы</a><a href="https://www.instagram.com/freekacca/" target="_blank" rel="noopener">Instagram</a></nav></header><a class="back" href="/track/">← Все треки</a><h1>Вопросы и ответы: сведение, мастеринг и продакшн</h1><p class="lead">Здесь собраны вопросы, которые чаще всего задают перед заказом. Не нашли свой — напишите в <a href="https://t.me/fkacca">Telegram</a>.</p><aside class="tldr"><p class="subhead">Коротко</p><p>КАССА — Артём Ткачев, звукорежиссёр и продюсер из Москвы, работает в профессии более <span class="num">10 лет</span> и принимает работу в собственной студии. Делает сведение, мастеринг и продакшн, а также выпускает музыку под своим именем. В открытом каталоге на этом сайте — <span class="num">100</span> треков для <span class="num">28</span> артистов, среди них VERBEE, Klava Koka, Асия, XARISTA, Марфа, PUSSYKILLER, Ваня Дмитриенко, Mary Gu и Imanbek. Стоимость обсуждается индивидуально под задачу.</p></aside><nav class="faqtabs" aria-label="Разделы"><a href="#s-about">О КАССЕ<span class="fc">5</span></a><a href="#s-works">Работы<span class="fc">6</span></a><a href="#s-approach">Подход к работе<span class="fc">3</span></a><a href="#s-order">Цены и заказ<span class="fc">6</span></a><a href="#s-education">Обучение<span class="fc">1</span></a><a href="#s-social">Соцсети<span class="fc">1</span></a></nav><section class="faqsec" id="s-about"><h2>О КАССЕ</h2><details id="q-kto-takoy-kassa"><summary>Кто такой КАССА?</summary><div class="ans">КАССА — рабочее имя Артёма Ткачева, звукорежиссёра и продюсера из Москвы. Он занимается музыкой профессионально более <span class="num">10 лет</span>: сводит, мастерит и продюсирует треки артистов русскоязычной сцены. В открытом каталоге на этом сайте собрано <span class="num">100</span> работ для <span class="num">28</span> артистов, выпущенных с 2021 по 2026 год.</div></details><details id="q-kto-takoy-artem-tkachev"><summary>Кто такой Артём Ткачев?</summary><div class="ans">Артём Ткачев — это и есть КАССА: звукорежиссёр, продюсер и артист. Под этим именем он выпускает собственную музыку и одновременно работает над релизами других исполнителей — от поп-артистов вроде Klava Koka и Асии до хип-хоп и альтернативных проектов.</div></details><details id="q-kassa-eto-artist-ili-zvukorezhisser"><summary>КАССА — это артист или звукорежиссёр?</summary><div class="ans">И то, и другое. КАССА выпускает свою музыку как артист — в каталоге есть треки «Трезво», «Не отрицай» и «Буря», — и параллельно работает звукорежиссёром и продюсером над чужими релизами. Большая часть каталога на этом сайте — работы для других исполнителей.</div></details><details id="q-gde-nahoditsya-studiya"><summary>Где находится студия?</summary><div class="ans">Студия находится в Москве. Работать можно и на месте, и удалённо: для сведения достаточно прислать мультитрек, личное присутствие не обязательно.</div></details><details id="q-kak-svyazatsya-s-kassoy"><summary>Как связаться с КАССОЙ?</summary><div class="ans">Быстрее всего — в Telegram: <a href="https://t.me/fkacca">@fkacca</a>. Можно написать на почту <a href="mailto:freekacca@gmail.com">freekacca@gmail.com</a> или в <a href="https://www.instagram.com/freekacca/">Instagram</a>.</div></details></section><section class="faqsec" id="s-works"><h2>Работы</h2><details id="q-s-kakimi-artistami-rabotal-kassa"><summary>С какими артистами работал КАССА?</summary><div class="ans">В каталоге <span class="num">28</span> артистов: VERBEE, Klava Koka, XARISTA, Асия, PUSSYKILLER, Марфа, metatka, Wicsur, Анетта, Линочка Ли, ANAZED, KDDK, VOIDCAT, Ваня Дмитриенко, Mary Gu, Imanbek, ARYUNA, ISB, Leningrad, Morandi, RARA, Rychovaa, Tima Belorusskih, VASYALISA, Софа Купер, помогисебесоня, 5УТРА и сам КАССА. Полный список с треками — на странице <a href="/track/">всех работ</a>.</div></details><details id="q-skolko-trekov-v-kataloge"><summary>Сколько треков в каталоге?</summary><div class="ans"><span class="num">100</span> треков для <span class="num">28</span> артистов, включая <span class="num">5</span> альбомов и EP. Релизы охватывают период с 2021 по 2026 год. Каталог открытый — каждый трек имеет <a href="/track/">отдельную страницу</a> с обложкой, плеером и указанием роли.</div></details><details id="q-kto-rabotal-nad-trekami-verbee"><summary>Кто работал над треками VERBEE?</summary><div class="ans">VERBEE — самый большой блок каталога: <span class="num">17</span> треков, среди них весь блок из альбома «Простой. Часть 2» (2024) — «Расклад», «Истерика», «Ярче», «Просто болит» — и синглы «Быстротечна», «Где ты, где я?», «Группа крови», «ЭТО МОЙ СТИЛЬ», «НЕДОСТУПЕН» и другие. Все они собраны <a href="/track/#a-verbee">в каталоге</a>.</div></details><details id="q-kto-rabotal-nad-trekami-klava-koka"><summary>Кто работал над треками Klava Koka?</summary><div class="ans">В каталоге <span class="num">9</span> треков Klava Koka, включая EP «Как я люблю тебя» (2026) целиком — «Дружить в губы», «В моём сердце», «Как я люблю тебя», «Я не отдам тебя никому» — а также «Журавли» с JONY, «СПЛЕТНИ. ШУМ. ЛУК.», «Сто шагов назад» и «Ты достоин». Список — <a href="/track/#a-klava-koka">здесь</a>.</div></details><details id="q-kakie-albomy-i-ep-est-v-kataloge"><summary>Какие альбомы и EP есть в каталоге?</summary><div class="ans">Пять релизов целиком или почти целиком: «Как я люблю тебя» — Klava Koka (2026), «Танцуй с моей тенью» — Марфа (2026), «Простой. Часть 2» — VERBEE (2024), «Плохой пример» — PUSSYKILLER (2024) и «ударение на А» — Асия (2023). Каждый альбом на <a href="/track/">странице работ</a> показан отдельным блоком со списком треков.</div></details><details id="q-v-kakih-zhanrah-rabotaet-kassa"><summary>В каких жанрах работает КАССА?</summary><div class="ans">Основной жанр — поп-музыка: это около двух третей каталога. Дальше идут хип-хоп и рэп, альтернатива, электроника и рок. На <a href="/">главной странице</a> работы можно отфильтровать по жанру.</div></details></section><section class="faqsec" id="s-approach"><h2>Подход к работе</h2><details id="q-kto-imenno-rabotaet-nad-trekom"><summary>Кто именно работает над треком?</summary><div class="ans">Работу ведёт сам Артём в своей студии в Москве. Сроки и объём обсуждаются до старта — под каждый проект отдельно, поэтому договориться лучше заранее.</div></details><details id="q-chto-vhodit-v-svedenie"><summary>Что входит в сведение?</summary><div class="ans">Сведение — это сборка готовых дорожек в цельный трек: баланс инструментов и вокала, эквализация, компрессия, обработка эффектами, панорама и глубина, чистка исходников. На выходе получается микс, готовый к мастерингу.</div></details><details id="q-chem-svedenie-otlichaetsya-ot-masteringa"><summary>Чем сведение отличается от мастеринга?</summary><div class="ans">Сведение работает с отдельными дорожками и определяет, как трек звучит внутри. Мастеринг работает уже с готовым миксом как с единым целым: выравнивает громкость и тональный баланс, готовит файл к загрузке на площадки и сводит альбом к общему звучанию. Это разные этапы, их можно заказать вместе или по отдельности.</div></details></section><section class="faqsec" id="s-order"><h2>Цены и заказ</h2><details id="q-skolko-stoit-svedenie-treka"><summary>Сколько стоит сведение трека?</summary><div class="ans">Цена договорная и зависит от материала: количества дорожек, состояния исходников и объёма работы. Точную стоимость КАССА называет после того, как послушает трек — напишите в <a href="https://t.me/fkacca">Telegram</a> и пришлите демо.</div></details><details id="q-skolko-stoit-mastering"><summary>Сколько стоит мастеринг?</summary><div class="ans">Мастеринг тоже обсуждается индивидуально. Если нужны сведение и мастеринг вместе, условия удобнее оговорить сразу одним пакетом — напишите в <a href="https://t.me/fkacca">Telegram</a>.</div></details><details id="q-mozhno-li-zakazat-prodakshn-treka-s-nulya"><summary>Можно ли заказать продакшн трека с нуля?</summary><div class="ans">Да. Помимо сведения и мастеринга КАССА делает продакшн — бит и аранжировку с нуля под конкретную задачу артиста. Условия и сроки такой работы обсуждаются отдельно.</div></details><details id="q-kak-zakazat-svedenie"><summary>Как заказать сведение?</summary><div class="ans">Напишите в <a href="https://t.me/fkacca">Telegram</a> или на <a href="mailto:freekacca@gmail.com">почту</a>, коротко опишите задачу и приложите демо или референс. После прослушивания КАССА назовёт стоимость и срок.</div></details><details id="q-chto-prislat-chtoby-zakazat-svedenie"><summary>Что прислать, чтобы заказать сведение?</summary><div class="ans">Мультитрек в формате WAV, 24 бита: каждая дорожка отдельным файлом, все — от одной точки старта, без мастер-обработки на общей шине. Полезно приложить референс — трек, звучание которого вам нравится, — и черновой микс, если он есть.</div></details><details id="q-skolko-vremeni-zanimaet-rabota-i-skolko-pravok-vhodit"><summary>Сколько времени занимает работа и сколько правок входит?</summary><div class="ans">Зависит от проекта: срок и количество правок обсуждаются до начала работы, вместе со стоимостью. Обычно этого хватает, чтобы довести микс до результата, который устраивает артиста.</div></details></section><section class="faqsec" id="s-education"><h2>Обучение</h2><details id="q-mozhno-li-uchitsya-u-kassy"><summary>Можно ли учиться у КАССЫ?</summary><div class="ans">Да, КАССА проводит индивидуальные занятия — разборы работ и обучение сведению один на один. Записаться и уточнить формат можно в <a href="https://t.me/fkacca">Telegram</a>.</div></details></section><section class="faqsec" id="s-social"><h2>Соцсети</h2><details id="q-gde-sledit-za-kassoy"><summary>Где следить за КАССОЙ?</summary><div class="ans">Основная площадка — <a href="https://t.me/fkacca">Telegram</a>, там же удобнее всего писать по работе. Ещё есть <a href="https://www.instagram.com/freekacca/">Instagram</a>. Все опубликованные работы — на <a href="/track/">странице каталога</a>.</div></details></section><p class="small upd">Последнее обновление: 2026-08-31.</p></div><footer class="foot"><div class="pf"><h2>Связаться</h2><ul class="cts"><li><a class="primary" href="https://t.me/fkacca" target="_blank" rel="noopener">Telegram</a></li><li><a class="" href="mailto:freekacca@gmail.com" target="_blank" rel="noopener">Почта</a></li></ul><p class="small">КАССА · 2026</p></div></footer><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "url": "https://artkachev.github.io/faq/", "name": "КАССА: вопросы и ответы — сведение, мастеринг и продакшн", "inLanguage": "ru", "about": {"@type": "Person", "name": "КАССА", "url": "https://artkachev.github.io/", "jobTitle": "звукорежиссёр и продюсер"}, "mainEntity": [{"@type": "Question", "name": "Кто такой КАССА?", "acceptedAnswer": {"@type": "Answer", "text": "КАССА — рабочее имя Артёма Ткачева, звукорежиссёра и продюсера из Москвы. Он занимается музыкой профессионально более 10 лет: сводит, мастерит и продюсирует треки артистов русскоязычной сцены. В открытом каталоге на этом сайте собрано 100 работ для 28 артистов, выпущенных с 2021 по 2026 год."}}, {"@type": "Question", "name": "Кто такой Артём Ткачев?", "acceptedAnswer": {"@type": "Answer", "text": "Артём Ткачев — это и есть КАССА: звукорежиссёр, продюсер и артист. Под этим именем он выпускает собственную музыку и одновременно работает над релизами других исполнителей — от поп-артистов вроде Klava Koka и Асии до хип-хоп и альтернативных проектов."}}, {"@type": "Question", "name": "КАССА — это артист или звукорежиссёр?", "acceptedAnswer": {"@type": "Answer", "text": "И то, и другое. КАССА выпускает свою музыку как артист — в каталоге есть треки «Трезво», «Не отрицай» и «Буря», — и параллельно работает звукорежиссёром и продюсером над чужими релизами. Большая часть каталога на этом сайте — работы для других исполнителей."}}, {"@type": "Question", "name": "Где находится студия?", "acceptedAnswer": {"@type": "Answer", "text": "Студия находится в Москве. Работать можно и на месте, и удалённо: для сведения достаточно прислать мультитрек, личное присутствие не обязательно."}}, {"@type": "Question", "name": "Как связаться с КАССОЙ?", "acceptedAnswer": {"@type": "Answer", "text": "Быстрее всего — в Telegram: @fkacca. Можно написать на почту freekacca@gmail.com или в Instagram."}}, {"@type": "Question", "name": "С какими артистами работал КАССА?", "acceptedAnswer": {"@type": "Answer", "text": "В каталоге 28 артистов: VERBEE, Klava Koka, XARISTA, Асия, PUSSYKILLER, Марфа, metatka, Wicsur, Анетта, Линочка Ли, ANAZED, KDDK, VOIDCAT, Ваня Дмитриенко, Mary Gu, Imanbek, ARYUNA, ISB, Leningrad, Morandi, RARA, Rychovaa, Tima Belorusskih, VASYALISA, Софа Купер, помогисебесоня, 5УТРА и сам КАССА. Полный список с треками — на странице всех работ."}}, {"@type": "Question", "name": "Сколько треков в каталоге?", "acceptedAnswer": {"@type": "Answer", "text": "100 треков для 28 артистов, включая 5 альбомов и EP. Релизы охватывают период с 2021 по 2026 год. Каталог открытый — каждый трек имеет отдельную страницу с обложкой, плеером и указанием роли."}}, {"@type": "Question", "name": "Кто работал над треками VERBEE?", "acceptedAnswer": {"@type": "Answer", "text": "VERBEE — самый большой блок каталога: 17 треков, среди них весь блок из альбома «Простой. Часть 2» (2024) — «Расклад», «Истерика», «Ярче», «Просто болит» — и синглы «Быстротечна», «Где ты, где я?», «Группа крови», «ЭТО МОЙ СТИЛЬ», «НЕДОСТУПЕН» и другие. Все они собраны в каталоге."}}, {"@type": "Question", "name": "Кто работал над треками Klava Koka?", "acceptedAnswer": {"@type": "Answer", "text": "В каталоге 9 треков Klava Koka, включая EP «Как я люблю тебя» (2026) целиком — «Дружить в губы», «В моём сердце», «Как я люблю тебя», «Я не отдам тебя никому» — а также «Журавли» с JONY, «СПЛЕТНИ. ШУМ. ЛУК.», «Сто шагов назад» и «Ты достоин». Список — здесь."}}, {"@type": "Question", "name": "Какие альбомы и EP есть в каталоге?", "acceptedAnswer": {"@type": "Answer", "text": "Пять релизов целиком или почти целиком: «Как я люблю тебя» — Klava Koka (2026), «Танцуй с моей тенью» — Марфа (2026), «Простой. Часть 2» — VERBEE (2024), «Плохой пример» — PUSSYKILLER (2024) и «ударение на А» — Асия (2023). Каждый альбом на странице работ показан отдельным блоком со списком треков."}}, {"@type": "Question", "name": "В каких жанрах работает КАССА?", "acceptedAnswer": {"@type": "Answer", "text": "Основной жанр — поп-музыка: это около двух третей каталога. Дальше идут хип-хоп и рэп, альтернатива, электроника и рок. На главной странице работы можно отфильтровать по жанру."}}, {"@type": "Question", "name": "Кто именно работает над треком?", "acceptedAnswer": {"@type": "Answer", "text": "Работу ведёт сам Артём в своей студии в Москве. Сроки и объём обсуждаются до старта — под каждый проект отдельно, поэтому договориться лучше заранее."}}, {"@type": "Question", "name": "Что входит в сведение?", "acceptedAnswer": {"@type": "Answer", "text": "Сведение — это сборка готовых дорожек в цельный трек: баланс инструментов и вокала, эквализация, компрессия, обработка эффектами, панорама и глубина, чистка исходников. На выходе получается микс, готовый к мастерингу."}}, {"@type": "Question", "name": "Чем сведение отличается от мастеринга?", "acceptedAnswer": {"@type": "Answer", "text": "Сведение работает с отдельными дорожками и определяет, как трек звучит внутри. Мастеринг работает уже с готовым миксом как с единым целым: выравнивает громкость и тональный баланс, готовит файл к загрузке на площадки и сводит альбом к общему звучанию. Это разные этапы, их можно заказать вместе или по отдельности."}}, {"@type": "Question", "name": "Сколько стоит сведение трека?", "acceptedAnswer": {"@type": "Answer", "text": "Цена договорная и зависит от материала: количества дорожек, состояния исходников и объёма работы. Точную стоимость КАССА называет после того, как послушает трек — напишите в Telegram и пришлите демо."}}, {"@type": "Question", "name": "Сколько стоит мастеринг?", "acceptedAnswer": {"@type": "Answer", "text": "Мастеринг тоже обсуждается индивидуально. Если нужны сведение и мастеринг вместе, условия удобнее оговорить сразу одним пакетом — напишите в Telegram."}}, {"@type": "Question", "name": "Можно ли заказать продакшн трека с нуля?", "acceptedAnswer": {"@type": "Answer", "text": "Да. Помимо сведения и мастеринга КАССА делает продакшн — бит и аранжировку с нуля под конкретную задачу артиста. Условия и сроки такой работы обсуждаются отдельно."}}, {"@type": "Question", "name": "Как заказать сведение?", "acceptedAnswer": {"@type": "Answer", "text": "Напишите в Telegram или на почту, коротко опишите задачу и приложите демо или референс. После прослушивания КАССА назовёт стоимость и срок."}}, {"@type": "Question", "name": "Что прислать, чтобы заказать сведение?", "acceptedAnswer": {"@type": "Answer", "text": "Мультитрек в формате WAV, 24 бита: каждая дорожка отдельным файлом, все — от одной точки старта, без мастер-обработки на общей шине. Полезно приложить референс — трек, звучание которого вам нравится, — и черновой микс, если он есть."}}, {"@type": "Question", "name": "Сколько времени занимает работа и сколько правок входит?", "acceptedAnswer": {"@type": "Answer", "text": "Зависит от проекта: срок и количество правок обсуждаются до начала работы, вместе со стоимостью. Обычно этого хватает, чтобы довести микс до результата, который устраивает артиста."}}, {"@type": "Question", "name": "Можно ли учиться у КАССЫ?", "acceptedAnswer": {"@type": "Answer", "text": "Да, КАССА проводит индивидуальные занятия — разборы работ и обучение сведению один на один. Записаться и уточнить формат можно в Telegram."}}, {"@type": "Question", "name": "Где следить за КАССОЙ?", "acceptedAnswer": {"@type": "Answer", "text": "Основная площадка — Telegram, там же удобнее всего писать по работе. Ещё есть Instagram. Все опубликованные работы — на странице каталога."}}], "dateModified": "2026-08-31"}</script></body></html>

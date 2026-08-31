@@ -34,10 +34,24 @@ GENRE_LABELS = {
 WORDS = {
     "ru": {"works": "Работы", "all_tracks": "Все треки", "back": "← Все работы",
            "listen": "Слушать", "contact": "Связаться", "hub_title": "Все треки",
-           "tracks_word": ("трек", "трека", "треков")},
+           "tracks_word": ("трек", "трека", "треков"),
+           "artists_word": ("артист", "артиста", "артистов"),
+           "albums_word": ("альбом", "альбома", "альбомов"),
+           "album_word": "Альбом", "singles_word": "Синглы",
+           "by_letter": "По алфавиту", "faq": "Вопросы",
+           "catalog_lead": "Полный каталог работ",
+           "among_them": "среди них",
+           "catalog_hint": "Ищите по артисту, альбому или названию трека."},
     "en": {"works": "Works", "all_tracks": "All tracks", "back": "← All works",
            "listen": "Listen", "contact": "Get in touch", "hub_title": "All tracks",
-           "tracks_word": ("track", "tracks", "tracks")},
+           "tracks_word": ("track", "tracks", "tracks"),
+           "artists_word": ("artist", "artists", "artists"),
+           "albums_word": ("album", "albums", "albums"),
+           "album_word": "Album", "singles_word": "Singles",
+           "by_letter": "By letter", "faq": "FAQ",
+           "catalog_lead": "Full catalogue of works",
+           "among_them": "among them",
+           "catalog_hint": "Search by artist, album or track title."},
 }
 
 
@@ -139,8 +153,12 @@ def nav(site, *, home=False):
     links = "".join(
         f'<a href="{esc(l["url"])}" target="_blank" rel="noopener">{esc(l["label"])}</a>'
         for l in site.get("links") or [])
+    inner = f'<a href="/track/">{esc(w["hub_title"])}</a>'
+    if site.get("has_faq"):
+        inner += f'<a href="/faq/">{esc(w["faq"])}</a>'
     if not home:
-        links = f'<a href="/">{esc(w["works"])}</a>' + links
+        inner = f'<a href="/">{esc(w["works"])}</a>' + inner
+    links = inner + links
     return (f'<header class="pfnav"><div><h1 class="brand">{title}</h1>'
             f'<p class="tagline">{esc(site["tagline"])}</p></div>'
             f'<nav class="navlinks">{links}</nav></header>')
@@ -232,13 +250,16 @@ def render_index(site, data):
     desc = site.get("description") or f'{site["name"]} — {site["tagline"]}'
     title = f'{site["name"]} — {site["tagline"]}'
     app_js = (TEMPLATES / "app.js").read_text(encoding="utf-8")
+    canonical = f"{site['url']}/"
     body = (
-        f'{head(site, title=title, description=desc, canonical=f"{site['url']}/")}'
+        f'{head(site, title=title, description=desc, canonical=canonical)}'
         f'<div class="pf">{nav(site, home=True)}'
         f'{_filters(site, releases)}'
         f'<ul class="grid">{"".join(tiles)}</ul></div>'
         f'{footer(site)}{player_and_modal(site)}'
-        f'<script>const ALBUMS={json.dumps(albums, ensure_ascii=False)};</script>'
+        # именно var: const на верхнем уровне не попадает в window,
+        # а app.js читает список как window.ALBUMS
+        f'<script>var ALBUMS={json.dumps(albums, ensure_ascii=False)};</script>'
         f'<script src="https://open.spotify.com/embed/iframe-api/v1" async></script>'
         f'<script>{app_js}</script></body></html>')
     return body
@@ -261,7 +282,8 @@ def track_entries(site, data):
             entries.append({
                 "id": rel["id"], "title": rel["title"], "artist": rel["artist"],
                 "year": rel.get("year"), "cover": rel["cover"],
-                "roles": rel.get("roles") or ["mix"], "album": None,
+                "roles": rel.get("roles") or ["mix"],
+                "album": rel.get("album"),
                 "feat": rel.get("feat") or []})
     used = {}
     for entry in entries:
@@ -306,8 +328,9 @@ def render_track_page(site, entry):
         jsonld["datePublished"] = str(entry["year"])
     w = words(site)
     roles_html = "".join(f"<li>{esc(word)}</li>" for word in role_words)
+    page_title = f'{title_line} · {site["name"]}'
     return (
-        f'{head(site, title=f"{title_line} · {site["name"]}", description=lead, canonical=canonical, image=cover)}'
+        f'{head(site, title=page_title, description=lead, canonical=canonical, image=cover)}'
         f'<div class="pf">{nav(site)}'
         f'<a class="back" href="/">{esc(w["back"])}</a>'
         f'<article class="trk">'
@@ -326,29 +349,243 @@ def render_track_page(site, entry):
         f'</body></html>')
 
 
-def render_hub(site, entries):
+def main_artist(name):
+    """Первый исполнитель: «VERBEE, Анетта» → «VERBEE»."""
+    return (name or "").split(",")[0].strip()
+
+
+def guests(full, primary):
+    """Остальные исполнители трека, кроме основного."""
+    return [a.strip() for a in (full or "").split(",")[1:]
+            if a.strip() and a.strip() != primary]
+
+
+def letter_of(name):
+    """Буква для указателя. Возвращает (группа, буква): латиница, кириллица, прочее."""
+    ch = (name or "#")[:1].upper()
+    if "A" <= ch <= "Z":
+        return (0, ch)
+    if "А" <= ch <= "Я" or ch == "Ё":
+        return (1, "Е" if ch == "Ё" else ch)
+    return (2, "#")
+
+
+def catalog(site, data, entries):
+    """Артисты по алфавиту, у каждого — альбомы и отдельно синглы."""
+    slug_of = {e["id"]: e["slug"] for e in entries}
+    shelf = {}
+    for rel in order_releases(site, data["releases"]):
+        primary = main_artist(rel["artist"])
+        who = shelf.setdefault(primary, {"albums": [], "singles": [], "count": 0})
+        if rel["type"] == "album":
+            tracks = [t for t in rel.get("tracks", []) if t["id"] in slug_of]
+            if not tracks:
+                continue
+            who["albums"].append({
+                "title": rel["title"], "year": rel.get("year"),
+                "tracks": [{"title": t["title"], "slug": slug_of[t["id"]],
+                            "guests": guests(t.get("artist") or rel["artist"], primary)}
+                           for t in tracks]})
+            who["count"] += len(tracks)
+        elif rel["id"] in slug_of:
+            who["singles"].append({
+                "title": rel["title"], "year": rel.get("year"),
+                "slug": slug_of[rel["id"]],
+                "guests": guests(rel["artist"], primary)})
+            who["count"] += 1
+    return dict(sorted(shelf.items(), key=lambda kv: (letter_of(kv[0]), kv[0].upper())))
+
+
+def _guest_note(names):
+    return f' <span class="with">· с {esc(", ".join(names))}</span>' if names else ""
+
+
+def _track_li(item, *, show_year):
+    year = (f'<span class="yr">{esc(item["year"])}</span>'
+            if show_year and item.get("year") else "")
+    return (f'<li><a href="/track/{esc(item["slug"])}/">{esc(item["title"])}'
+            f'{_guest_note(item["guests"])}{year}</a></li>')
+
+
+def render_hub(site, data, entries):
     w = words(site)
-    by_artist = {}
-    for entry in entries:
-        by_artist.setdefault(entry["artist"], []).append(entry)
-    blocks = []
-    for artist, items in by_artist.items():
-        links = "".join(
-            f'<li><a href="/track/{esc(e["slug"])}/">{esc(e["title"])}'
-            + (f'<span class="yr">{esc(e["year"])}</span>' if e.get("year") else "")
-            + "</a></li>" for e in items)
-        blocks.append(f'<section><h2>{esc(artist)}</h2><ul>{links}</ul></section>')
-    desc = f'{site["name"]} — {w["hub_title"].lower()}: {len(entries)}.'
+    shelf = catalog(site, data, entries)
+
+    letters, blocks = [], []
+    seen_letter = None
+    for artist, who in shelf.items():
+        group, ch = letter_of(artist)
+        if ch != seen_letter:
+            seen_letter = ch
+            letters.append(ch)
+            blocks.append(f'<h2 class="ltr" id="l-{esc(slugify(ch) or "n")}">'
+                          f'{esc(ch)}</h2>')
+        parts = []
+        for album in who["albums"]:
+            year = (f'<span class="yr">{esc(album["year"])}</span>'
+                    if album.get("year") else "")
+            rows = "".join(_track_li(t, show_year=False) for t in album["tracks"])
+            parts.append(
+                f'<div class="alb"><p class="albhead">«{esc(album["title"])}»'
+                f'{year} <span class="albtag">{esc(w["album_word"])}</span></p>'
+                f'<ul>{rows}</ul></div>')
+        if who["singles"]:
+            head_line = (f'<p class="subhead">{esc(w["singles_word"])}</p>'
+                         if who["albums"] else "")
+            rows = "".join(_track_li(s, show_year=True) for s in who["singles"])
+            parts.append(f'{head_line}<ul>{rows}</ul>')
+        n = who["count"]
+        blocks.append(
+            f'<section class="art" id="a-{esc(slugify(artist))}">'
+            f'<h3>{esc(artist)}<span class="cnt">{n}</span></h3>'
+            f'{"".join(parts)}</section>')
+
+    nav_letters = "".join(
+        f'<a href="#l-{esc(slugify(ch) or "n")}">{esc(ch)}</a>' for ch in letters)
+
+    n_tracks, n_artists = len(entries), len(shelf)
+    n_albums = sum(len(v["albums"]) for v in shelf.values())
+    top = [a for a, _ in sorted(shelf.items(), key=lambda kv: -kv[1]["count"])[:6]]
+    tw, aw = w["tracks_word"], w["artists_word"]
+    counter = (f'{n_tracks} {plural(n_tracks, tw)} · {n_artists} {plural(n_artists, aw)}'
+               + (f' · {n_albums} {plural(n_albums, w["albums_word"])}' if n_albums else ""))
+    scope = (f'{n_tracks} {plural(n_tracks, tw)} для '
+             f'{n_artists} {plural(n_artists, aw)}')
+    lead = (f'{esc(site["name"])} — {esc(site["tagline"])}. '
+            f'{esc(w["catalog_lead"])}: {esc(scope)}, '
+            f'{esc(w["among_them"])} {esc(", ".join(top))}. '
+            f'{esc(w["catalog_hint"])}')
+
+    desc = (f'{w["hub_title"]} — {site["name"]}, {site["tagline"]}. '
+            f'{w["catalog_lead"]}: {scope}. {w["catalog_hint"]}')[:300]
+    page_title = f'{w["hub_title"]} — {site["name"]}'
+    canonical = f"{site['url']}/track/"
+    jsonld = {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": page_title,
+        "url": canonical,
+        "description": desc,
+        "inLanguage": site["lang"],
+        "about": {"@type": "Person", "name": site["name"], "url": f'{site["url"]}/'},
+        "mainEntity": {
+            "@type": "ItemList",
+            "numberOfItems": n_tracks,
+            "itemListElement": [
+                {"@type": "ListItem", "position": i,
+                 "url": f'{site["url"]}/track/{e["slug"]}/',
+                 "name": f'{e["artist"]} — {e["title"]}'}
+                for i, e in enumerate(entries, 1)],
+        },
+    }
     return (
-        f'{head(site, title=f"{w["hub_title"]} · {site["name"]}", description=desc, canonical=f"{site['url']}/track/")}'
+        f'{head(site, title=page_title, description=desc, canonical=canonical)}'
         f'<div class="pf hub">{nav(site)}'
-        f'<h1>{esc(w["hub_title"])} <span class="yr">{len(entries)}</span></h1>'
-        f'{"".join(blocks)}</div>{footer(site)}</body></html>')
+        f'<a class="back" href="/">{esc(w["back"])}</a>'
+        f'<h1>{esc(w["hub_title"])}</h1>'
+        f'<p class="lead">{lead}</p>'
+        f'<p class="counter">{esc(counter)}</p>'
+        f'<nav class="alpha" aria-label="{esc(w["by_letter"])}">{nav_letters}</nav>'
+        f'{"".join(blocks)}</div>{footer(site)}'
+        f'<script type="application/ld+json">{json.dumps(jsonld, ensure_ascii=False)}</script>'
+        f'</body></html>')
 
 
-def render_sitemap(site, entries):
+def esc_join(names):
+    return esc(", ".join(names))
+
+
+# ── вопросы и ответы ────────────────────────────────────────────────
+
+LINK_RE = re.compile(r"\[([^\]]+)\]\(([^)]+)\)")
+BOLD_RE = re.compile(r"\*\*([^*]+)\*\*")
+
+
+def inline(text):
+    """Мини-разметка ответов: [текст](ссылка) и **выделение**.
+
+    Сначала экранируем всё целиком, потом размечаем — поэтому в faq.json
+    нельзя случайно занести сырой HTML.
+    """
+    out = esc(text)
+    out = LINK_RE.sub(
+        lambda m: f'<a href="{m.group(2)}">{m.group(1)}</a>', out)
+    return BOLD_RE.sub(lambda m: f'<span class="num">{m.group(1)}</span>', out)
+
+
+def plain(text):
+    """Тот же текст без разметки — для schema.org и описания страницы."""
+    out = LINK_RE.sub(lambda m: m.group(1), str(text or ""))
+    return BOLD_RE.sub(lambda m: m.group(1), out)
+
+
+def render_faq(site, faq):
+    sections = faq.get("sections") or []
+    items = [(s, it) for s in sections for it in s.get("items") or []]
+
+    tabs = "".join(
+        f'<a href="#s-{esc(s["id"])}">{esc(s["title"])}'
+        f'<span class="fc">{len(s.get("items") or [])}</span></a>'
+        for s in sections)
+
+    blocks = []
+    for section in sections:
+        rows = "".join(
+            f'<details id="q-{esc(slugify(it["q"]))}">'
+            f'<summary>{esc(it["q"])}</summary>'
+            f'<div class="ans">{inline(it["a"])}</div></details>'
+            for it in section.get("items") or [])
+        blocks.append(
+            f'<section class="faqsec" id="s-{esc(section["id"])}">'
+            f'<h2>{esc(section["title"])}</h2>{rows}</section>')
+
+    canonical = f"{site['url']}/faq/"
+    title = faq.get("title") or f'{site["name"]} — вопросы и ответы'
+    desc = plain(faq.get("summary") or "")[:300]
+    jsonld = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "url": canonical,
+        "name": title,
+        "inLanguage": site["lang"],
+        "about": {"@type": "Person", "name": site["name"],
+                  "url": f'{site["url"]}/', "jobTitle": site["tagline"]},
+        "mainEntity": [
+            {"@type": "Question", "name": plain(it["q"]),
+             "acceptedAnswer": {"@type": "Answer", "text": plain(it["a"])}}
+            for _, it in items],
+    }
+    if faq.get("updated"):
+        jsonld["dateModified"] = faq["updated"]
+
+    updated = ""
+    if faq.get("updated"):
+        updated = (f'<p class="small upd">Последнее обновление: '
+                   f'{esc(faq["updated"])}.</p>')
+    summary = ""
+    if faq.get("summary"):
+        summary = (f'<aside class="tldr">'
+                   f'<p class="subhead">{esc(faq.get("summary_label") or "Коротко")}</p>'
+                   f'<p>{inline(faq["summary"])}</p></aside>')
+
+    return (
+        f'{head(site, title=title, description=desc, canonical=canonical)}'
+        f'<div class="pf faq">{nav(site)}'
+        f'<a class="back" href="/track/">← {esc(words(site)["hub_title"])}</a>'
+        f'<h1>{esc(faq.get("heading") or "Вопросы и ответы")}</h1>'
+        + (f'<p class="lead">{inline(faq["intro"])}</p>' if faq.get("intro") else "")
+        + f'{summary}'
+        f'<nav class="faqtabs" aria-label="Разделы">{tabs}</nav>'
+        f'{"".join(blocks)}{updated}</div>'
+        f'{footer(site)}'
+        f'<script type="application/ld+json">{json.dumps(jsonld, ensure_ascii=False)}</script>'
+        f'</body></html>')
+
+
+def render_sitemap(site, entries, extra=()):
     today = date.today().isoformat()
     urls = [f'{site["url"]}/', f'{site["url"]}/track/']
+    urls += list(extra)
     urls += [f'{site["url"]}/track/{e["slug"]}/' for e in entries]
     body = "".join(
         f"<url><loc>{esc(u)}</loc><lastmod>{today}</lastmod></url>" for u in urls)
@@ -361,21 +598,31 @@ def render_robots(site):
     return f"User-agent: *\nAllow: /\n\nSitemap: {site['url']}/sitemap.xml\n"
 
 
-def render_site(site, data, out_dir):
+def render_site(site, data, out_dir, faq=None):
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
+    site = dict(site, has_faq=bool(faq))
     entries = track_entries(site, data)
     (out / "index.html").write_text(render_index(site, data), encoding="utf-8")
     track_dir = out / "track"
     track_dir.mkdir(exist_ok=True)
-    (track_dir / "index.html").write_text(render_hub(site, entries), encoding="utf-8")
+    (track_dir / "index.html").write_text(
+        render_hub(site, data, entries), encoding="utf-8")
     for entry in entries:
         page_dir = track_dir / entry["slug"]
         page_dir.mkdir(exist_ok=True)
         (page_dir / "index.html").write_text(
             render_track_page(site, entry), encoding="utf-8")
-    (out / "sitemap.xml").write_text(render_sitemap(site, entries), encoding="utf-8")
+    extra = []
+    if faq:
+        faq_dir = out / "faq"
+        faq_dir.mkdir(exist_ok=True)
+        (faq_dir / "index.html").write_text(render_faq(site, faq), encoding="utf-8")
+        extra.append(f'{site["url"]}/faq/')
+    (out / "sitemap.xml").write_text(
+        render_sitemap(site, entries, extra), encoding="utf-8")
     (out / "robots.txt").write_text(render_robots(site), encoding="utf-8")
     (out / ".nojekyll").write_text("", encoding="utf-8")
     return {"tracks": len(entries),
-            "releases": len([r for r in data["releases"] if not r.get("hidden")])}
+            "releases": len([r for r in data["releases"] if not r.get("hidden")]),
+            "faq": sum(len(s.get("items") or []) for s in (faq or {}).get("sections") or [])}

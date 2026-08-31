@@ -28,6 +28,14 @@ def _load(proj):
     return site, data
 
 
+def _faq(proj):
+    """Вопросы и ответы — необязательный файл, без него страницы просто нет."""
+    path = proj / "faq.json"
+    if not path.exists():
+        return None
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
 def _genre_map(proj):
     path = proj / "artist_genres.json"
     if not path.exists():
@@ -146,7 +154,7 @@ def cmd_roles(args):
 def cmd_build(args):
     proj = _project(args)
     site, data = _load(proj)
-    summary = render.render_site(site, data, proj)
+    summary = render.render_site(site, data, proj, faq=_faq(proj))
     _out(summary, args)
     return 0
 
@@ -154,7 +162,7 @@ def cmd_build(args):
 def cmd_publish(args):
     proj = _project(args)
     site, data = _load(proj)
-    render.render_site(site, data, proj)
+    render.render_site(site, data, proj, faq=_faq(proj))
     result = publish_mod.publish(proj, site, args.message, confirmed=args.confirm)
     _out(result, args)
     return 0

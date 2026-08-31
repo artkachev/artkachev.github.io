@@ -140,19 +140,90 @@ img{max-width:100%;display:block}
   letter-spacing:.09em;font-size:12px;padding:12px 0}
 .back:hover{color:var(--accent)}
 
-/* ── список треков ──────────────────────────────────────────────── */
+/* ── каталог работ ──────────────────────────────────────────────── */
 .hub h1{font-family:var(--font-head);font-weight:700;text-transform:uppercase;
-  font-size:clamp(28px,5vw,50px);line-height:1;margin:24px 0 30px}
-.hub section{margin:0 0 34px}
-.hub h2{font-family:var(--font-head);font-weight:700;text-transform:uppercase;
-  font-size:15px;letter-spacing:.09em;color:var(--accent);margin:0 0 10px;
-  padding-bottom:9px;border-bottom:1px solid var(--line)}
+  font-size:clamp(28px,5vw,50px);line-height:1;margin:18px 0 18px}
+.hub .lead{font-size:17px;line-height:1.65;max-width:74ch;margin:0 0 14px}
+.hub .counter{font-family:var(--font-head);font-weight:500;font-size:12px;
+  letter-spacing:.11em;text-transform:uppercase;color:var(--ink-dim);margin:0 0 22px}
+
+/* указатель по буквам */
+.alpha{display:flex;flex-wrap:wrap;gap:2px 4px;margin:0 0 44px;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:12px 0}
+.alpha a{font-family:var(--font-head);font-weight:500;font-size:13px;
+  letter-spacing:.06em;color:var(--ink-dim);text-decoration:none;
+  min-width:34px;min-height:34px;display:inline-flex;align-items:center;
+  justify-content:center;border-radius:2px;transition:color .16s,background .16s}
+.alpha a:hover{color:var(--accent);background:var(--surface)}
+
+/* буква-разделитель */
+.hub .ltr{font-family:var(--font-head);font-weight:700;font-size:clamp(40px,7vw,74px);
+  line-height:1;color:var(--line);margin:46px 0 14px;scroll-margin-top:18px;
+  border-bottom:1px solid var(--line);padding-bottom:10px}
+
+/* артист */
+.art{margin:0 0 30px;scroll-margin-top:18px}
+.art h3{font-family:var(--font-head);font-weight:700;text-transform:uppercase;
+  font-size:16px;letter-spacing:.08em;color:var(--accent);margin:0 0 8px;
+  display:flex;align-items:baseline;gap:9px}
+.art .cnt{font-family:var(--font-body);font-weight:500;font-size:11px;
+  letter-spacing:0;color:var(--ink-dim)}
 .hub ul{list-style:none;margin:0;padding:0;
-  display:grid;gap:2px 26px;grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
-.hub a{display:block;padding:11px 0;text-decoration:none;color:var(--ink);
-  border-bottom:1px solid transparent;transition:color .16s}
-.hub a:hover{color:var(--accent)}
+  display:grid;gap:0 26px;grid-template-columns:repeat(auto-fill,minmax(290px,1fr))}
+.hub li a{display:block;padding:9px 0;text-decoration:none;color:var(--ink);
+  font-size:15px;transition:color .16s}
+.hub li a:hover{color:var(--accent)}
 .hub .yr{color:var(--ink-dim);font-size:13px;margin-left:7px}
+.hub .with{color:var(--ink-dim);font-size:13px}
+
+/* альбом внутри артиста */
+.alb{margin:0 0 14px;border-left:2px solid var(--line);padding-left:15px}
+.albhead{margin:0 0 2px;font-size:15px;font-weight:500;
+  display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
+.albtag{font-family:var(--font-head);font-weight:500;font-size:10px;
+  letter-spacing:.11em;text-transform:uppercase;color:var(--ink-dim);
+  border:1px solid var(--line);padding:2px 6px;border-radius:2px}
+.subhead{font-family:var(--font-head);font-weight:500;font-size:11px;
+  letter-spacing:.11em;text-transform:uppercase;color:var(--ink-dim);margin:12px 0 0}
+
+/* ── вопросы и ответы ───────────────────────────────────────────── */
+.faq h1{font-family:var(--font-head);font-weight:700;text-transform:uppercase;
+  font-size:clamp(26px,4.4vw,46px);line-height:1.04;margin:18px 0 18px;max-width:20ch}
+.faq .lead{font-size:17px;line-height:1.65;max-width:70ch;margin:0 0 24px}
+.tldr{border:1px solid var(--line);border-left:2px solid var(--accent);
+  border-radius:2px;padding:18px 20px;margin:0 0 30px;max-width:78ch;
+  background:var(--surface)}
+.tldr p:last-child{margin:0;font-size:16px;line-height:1.7}
+.tldr .subhead{margin:0 0 8px}
+.num{color:var(--accent);font-weight:500;font-variant-numeric:tabular-nums}
+
+.faqtabs{display:flex;flex-wrap:wrap;gap:4px 20px;margin:0 0 34px;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:6px 0}
+.faqtabs a{font-family:var(--font-head);font-weight:500;font-size:13px;
+  text-transform:uppercase;letter-spacing:.09em;color:var(--ink-dim);
+  text-decoration:none;padding:11px 0;min-height:44px;display:inline-flex;
+  align-items:center;transition:color .16s}
+.faqtabs a:hover{color:var(--accent)}
+
+.faqsec{margin:0 0 34px;scroll-margin-top:18px}
+.faqsec h2{font-family:var(--font-head);font-weight:700;text-transform:uppercase;
+  font-size:15px;letter-spacing:.09em;color:var(--accent);margin:0 0 4px;
+  padding-bottom:9px;border-bottom:1px solid var(--line)}
+.faq details{border-bottom:1px solid var(--line);scroll-margin-top:18px}
+.faq summary{cursor:pointer;padding:16px 34px 16px 0;position:relative;
+  font-size:16px;line-height:1.45;list-style:none;transition:color .16s}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary:hover{color:var(--accent)}
+.faq summary::after{content:"+";position:absolute;right:6px;top:50%;
+  transform:translateY(-50%);color:var(--ink-dim);font-size:20px;line-height:1}
+.faq details[open] summary{color:var(--accent)}
+.faq details[open] summary::after{content:"–";color:var(--accent)}
+.faq .ans{padding:0 0 20px;max-width:74ch;color:var(--ink-dim);
+  font-size:16px;line-height:1.72}
+.faq .ans a{color:var(--ink);text-decoration:underline;
+  text-decoration-color:var(--line);text-underline-offset:3px}
+.faq .ans a:hover{color:var(--accent);text-decoration-color:var(--accent)}
+.faq .upd{color:var(--ink-dim);font-size:13px;margin:26px 0 40px}
 
 /* ── подвал ─────────────────────────────────────────────────────── */
 .foot{border-top:1px solid var(--line);padding:38px 0 46px;margin-top:20px}

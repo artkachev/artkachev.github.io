@@ -6,10 +6,10 @@ import urllib.request
 from pathlib import Path
 
 MANAGED_PATHS = (
-    "index.html", "track", "covers", "assets", "sitemap.xml", "robots.txt",
+    "index.html", "track", "faq", "covers", "assets", "sitemap.xml", "robots.txt",
     ".nojekyll", ".github/workflows/deploy.yml",
-    ".github/workflows/fetch-covers.yml", "site.json", "data.json",
-    "artist_genres.json", "CLAUDE.md", "README.md",
+    ".github/workflows/fetch-covers.yml", "site.json", "data.json", "faq.json",
+    "artist_genres.json", "skill", "CLAUDE.md", "README.md",
 )
 
 TEMPLATES = Path(__file__).resolve().parent.parent / "templates"
@@ -40,6 +40,17 @@ def _remote_slug(proj):
     if "github.com" not in url:
         raise PublishRefused(f"origin не на github.com: {url!r}")
     return url.split("github.com")[-1].lstrip(":/")
+
+
+def guard_identity(proj):
+    """Коммит подписывается настройками git, а не зашитым в скрипт человеком."""
+    missing = [key for key in ("user.name", "user.email")
+               if not _git(proj, "config", key).stdout.strip()]
+    if missing:
+        raise PublishRefused(
+            "не задано " + " и ".join(missing) + ". Выполните один раз:\n"
+            '  git config --global user.name "Артём Ткачев"\n'
+            '  git config --global user.email "вашapochta@example.com"')
 
 
 def guard(proj, site):
@@ -81,6 +92,7 @@ def fetch_covers_remotely(proj, site, timeout=300):
 def publish(proj, site, message, confirmed):
     proj = Path(proj)
     guard(proj, site)
+    guard_identity(proj)
     if not confirmed:
         raise PublishRefused(
             "заливка в чужой репозиторий требует явного подтверждения (--confirm)")
@@ -99,8 +111,7 @@ def publish(proj, site, message, confirmed):
     staged = _git(proj, "diff", "--cached", "--name-only").stdout.strip()
     if not staged:
         return {"status": "нечего публиковать", "paths": present}
-    _git_ok(proj, "-c", "user.name=Pavel Podlesny",
-            "-c", "user.email=lesnyprod@gmail.com", "commit", "-m", message)
+    _git_ok(proj, "commit", "-m", message)
     _git_ok(proj, "push", "origin", "HEAD:main")
     return {"status": "залито", "files": len(staged.splitlines()), "paths": present}
 
