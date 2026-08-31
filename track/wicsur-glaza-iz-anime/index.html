@@ -66,6 +66,14 @@ img{max-width:100%;display:block}
   transition:color .18s}
 .filters button:hover{color:var(--ink)}
 .filters button[aria-pressed="true"]{color:var(--accent)}
+/* выбранная роль подчёркнута — видно, что их может быть несколько */
+.filters[data-multi] button[aria-pressed="true"]{
+  box-shadow:inset 0 -2px 0 var(--accent)}
+.filters[data-multi] button[data-f="ALL"][aria-pressed="true"]{box-shadow:none}
+.filters button.empty{opacity:.32}
+.fhint{text-transform:none;letter-spacing:.02em;font-size:10px;opacity:.75;
+  display:block;font-weight:400}
+.nothing{color:var(--ink-dim);font-size:15px;margin:0 0 70px;padding:26px 0}
 .fc{font-family:var(--font-body);font-size:11px;font-weight:500;
   letter-spacing:0;vertical-align:super;margin-left:5px;opacity:.65}
 

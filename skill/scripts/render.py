@@ -40,6 +40,8 @@ WORDS = {
            "album_word": "Альбом", "singles_word": "Синглы",
            "by_letter": "По алфавиту", "faq": "Вопросы", "pause": "Пауза",
            "genre_word": "Жанр", "role_word": "Роль", "all_word": "Все",
+           "multi_hint": "можно несколько",
+           "nothing": "Работ сразу со всеми этими ролями нет. Снимите один фильтр.",
            "catalog_lead": "Полный каталог работ",
            "among_them": "среди них",
            "catalog_hint": "Ищите по артисту, альбому или названию трека."},
@@ -51,6 +53,8 @@ WORDS = {
            "album_word": "Album", "singles_word": "Singles",
            "by_letter": "By letter", "faq": "FAQ", "pause": "Pause",
            "genre_word": "Genre", "role_word": "Role", "all_word": "All",
+           "multi_hint": "combine",
+           "nothing": "Nothing matches all of these. Remove one filter.",
            "catalog_lead": "Full catalogue of works",
            "among_them": "among them",
            "catalog_hint": "Search by artist, album or track title."},
@@ -306,8 +310,13 @@ def release_roles(rel):
     return [k for k in config.ROLE_ORDER if k in found]
 
 
-def _filter_row(site, releases, *, dim, label, codes, name_of, match):
-    """Одна строка фильтров: «Все» плюс те значения, которые реально есть."""
+def _filter_row(site, releases, *, dim, label, codes, name_of, match, multi=False):
+    """Одна строка фильтров: «Все» плюс те значения, которые реально есть.
+
+    Числа у кнопок — сколько работ останется, если включить этот фильтр.
+    Дальше их пересчитывает app.js, потому что после первого выбора
+    исходные числа перестают быть правдой.
+    """
     out = []
     for code in ["ALL"] + list(codes):
         n = len(releases) if code == "ALL" else sum(
@@ -320,9 +329,14 @@ def _filter_row(site, releases, *, dim, label, codes, name_of, match):
                    f'<span class="fc">{n}</span></button>')
     if len(out) < 3:                      # «Все» плюс один вариант — не фильтр
         return ""
-    return (f'<div class="filters" data-dim="{esc(dim)}" '
+    hint = ""
+    flag = ""
+    if multi:
+        hint = f' <span class="fhint">{esc(words(site)["multi_hint"])}</span>'
+        flag = ' data-multi="1"'
+    return (f'<div class="filters" data-dim="{esc(dim)}"{flag} '
             f'role="group" aria-label="{esc(label)}">'
-            f'<span class="flabel">{esc(label)}</span>{"".join(out)}</div>')
+            f'<span class="flabel">{esc(label)}{hint}</span>{"".join(out)}</div>')
 
 
 def _filters(site, releases):
@@ -339,7 +353,7 @@ def _filters(site, releases):
         site, releases, dim="r", label=w["role_word"], codes=roles,
         name_of=lambda c: (w["all_word"] if c == "ALL"
                            else site["roles"][c]["word"]),
-        match=lambda r, c: c in release_roles(r)))
+        match=lambda r, c: c in release_roles(r), multi=True))
     rows = [r for r in rows if r]
     return f'<div class="filterbar">{"".join(rows)}</div>' if rows else ""
 
@@ -365,7 +379,8 @@ def render_index(site, data):
         f'{head(site, title=title, description=desc, canonical=canonical)}'
         f'<div class="pf">{nav(site, home=True)}'
         f'{_filters(site, releases)}'
-        f'<ul class="grid" data-listen="{esc(words(site)["listen"])}" data-pause="{esc(words(site)["pause"])}">{"".join(tiles)}</ul></div>'
+        f'<ul class="grid" data-listen="{esc(words(site)["listen"])}" data-pause="{esc(words(site)["pause"])}">{"".join(tiles)}</ul>'
+        f'<p class="nothing" hidden>{esc(words(site)["nothing"])}</p></div>'
         f'{footer(site)}{player_and_modal(site)}'
         # именно var: const на верхнем уровне не попадает в window,
         # а app.js читает список как window.ALBUMS

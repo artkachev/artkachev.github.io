@@ -16,18 +16,63 @@
   var grid = document.querySelector(".grid");
   var panel = document.getElementById("player");
 
-  /* ── фильтры: жанр и роль, работают вместе ───────────────── */
+  /* ── фильтры ─────────────────────────────────────────────────
+     Жанр — один из списка. Роли — сколько угодно сразу, и работа
+     должна нести их все: «продакшн + сведение» показывает те, где
+     сделано и то, и другое, а не сумму двух списков. */
   var bar = document.querySelector(".filterbar");
-  var picked = { g: "ALL", r: "ALL" };
+  var empty = document.querySelector(".nothing");
+  var genre = "ALL";
+  var roles = [];
 
-  function applyFilters() {
+  function fits(tile, g, rr) {
+    if (g !== "ALL" && tile.dataset.g !== g) return false;
+    var have = (tile.dataset.r || "").split(" ");
+    for (var i = 0; i < rr.length; i++) {
+      if (have.indexOf(rr[i]) === -1) return false;
+    }
+    return true;
+  }
+
+  function countIf(g, rr) {
+    var n = 0;
+    document.querySelectorAll(".grid .tile").forEach(function (t) {
+      if (fits(t, g, rr)) n++;
+    });
+    return n;
+  }
+
+  function withRole(code) {
+    return roles.indexOf(code) === -1 ? roles.concat([code]) : roles;
+  }
+
+  function paint() {
+    var shown = 0;
     document.querySelectorAll(".grid > li").forEach(function (li) {
       var tile = li.querySelector(".tile");
       if (!tile) return;
-      var okGenre = picked.g === "ALL" || tile.dataset.g === picked.g;
-      var roles = (tile.dataset.r || "").split(" ");
-      var okRole = picked.r === "ALL" || roles.indexOf(picked.r) !== -1;
-      li.hidden = !(okGenre && okRole);
+      var ok = fits(tile, genre, roles);
+      li.hidden = !ok;
+      if (ok) shown++;
+    });
+    if (empty) empty.hidden = shown !== 0;
+
+    bar.querySelectorAll(".filters").forEach(function (row) {
+      var isRole = row.dataset.dim === "r";
+      row.querySelectorAll("button[data-f]").forEach(function (b) {
+        var code = b.dataset.f;
+        var n, on;
+        if (isRole) {
+          n = code === "ALL" ? countIf(genre, []) : countIf(genre, withRole(code));
+          on = code === "ALL" ? roles.length === 0 : roles.indexOf(code) !== -1;
+        } else {
+          n = countIf(code, roles);
+          on = code === genre;
+        }
+        b.setAttribute("aria-pressed", String(on));
+        b.classList.toggle("empty", n === 0 && !on);
+        b.querySelector(".fc").textContent = n;
+      });
     });
   }
 
@@ -35,13 +80,21 @@
     bar.addEventListener("click", function (e) {
       var btn = e.target.closest("button[data-f]");
       if (!btn) return;
-      var row = btn.closest(".filters");
-      picked[row.dataset.dim] = btn.dataset.f;
-      row.querySelectorAll("button").forEach(function (b) {
-        b.setAttribute("aria-pressed", String(b === btn));
-      });
-      applyFilters();
+      var code = btn.dataset.f;
+      if (btn.closest(".filters").dataset.dim === "r") {
+        if (code === "ALL") {
+          roles = [];
+        } else if (roles.indexOf(code) === -1) {
+          roles = roles.concat([code]);
+        } else {
+          roles = roles.filter(function (r) { return r !== code; });
+        }
+      } else {
+        genre = code;
+      }
+      paint();
     });
+    paint();
   }
 
   /* ── состояние плиток ────────────────────────────────────── */
