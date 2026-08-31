@@ -109,8 +109,8 @@
       var btn = playBtn(tile);
       if (!btn) return;
       var isCurrent = tile === current;
-      var show = tile === armed || isCurrent;
-      btn.hidden = !show;
+      // класс на ячейке: показом заведует CSS, он же ловит наведение
+      tile.parentElement.classList.toggle("on", tile === armed || isCurrent);
       var playing = isCurrent && !isPaused;
       btn.classList.toggle("on", playing);
       tile.classList.toggle("armed", tile === armed && !isCurrent);
@@ -131,6 +131,7 @@
   function preload(tile) {
     var id = tile && tile.dataset.id;
     if (!id || !ctrl || loaded === id) return;
+    if (current) return;      // плеер занят: loadUri сбил бы текущий трек
     ctrl.loadUri("spotify:track:" + id);
     loaded = id;
   }
@@ -198,9 +199,10 @@
     grid.addEventListener("click", function (e) {
       var btn = e.target.closest(".pbtn");
       if (btn) {                       // второй шаг: играем
-        window.play(btn.parentElement.querySelector(".tile"));
+        window.play(btn.closest(".cell").querySelector(".tile"));
         return;
       }
+      if (e.target.closest(".ibtn")) return;   // ссылка уводит сама
       var tile = e.target.closest(".tile");
       if (!tile) return;
       if (tile.dataset.album !== undefined) {
@@ -244,6 +246,13 @@
       b.append(num, name);
       b.addEventListener("click", function () { window.play(b); });
       li.appendChild(b);
+      if (t.slug) {                    // у трека альбома тоже есть страница
+        var a = document.createElement("a");
+        a.className = "mlink";
+        a.href = "/track/" + t.slug + "/";
+        a.textContent = grid ? (grid.dataset.about || "") : "";
+        li.appendChild(a);
+      }
       list.appendChild(li);
     });
     modal.classList.add("on");

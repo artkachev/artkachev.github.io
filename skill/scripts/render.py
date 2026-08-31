@@ -40,7 +40,7 @@ WORDS = {
            "album_word": "Альбом", "singles_word": "Синглы",
            "by_letter": "По алфавиту", "faq": "Вопросы", "pause": "Пауза",
            "genre_word": "Жанр", "role_word": "Роль", "all_word": "Все",
-           "multi_hint": "можно несколько",
+           "multi_hint": "можно несколько", "about_track": "О треке",
            "search_hint": "Поиск по артисту, альбому или треку",
            "clear": "Очистить", "no_hits": "Ничего не нашлось. Попробуйте короче или по-другому.",
            "nothing": "Работ сразу со всеми этими ролями нет. Снимите один фильтр.",
@@ -55,7 +55,7 @@ WORDS = {
            "album_word": "Album", "singles_word": "Singles",
            "by_letter": "By letter", "faq": "FAQ", "pause": "Pause",
            "genre_word": "Genre", "role_word": "Role", "all_word": "All",
-           "multi_hint": "combine",
+           "multi_hint": "combine", "about_track": "About",
            "search_hint": "Search by artist, album or track",
            "clear": "Clear", "no_hits": "Nothing found. Try a shorter query.",
            "nothing": "Nothing matches all of these. Remove one filter.",
@@ -268,13 +268,13 @@ PAUSE_ICON = ('<svg class="ico pause" viewBox="0 0 24 24" aria-hidden="true">'
               '<path d="M6.5 5h3.6v14H6.5zM13.9 5h3.6v14h-3.6z"/></svg>')
 
 
-def _tile(site, rel, album_index=None):
+def _tile(site, rel, album_index=None, slug=None):
     """Плитка работы.
 
-    У сингла обложка только выбирает трек, а играет отдельная кнопка рядом —
-    она лежит соседом, а не внутри плитки: кнопка в кнопке невалидна и её
-    не достать с клавиатуры.
+    Кнопки лежат соседями плитки, а не внутри неё: кнопка и ссылка внутри
+    кнопки — невалидная разметка, и с клавиатуры до них не добраться.
     """
+    w = words(site)
     cover = f'/covers/{esc(rel["cover"])}.jpg'
     artist = esc(rel["artist"])
     title = esc(rel["title"])
@@ -282,24 +282,31 @@ def _tile(site, rel, album_index=None):
     roles = " ".join(release_roles(rel))
     if rel["type"] == "album":
         n = len(rel.get("tracks", []))
-        tw = words(site)["tracks_word"]
-        badge = f'<span class="tbadge">{n} {plural(n, tw)}</span>'
+        badge = f'<span class="tbadge">{n} {plural(n, w["tracks_word"])}</span>'
         attrs = f'data-album="{album_index}"'
-        cls, button = "tile album", ""
+        cls, acts = "tile album", ""
     else:
         badge = ""
         attrs = f'data-id="{esc(rel["id"])}"'
         cls = "tile"
-        button = (f'<button type="button" class="pbtn" hidden '
-                  f'data-label="{artist} — {title}" '
-                  f'aria-label="{esc(words(site)["listen"])}: {artist} — {title}">'
-                  f'{PLAY_ICON}{PAUSE_ICON}</button>')
+        play = (f'<button type="button" class="pbtn" '
+                f'data-label="{artist} — {title}" '
+                f'aria-label="{esc(w["listen"])}: {artist} — {title}">'
+                f'{PLAY_ICON}{PAUSE_ICON}</button>')
+        # настоящая ссылка, а не кнопка: открывается в новой вкладке
+        # и даёт с главной прямые ссылки на страницы треков
+        info = ""
+        if slug:
+            info = (f'<a class="ibtn" href="/track/{esc(slug)}/" '
+                    f'aria-label="{esc(w["about_track"])}: {artist} — {title}">'
+                    f'{esc(w["about_track"])}</a>')
+        acts = f'<div class="acts">{play}{info}</div>'
     return (f'<li class="cell"><button type="button" class="{cls}" '
             f'data-g="{genre}" data-r="{esc(roles)}" {attrs}>'
             f'<img src="{cover}" alt="{artist} — {title}" loading="lazy" '
             f'width="640" height="640">{badge}'
             f'<span class="tmeta"><span class="tartist">{artist}</span>'
-            f'<span class="ttitle">{title}</span></span></button>{button}</li>')
+            f'<span class="ttitle">{title}</span></span></button>{acts}</li>')
 
 
 def release_roles(rel):
@@ -362,8 +369,9 @@ def _filters(site, releases):
     return f'<div class="filterbar">{"".join(rows)}</div>' if rows else ""
 
 
-def render_index(site, data):
+def render_index(site, data, entries):
     releases = order_releases(site, data["releases"])
+    slug_of = {e["id"]: e["slug"] for e in entries}
     albums, tiles = [], []
     for rel in releases:
         if rel["type"] == "album":
@@ -371,10 +379,11 @@ def render_index(site, data):
             albums.append({
                 "artist": rel["artist"], "title": rel["title"],
                 "cover": rel["cover"],
-                "tracks": [{"id": t["id"], "title": t["title"]}
+                "tracks": [{"id": t["id"], "title": t["title"],
+                            "slug": slug_of.get(t["id"])}
                            for t in rel.get("tracks", [])]})
         else:
-            tiles.append(_tile(site, rel))
+            tiles.append(_tile(site, rel, slug=slug_of.get(rel["id"])))
     desc = site.get("description") or f'{site["name"]} — {site["tagline"]}'
     title = f'{site["name"]} — {site["tagline"]}'
     app_js = (TEMPLATES / "app.js").read_text(encoding="utf-8")
@@ -383,7 +392,7 @@ def render_index(site, data):
         f'{head(site, title=title, description=desc, canonical=canonical)}'
         f'<div class="pf">{nav(site, home=True)}'
         f'{_filters(site, releases)}'
-        f'<ul class="grid" data-listen="{esc(words(site)["listen"])}" data-pause="{esc(words(site)["pause"])}">{"".join(tiles)}</ul>'
+        f'<ul class="grid" data-listen="{esc(words(site)["listen"])}" data-pause="{esc(words(site)["pause"])}" data-about="{esc(words(site)["about_track"])}">{"".join(tiles)}</ul>'
         f'<p class="nothing" hidden>{esc(words(site)["nothing"])}</p></div>'
         f'{footer(site)}{player_and_modal(site)}'
         # именно var: const на верхнем уровне не попадает в window,
@@ -763,7 +772,8 @@ def render_site(site, data, out_dir, faq=None):
     site = dict(site, has_faq=bool(faq),
                 logo_svg=load_logo_svg(site, out_dir))
     entries = track_entries(site, data)
-    (out / "index.html").write_text(render_index(site, data), encoding="utf-8")
+    (out / "index.html").write_text(
+        render_index(site, data, entries), encoding="utf-8")
     track_dir = out / "track"
     track_dir.mkdir(exist_ok=True)
     (track_dir / "index.html").write_text(
