@@ -1,0 +1,59 @@
+{
+  "slug": "artkachev",
+  "repo": "artkachev/artkachev.github.io",
+  "url": "https://artkachev.github.io",
+  "lang": "ru",
+  "name": "КАССА",
+  "tagline": "звукорежиссёр и продюсер",
+  "description": "КАССА — Артём Ткачев, звукорежиссёр и продюсер. Сведение, продакшн и сонграйтинг: Klava Koka, VERBEE, Асия, Ваня Дмитриенко, Mary Gu, Imanbek и другие.",
+  "theme": {
+    "bg": "#12100f",
+    "accent": "#e0a33c",
+    "mode": "dark"
+  },
+  "contacts": [
+    {
+      "label": "Telegram",
+      "url": "https://t.me/fkacca",
+      "primary": true
+    },
+    {
+      "label": "Почта",
+      "url": "mailto:freekacca@gmail.com"
+    }
+  ],
+  "links": [
+    {
+      "label": "Instagram",
+      "url": "https://www.instagram.com/freekacca/"
+    }
+  ],
+  "roles": {
+    "write": {
+      "word": "Автор",
+      "verb": "Кто написал"
+    },
+    "prod": {
+      "word": "Продакшн",
+      "verb": "Кто спродюсировал"
+    },
+    "mix": {
+      "word": "Сведение",
+      "verb": "Кто свёл"
+    },
+    "master": {
+      "word": "Мастеринг",
+      "verb": "Кто мастерил"
+    }
+  },
+  "genres": [
+    "POP",
+    "HIPHOP",
+    "ELECTRONIC",
+    "ALT",
+    "ROCK"
+  ],
+  "featured": [],
+  "facts": [],
+  "analytics": null
+}

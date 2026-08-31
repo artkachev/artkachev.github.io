@@ -1,0 +1,1404 @@
+{
+ "releases": [
+  {
+   "type": "single",
+   "id": "6MEXliAScCaD1srRHkwsPW",
+   "artist": "Klava Koka, JONY",
+   "title": "Журавли",
+   "year": "2026",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "022ad1a1c44ee60bf1a487b3",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "5KgvgvgJz7BK23rf71yOS5",
+   "artist": "Klava Koka",
+   "title": "СПЛЕТНИ. ШУМ. ЛУК.",
+   "year": "2025",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "c90b5cd16167cd1dd4f4c9f3",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "7lihukNOr8sjqnUKIP8rxQ",
+   "artist": "Klava Koka",
+   "title": "Тысячи зим",
+   "year": "2026",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "e8410295e1d15d293799a9ee",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "2wa14u5wsOuZII8cLdhcpR",
+   "artist": "Klava Koka",
+   "title": "Сто шагов назад",
+   "year": "2026",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "73be536fffaebea28656d644",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "5Zf58rXUqdeYRVXT5SsXJB",
+   "artist": "Klava Koka",
+   "title": "Ты достоин",
+   "year": "2025",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "ccd0ead88f69cf7af583821c",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "65ldI90T8BtC6FNH7Z8jlg",
+   "artist": "Klava Koka",
+   "title": "Дружить в губы",
+   "year": "2026",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "abb7d694e109d8bd0f99a5fc",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "0apdLsc0ay2lG05hG0Wq7r",
+   "artist": "Klava Koka",
+   "title": "В моём сердце",
+   "year": "2026",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "abb7d694e109d8bd0f99a5fc",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "5wBxpKuUdjZnHXuxFbhdZZ",
+   "artist": "Klava Koka",
+   "title": "Как я люблю тебя",
+   "year": "2026",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "abb7d694e109d8bd0f99a5fc",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "22nVYJmEJjrH5ynEM78wNh",
+   "artist": "Klava Koka",
+   "title": "Я не отдам тебя никому - Вonus track",
+   "year": "2026",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "abb7d694e109d8bd0f99a5fc",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "2kZYy13IydR8XbpWXmA0rX",
+   "artist": "Mary Gu",
+   "title": "яд",
+   "year": "2024",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "928e2c985fe31162dee7fbe1",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "4LHmrALITW6N34HdiU0f8G",
+   "artist": "Ваня Дмитриенко",
+   "title": "Без обид",
+   "year": "2025",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "f7a4f8386d5dda60360213ff",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "37ChDX3mqL3s60HXE2BVIt",
+   "artist": "Ваня Дмитриенко, Malbec, Siuzanna",
+   "title": "Отражение",
+   "year": "2026",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "301b572c3dbd79e18cd23a08",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "27j6HjArAtyRRG8hPgNHUM",
+   "artist": "Ваня Дмитриенко",
+   "title": "След",
+   "year": "2026",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "8eac402385eea047c5dbebc7",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "4c97cGX3EhuydDdWFKW4K6",
+   "artist": "Tima Belorusskih",
+   "title": "Мысли",
+   "year": "2026",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "4507ed429251509d53264120",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "1YvTAohWYtAyXE9l1AnA6w",
+   "artist": "5УТРА",
+   "title": "Футболка",
+   "year": "2024",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "70fbc2347ade8eb1afd6d8f6",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "38r1ji1fsrS6PVMfveDJ7P",
+   "artist": "VERBEE, Антон Токарев",
+   "title": "Ясный мой свет",
+   "year": "2022",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "7f690c0eebf2d7e24c5313ce",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "7BKe4fV0Sa8kCDBgHbyLVq",
+   "artist": "KDDK, Smokepurpp",
+   "title": "Geek All Week",
+   "year": "2026",
+   "genre": "HIPHOP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "7ee54d19c2586e7cbd09db8c",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "3Izz3CZpcD0n9RMh6k5oIK",
+   "artist": "Imanbek, Mc KF",
+   "title": "EMPURRA",
+   "year": "2026",
+   "genre": "ELECTRONIC",
+   "roles": [
+    "mix"
+   ],
+   "cover": "3c1710c7fdd5cfb664c0e952",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "6jbpOLpK1QMXNHApqgxftL",
+   "artist": "Imanbek, Mnogotochie",
+   "title": "В жизни так бывает (Remix)",
+   "year": "2026",
+   "genre": "ELECTRONIC",
+   "roles": [
+    "mix"
+   ],
+   "cover": "9c1d5c995c607c09fc1e8dda",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "6VTH10Bou5Szq3huJ4XFPQ",
+   "artist": "Morandi, Imanbek",
+   "title": "Miss Cali (Hallelujah) - Imanbek Remix",
+   "year": "2026",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "a5d790a9db4feb3cdcec6468",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "06wqxaTHK9FOs258oDfnLy",
+   "artist": "RARA",
+   "title": "CLOSER",
+   "year": "2025",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "98f135e642b58f50177d1461",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "4C3CVJxnIV5Ew0W3sKqXlZ",
+   "artist": "KDDK, SODA LUV",
+   "title": "McGregor",
+   "year": "2025",
+   "genre": "HIPHOP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "3506b16b90a1022574d8e0cb",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "6SyfobmCh1ckbmdAa5WAcq",
+   "artist": "KDDK, Leonid Agutin",
+   "title": "На сиреневой луне (Rework)",
+   "year": "2025",
+   "genre": "ELECTRONIC",
+   "roles": [
+    "mix"
+   ],
+   "cover": "2205cd3061f57f845e7942f8",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "5NnJUK4XIEUG3r5t5JxsI9",
+   "artist": "ARYUNA",
+   "title": "Guilty Pleasure",
+   "year": "2026",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "efe11c6fa16bf31f2ce84bcf",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "3vzbZgN8Fq2ENkNRFDMJra",
+   "artist": "ARYUNA",
+   "title": "Relapse",
+   "year": "2026",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "1efcdb7a5694fc9a618a5199",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "7qkLuOVRpj2768p8nSlRTf",
+   "artist": "PUSSYKILLER, VERBEE",
+   "title": "Наше лето",
+   "year": "2024",
+   "genre": "ALT",
+   "roles": [
+    "mix"
+   ],
+   "cover": "37cff7b75d4c0c3644fd8c55",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "2kIxDpQlngRVYUAT45vOil",
+   "artist": "PUSSYKILLER",
+   "title": "Не выноси",
+   "year": "2024",
+   "genre": "ALT",
+   "roles": [
+    "mix"
+   ],
+   "cover": "baf86c5661354a44bb14e3ef",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "6uNTSxQZsJxMW6dn9UUN5G",
+   "artist": "PUSSYKILLER",
+   "title": "На пьяную голову",
+   "year": "2024",
+   "genre": "ALT",
+   "roles": [
+    "mix"
+   ],
+   "cover": "baf86c5661354a44bb14e3ef",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "3EvyeCMdWERZWN8i3TQgfd",
+   "artist": "PUSSYKILLER",
+   "title": "Время",
+   "year": "2024",
+   "genre": "ALT",
+   "roles": [
+    "mix"
+   ],
+   "cover": "baf86c5661354a44bb14e3ef",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "246wXHCgkoExlxI5fG6G6Y",
+   "artist": "PUSSYKILLER",
+   "title": "Дыши",
+   "year": "2024",
+   "genre": "ALT",
+   "roles": [
+    "mix"
+   ],
+   "cover": "65af787baef42d79758d9b46",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "6h3nay03MiHSmvARKIQKIg",
+   "artist": "PUSSYKILLER",
+   "title": "Хочу",
+   "year": "2024",
+   "genre": "ALT",
+   "roles": [
+    "mix"
+   ],
+   "cover": "976cabd454275e3607488394",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "5F5YjOlK8yErFHq5xVLd9p",
+   "artist": "КАССА, detis",
+   "title": "Буря",
+   "year": "2026",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "c21b3ada6b1176510a1bcec3",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "0oLQZQTuaMcynXda3Xq70F",
+   "artist": "Leningrad, Зоя, КАССА",
+   "title": "Жигули (Remix)",
+   "year": "2025",
+   "genre": "ROCK",
+   "roles": [
+    "mix"
+   ],
+   "cover": "2a1ce24ca5579fa055a3c420",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "0gXGO7xTwMQtmUeE475TiA",
+   "artist": "КАССА",
+   "title": "Трезво",
+   "year": "2025",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "210dd024e74dfa66226f8132",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "1YiSQhZ8wCw8VjJtPUJMRI",
+   "artist": "КАССА",
+   "title": "Не отрицай",
+   "year": "2025",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "4fb455304e86ded1b2b9281d",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "6lG3uLoMyk2pMxbhfzh4uh",
+   "artist": "Линочка Ли",
+   "title": "Человек",
+   "year": "2024",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "bbb6cecb03c8047aae38ddff",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "24gZHh4J5W8FtVvPvS6GEj",
+   "artist": "Линочка Ли",
+   "title": "Руки",
+   "year": "2024",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "51ac06d99d32d9491280c505",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "3wJdbrPfSkoGuvW05nIQsd",
+   "artist": "Линочка Ли",
+   "title": "Другое тело",
+   "year": "2025",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "1e51e1147ab05a818116bf30",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "5FLIpz1yHxC3sePiK6HCVs",
+   "artist": "Линочка Ли",
+   "title": "Трудная девочка (из т/с «Трудная»‎)",
+   "year": "2024",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "5aa42a8985e0ce87d1dc344b",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "4NHekgdl6eicmzg0CJOkor",
+   "artist": "Асия",
+   "title": "Я не злюсь, милый",
+   "year": "2023",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "824f9bf8719b7698d158d592",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "4tifsl9u8ZxYFf4LEzNfRQ",
+   "artist": "Асия",
+   "title": "Молчу",
+   "year": "2023",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "824f9bf8719b7698d158d592",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "71cVD3Zs8lj8iZizQ6zWLR",
+   "artist": "Асия, Slame",
+   "title": "Как ты",
+   "year": "2023",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "824f9bf8719b7698d158d592",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "1maFgPX4y16tGKKr9b11b5",
+   "artist": "Асия",
+   "title": "Второй том (Bonus Track)",
+   "year": "2023",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "824f9bf8719b7698d158d592",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "66JJCbs0NIkeIbdcNWBhJx",
+   "artist": "Асия",
+   "title": "Обочины",
+   "year": "2024",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "76d9d598bd09dea3b699d846",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "5Cq5vo2gHDeDCxSkOQnuyw",
+   "artist": "Асия",
+   "title": "Детство (из к/ф «Новенькие. Бунт против взрослых»)",
+   "year": "2023",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "bcf31e3e4c13d4884e2c07c1",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "0uunnjbShSLOt38XDXDeaS",
+   "artist": "Асия",
+   "title": "Не по пути",
+   "year": "2022",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "54e751d4b70d6f367fa5c04b",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "0KNzQZeWpzG1Rz4eJc0N8Q",
+   "artist": "Асия",
+   "title": "Чудо",
+   "year": "2026",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "5d7c1674fafdc8ec6eafb1a6",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "3PFNLH4N93KO4jWe3yMjH0",
+   "artist": "ISB, Асия",
+   "title": "Две звезды",
+   "year": "2026",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "451a7567b1e151c7be7230fe",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "3lKv36jZJ56hptC9dOZory",
+   "artist": "Марфа",
+   "title": "Водопадами",
+   "year": "2026",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "9810dccd722a01243577b687",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "4po3ub9fmp85MP6LNHQDYh",
+   "artist": "Марфа",
+   "title": "Танцуй с моей тенью",
+   "year": "2026",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "ddfe2584de4a09e14441d020",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "6lBXXgbs2aU83MRkHaxPpF",
+   "artist": "Марфа",
+   "title": "Темнота",
+   "year": "2026",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "ddfe2584de4a09e14441d020",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "2FgGTDNYW10lWuOrLVBKJB",
+   "artist": "Марфа",
+   "title": "Есть на свете человек",
+   "year": "2026",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "ddfe2584de4a09e14441d020",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "3Twq6zbBOFIbs6ePrCOSUz",
+   "artist": "Марфа",
+   "title": "Ты со мной",
+   "year": "2026",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "ddfe2584de4a09e14441d020",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "7FxkrsVzUjGLqRSSUCtkzt",
+   "artist": "помогисебесоня",
+   "title": "НЕ ВЕРНУСЬ",
+   "year": "2025",
+   "genre": "ALT",
+   "roles": [
+    "mix"
+   ],
+   "cover": "202965fc0eb5fdd2b3ffead6",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "17yxO5oOH8W6rEWWH8mC1K",
+   "artist": "помогисебесоня",
+   "title": "ДЕЖАВЮ",
+   "year": "2025",
+   "genre": "ALT",
+   "roles": [
+    "mix"
+   ],
+   "cover": "04d5a5c34f0815b387c856b3",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "2P1CoYnnJgYLigmedAcpy8",
+   "artist": "VERBEE",
+   "title": "Быстротечна",
+   "year": "2025",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "59dea8bc354e6877626b97ec",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "1f59fArHJ4Wbw2DDZHGbbz",
+   "artist": "VERBEE",
+   "title": "Где ты, где я?",
+   "year": "2025",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "4b25edca81460638ac427677",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "5Z0Um0hKmSvnBlpuztZZrJ",
+   "artist": "VERBEE",
+   "title": "Прощаться не будем",
+   "year": "2025",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "8cdd945ee9ca55ee44a0ab13",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "0CH4KRXRf7buAWsr1gb1TV",
+   "artist": "VERBEE",
+   "title": "Группа крови",
+   "year": "2024",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "b8b0d7cd6ceeb64f833428c9",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "1wfA0En2TGvdE5WedWcybz",
+   "artist": "VERBEE",
+   "title": "Город",
+   "year": "2024",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "a0013b7322cf06872e3c5f51",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "0f3puOS1pW9iOlQNhlMpfn",
+   "artist": "VERBEE",
+   "title": "Фигура",
+   "year": "2024",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "d6bb19245cd0b1b11cd06e96",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "4QmHPHKZrYJOy8MwzGuFBf",
+   "artist": "VERBEE",
+   "title": "Давай взорвём 2",
+   "year": "2024",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "0a543cbb95b77a9576044057",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "3aNbBcLOS50mEpxPYemK4g",
+   "artist": "VERBEE",
+   "title": "Расклад",
+   "year": "2024",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "740da9c5587c7ddd1d343e44",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "7DkAui4Fah1RpcR1sOo7ah",
+   "artist": "VERBEE, Анетта",
+   "title": "Истерика",
+   "year": "2024",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "740da9c5587c7ddd1d343e44",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "3QBcqjya0wgIF2HCcKyqf8",
+   "artist": "VERBEE",
+   "title": "Ярче",
+   "year": "2024",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "740da9c5587c7ddd1d343e44",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "30f2EMEngxYVKtdCjw7OlY",
+   "artist": "VERBEE",
+   "title": "Просто болит",
+   "year": "2024",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "740da9c5587c7ddd1d343e44",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "55CV2d8adLZPSJ1zhmV2OH",
+   "artist": "VERBEE",
+   "title": "Руки тянутся к тебе",
+   "year": "2026",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "09e740d2182ad741f45b6ca3",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "0of4J57trImVadxJTQKh50",
+   "artist": "VERBEE",
+   "title": "ЭТО МОЙ СТИЛЬ",
+   "year": "2026",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "d8716339be88cbb43717441d",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "7dCkSmzN52Zqiz0hk8lG6r",
+   "artist": "VERBEE",
+   "title": "Хочу к тебе",
+   "year": "2026",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "55b69b00453dbd77fdf1f652",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "3yc7QyNDsDA4QezjtKEzSU",
+   "artist": "VERBEE",
+   "title": "НЕДОСТУПЕН",
+   "year": "2026",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "336043bca6d71112b7388289",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "3vsQTiEl4Mn3E2xe4Qwzag",
+   "artist": "VERBEE",
+   "title": "Забуду",
+   "year": "2026",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "19e5f8700dfc3cb2605894ba",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "0XDH6lTEAsgeU2RsFhOQ6K",
+   "artist": "XARISTA",
+   "title": "Паранойя",
+   "year": "2021",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "10e53bb9958943d1246b9089",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "49hWPNyWiBnCdWhPiB0gl9",
+   "artist": "XARISTA, ANAZED",
+   "title": "Камеры",
+   "year": "2022",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "0ede52060722f85e944afbe1",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "2KkBvadU7b4bU7zbWTUqXL",
+   "artist": "XARISTA, Куок",
+   "title": "Помоги",
+   "year": "2022",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "6c59184c1d8cd2a3ab5e7f09",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "2ZdYyYDb9Z9KCp5MhDtNmQ",
+   "artist": "XARISTA",
+   "title": "ПО ДУШАМ",
+   "year": "2021",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "4b302bf7bf435fe6f4a2cb20",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "2Q4ObPoRewn9tG77iiWf67",
+   "artist": "XARISTA",
+   "title": "Я запуталась",
+   "year": "2023",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "0a65891872da57abed261f13",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "2HnDo1kyK9ZWP4cdM9h0Jj",
+   "artist": "XARISTA",
+   "title": "Выберу себя",
+   "year": "2024",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "16e95c03e8938e681091ccf1",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "5I8fFWDSmBAN5KivGKVjw9",
+   "artist": "XARISTA",
+   "title": "Последнее лето",
+   "year": "2023",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "a0bbd98f9fd19da254e21e4b",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "2kpKIVaMsjvX97CAXHGXbG",
+   "artist": "XARISTA",
+   "title": "Лети",
+   "year": "2022",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "3df6370ef438c2cf9e514388",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "6plLRCck0JhctUKa96ZG8B",
+   "artist": "VOIDCAT",
+   "title": "IMBURN",
+   "year": "2025",
+   "genre": "ALT",
+   "roles": [
+    "mix"
+   ],
+   "cover": "8a4f1155d8f5c84c7a9f5dfd",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "6eJzsM013mcPkfb31zSRSY",
+   "artist": "VOIDCAT",
+   "title": "SWEATER ON",
+   "year": "2025",
+   "genre": "ALT",
+   "roles": [
+    "mix"
+   ],
+   "cover": "444f71bf627f331a28881f2d",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "1ELLbIy5WxzcReYwV0ms5Z",
+   "artist": "VOIDCAT",
+   "title": "BBBACK",
+   "year": "2025",
+   "genre": "ALT",
+   "roles": [
+    "mix"
+   ],
+   "cover": "6aca7aad22a31e175878ae8c",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "77JGYKWeP021znxlvYfC6q",
+   "artist": "metatka",
+   "title": "underwater",
+   "year": "2025",
+   "genre": "HIPHOP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "eeec5c4c10149a347a3d1b30",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "58ImGTvoaYs1jjf3zsSefG",
+   "artist": "metatka",
+   "title": "set me free",
+   "year": "2025",
+   "genre": "HIPHOP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "3e52ad0672b5f8afd40adeb0",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "21zE1gtoZ6BzPFdUM2v8Ut",
+   "artist": "metatka",
+   "title": "seventeen",
+   "year": "2025",
+   "genre": "HIPHOP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "e6467563d499985e58f014da",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "6t9LOMdQb1saRsNnxGOTxv",
+   "artist": "metatka",
+   "title": "underglass",
+   "year": "2026",
+   "genre": "HIPHOP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "1283379c3b176dc3d4e2a441",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "1XxxHLCXMzChizj6b3qk2i",
+   "artist": "Wicsur",
+   "title": "RockSt4r",
+   "year": "2024",
+   "genre": "HIPHOP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "924e1f3480affb059efdfd89",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "3Du5WF40a88hQ8sEYHITXJ",
+   "artist": "Wicsur",
+   "title": "Ворон",
+   "year": "2025",
+   "genre": "HIPHOP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "80190aa7bc221275e533c7df",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "7elRYdPByovHFO2R656Fg6",
+   "artist": "Wicsur, CLEXXD",
+   "title": "Меня три",
+   "year": "2024",
+   "genre": "HIPHOP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "b2b7c48de39bf0b74a24984d",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "1dNLxzMkLvdUfoC97I7dJY",
+   "artist": "Wicsur",
+   "title": "Глаза из аниме",
+   "year": "2023",
+   "genre": "HIPHOP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "3850895cbf6291a88cfbaaef",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "1MgtpdAyuOfzkshm1WECx9",
+   "artist": "Софа Купер",
+   "title": "кроме тебя",
+   "year": "2026",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "d5c7399fa0feec2ebefc41b9",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "6PWVIPWUE1ySGLKl5U1zcy",
+   "artist": "Rychovaa",
+   "title": "Подарила любовь",
+   "year": "2024",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "6e015afd63b17fa31f2f0ee9",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "0eMMyHno4jW7vtVwsjXnBR",
+   "artist": "Анетта",
+   "title": "На работу",
+   "year": "2026",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "fa753cb9f34f0cae3b42d78f",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "45yDj6GlgCUS81afZpPiSs",
+   "artist": "Анетта",
+   "title": "Тысяча секунд",
+   "year": "2025",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "381050406a14f6fea78843ac",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "0oZEuaMC6N6g2GOPsIDKWB",
+   "artist": "Анетта",
+   "title": "Синим пламенем",
+   "year": "2025",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "a46d871296121a8a9776bfe0",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "7ygxI1LZfgZv1CfNaAi5HK",
+   "artist": "Анетта",
+   "title": "Выброс негатива",
+   "year": "2025",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "c6336b9a7c7e89930ddd1d9b",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "512KBmIY2PnQ996uvPwNan",
+   "artist": "VASYALISA",
+   "title": "Дорогу педагогу",
+   "year": "2021",
+   "genre": "POP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "cf36e95cac5520bb99400fa3",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "52Q1BotLsWGG1TMwUaCHp5",
+   "artist": "ANAZED",
+   "title": "Товарищ Сталин",
+   "year": "2022",
+   "genre": "HIPHOP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "10ba2be8190df6ad9853b979",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "5sNHNI3psYJUNWQohHSyFx",
+   "artist": "ANAZED",
+   "title": "Адреналин",
+   "year": "2022",
+   "genre": "HIPHOP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "1e6006955f02af085a8c1d35",
+   "feat": [],
+   "hidden": false
+  },
+  {
+   "type": "single",
+   "id": "7cPROd4Xcxq3ut1So3Pt1a",
+   "artist": "ANAZED",
+   "title": "Хейт ми",
+   "year": "2022",
+   "genre": "HIPHOP",
+   "roles": [
+    "mix"
+   ],
+   "cover": "b05889bf3f424513f2f9349d",
+   "feat": [],
+   "hidden": false
+  }
+ ]
+}
