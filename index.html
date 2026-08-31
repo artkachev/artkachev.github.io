@@ -26,7 +26,9 @@ html{scrollbar-color:var(--accent) var(--bg)}
 ::-webkit-scrollbar-thumb{background:#3a3431;border-radius:99px;border:3px solid var(--bg)}
 ::-webkit-scrollbar-thumb:hover{background:var(--accent)}
 a{color:inherit}
-img{max-width:100%;display:block}
+/* без height:auto атрибут height="640" растягивает картинку,
+   когда ширину ужимает колонка */
+img{max-width:100%;height:auto;display:block}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .pf{max-width:var(--maxw);margin:0 auto;padding:0 var(--step)}
 
@@ -166,7 +168,8 @@ img{max-width:100%;display:block}
 /* ── страница трека ─────────────────────────────────────────────── */
 .trk{display:grid;gap:38px;grid-template-columns:minmax(0,300px) minmax(0,1fr);
   align-items:start;margin:26px 0 60px}
-.trk .cover{border-radius:3px;box-shadow:var(--shadow)}
+.trk .cover{width:100%;aspect-ratio:1;object-fit:cover;
+  border-radius:3px;box-shadow:var(--shadow)}
 .trk h1{font-family:var(--font-head);font-weight:700;text-transform:uppercase;
   font-size:clamp(27px,4.2vw,46px);line-height:1.02;margin:0 0 16px;letter-spacing:.004em}
 .lead{font-size:17px;line-height:1.65;max-width:68ch;margin:0 0 20px;color:var(--ink)}
@@ -189,7 +192,23 @@ img{max-width:100%;display:block}
 .hub .counter{font-family:var(--font-head);font-weight:500;font-size:12px;
   letter-spacing:.11em;text-transform:uppercase;color:var(--ink-dim);margin:0 0 22px}
 
+/* поиск по каталогу */
+.search{position:relative;margin:0 0 26px;max-width:520px}
+.search input{width:100%;background:var(--surface);color:var(--ink);
+  border:1px solid var(--line);border-radius:2px;
+  padding:14px 44px 14px 15px;font:inherit;font-size:16px;
+  min-height:52px;transition:border-color .18s}
+.search input::placeholder{color:var(--ink-dim)}
+.search input:focus{outline:none;border-color:var(--accent)}
+.search input::-webkit-search-cancel-button{display:none}
+.search button{position:absolute;right:2px;top:50%;transform:translateY(-50%);
+  background:none;border:0;color:var(--ink-dim);font-size:24px;line-height:1;
+  cursor:pointer;min-width:44px;min-height:44px}
+.search button:hover{color:var(--accent)}
+.search button[hidden]{display:none}
+
 /* указатель по буквам */
+.alpha[hidden]{display:none}   /* иначе display:flex перебивает hidden */
 .alpha{display:flex;flex-wrap:wrap;gap:2px 4px;margin:0 0 44px;
   border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:12px 0}
 .alpha a{font-family:var(--font-head);font-weight:500;font-size:13px;
@@ -324,7 +343,8 @@ c-2 -36 -8 -70 -13 -77 -6 -7 -20 -32 -32 -55 -31 -62 -51 -57 -51 12 0 55 30
   var armed = null;         // плитка, выбранная но ещё не запущенная
   var isPaused = true;
   var wantPlay = false;     // сафари на айфоне глушит автостарт
-  var pendingUri = null;
+  var pendingId = null;
+  var loaded = null;        // какой трек уже заряжен в плеер
 
   var grid = document.querySelector(".grid");
   var panel = document.getElementById("player");
@@ -432,9 +452,25 @@ c-2 -36 -8 -70 -13 -77 -6 -7 -20 -32 -32 -55 -31 -62 -51 -57 -51 12 0 55 30
     });
   }
 
+  /* Заранее заряжаем трек в плеер, не запуская звук.
+
+     Телефон разрешает автозапуск только внутри жеста пользователя, а
+     loadUri грузит трек не мгновенно — к моменту готовности жест первого
+     нажатия уже «протух», и play срабатывал вхолостую. Но нажатий у нас
+     два: первое выбирает плитку, и его хватает, чтобы загрузить трек.
+     Тогда второе нажатие только снимает с паузы — сразу и внутри
+     собственного жеста. */
+  function preload(tile) {
+    var id = tile && tile.dataset.id;
+    if (!id || !ctrl || loaded === id) return;
+    ctrl.loadUri("spotify:track:" + id);
+    loaded = id;
+  }
+
   function arm(tile) {
     armed = tile;
     refresh();
+    preload(tile);
     var btn = playBtn(tile);
     if (btn) btn.focus();
   }
@@ -461,12 +497,16 @@ c-2 -36 -8 -70 -13 -77 -6 -7 -20 -32 -32 -55 -31 -62 -51 -57 -51 12 0 55 30
         }
         refresh();
       });
-      if (pendingUri) { start(pendingUri); pendingUri = null; }
+      if (pendingId) { start(pendingId); pendingId = null; }
+      else if (armed) { preload(armed); }   // выбрали до готовности API
     });
   };
 
-  function start(uri) {
-    ctrl.loadUri(uri);
+  function start(id) {
+    if (loaded !== id) {          // не заряжен заранее — грузим сейчас
+      ctrl.loadUri("spotify:track:" + id);
+      loaded = id;
+    }
     ctrl.play();
   }
 
@@ -482,8 +522,7 @@ c-2 -36 -8 -70 -13 -77 -6 -7 -20 -32 -32 -55 -31 -62 -51 -57 -51 12 0 55 30
     wantPlay = true;
     panel.classList.add("on");
     refresh();
-    var uri = "spotify:track:" + id;
-    if (ctrl) { start(uri); } else { pendingUri = uri; }
+    if (ctrl) { start(id); } else { pendingId = id; }
   };
 
   /* ── клики по сетке ──────────────────────────────────────── */

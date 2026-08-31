@@ -11,7 +11,8 @@
   var armed = null;         // плитка, выбранная но ещё не запущенная
   var isPaused = true;
   var wantPlay = false;     // сафари на айфоне глушит автостарт
-  var pendingUri = null;
+  var pendingId = null;
+  var loaded = null;        // какой трек уже заряжен в плеер
 
   var grid = document.querySelector(".grid");
   var panel = document.getElementById("player");
@@ -119,9 +120,25 @@
     });
   }
 
+  /* Заранее заряжаем трек в плеер, не запуская звук.
+
+     Телефон разрешает автозапуск только внутри жеста пользователя, а
+     loadUri грузит трек не мгновенно — к моменту готовности жест первого
+     нажатия уже «протух», и play срабатывал вхолостую. Но нажатий у нас
+     два: первое выбирает плитку, и его хватает, чтобы загрузить трек.
+     Тогда второе нажатие только снимает с паузы — сразу и внутри
+     собственного жеста. */
+  function preload(tile) {
+    var id = tile && tile.dataset.id;
+    if (!id || !ctrl || loaded === id) return;
+    ctrl.loadUri("spotify:track:" + id);
+    loaded = id;
+  }
+
   function arm(tile) {
     armed = tile;
     refresh();
+    preload(tile);
     var btn = playBtn(tile);
     if (btn) btn.focus();
   }
@@ -148,12 +165,16 @@
         }
         refresh();
       });
-      if (pendingUri) { start(pendingUri); pendingUri = null; }
+      if (pendingId) { start(pendingId); pendingId = null; }
+      else if (armed) { preload(armed); }   // выбрали до готовности API
     });
   };
 
-  function start(uri) {
-    ctrl.loadUri(uri);
+  function start(id) {
+    if (loaded !== id) {          // не заряжен заранее — грузим сейчас
+      ctrl.loadUri("spotify:track:" + id);
+      loaded = id;
+    }
     ctrl.play();
   }
 
@@ -169,8 +190,7 @@
     wantPlay = true;
     panel.classList.add("on");
     refresh();
-    var uri = "spotify:track:" + id;
-    if (ctrl) { start(uri); } else { pendingUri = uri; }
+    if (ctrl) { start(id); } else { pendingId = id; }
   };
 
   /* ── клики по сетке ──────────────────────────────────────── */

@@ -41,6 +41,8 @@ WORDS = {
            "by_letter": "По алфавиту", "faq": "Вопросы", "pause": "Пауза",
            "genre_word": "Жанр", "role_word": "Роль", "all_word": "Все",
            "multi_hint": "можно несколько",
+           "search_hint": "Поиск по артисту, альбому или треку",
+           "clear": "Очистить", "no_hits": "Ничего не нашлось. Попробуйте короче или по-другому.",
            "nothing": "Работ сразу со всеми этими ролями нет. Снимите один фильтр.",
            "catalog_lead": "Полный каталог работ",
            "among_them": "среди них",
@@ -54,6 +56,8 @@ WORDS = {
            "by_letter": "By letter", "faq": "FAQ", "pause": "Pause",
            "genre_word": "Genre", "role_word": "Role", "all_word": "All",
            "multi_hint": "combine",
+           "search_hint": "Search by artist, album or track",
+           "clear": "Clear", "no_hits": "Nothing found. Try a shorter query.",
            "nothing": "Nothing matches all of these. Remove one filter.",
            "catalog_lead": "Full catalogue of works",
            "among_them": "among them",
@@ -525,10 +529,24 @@ def _guest_note(names):
     return f' <span class="with">· с {esc(", ".join(names))}</span>' if names else ""
 
 
-def _track_li(item, *, show_year):
+def search_key(*parts):
+    """Строка для поиска: сам текст плюс его латиница.
+
+    Каталог подписан как в Spotify — «Klava Koka», — а искать будут и
+    «клава». Держим обе записи рядом, тогда совпадёт любая.
+    """
+    text = " ".join(str(p) for p in parts if p).lower().replace("ё", "е")
+    text = re.sub(r"\s+", " ", text).strip()
+    lat = "".join(TRANSLIT.get(ch, ch) for ch in text)
+    return text if lat == text else f"{text} {lat}"
+
+
+def _track_li(item, *, show_year, artist, album=None):
     year = (f'<span class="yr">{esc(item["year"])}</span>'
             if show_year and item.get("year") else "")
-    return (f'<li><a href="/track/{esc(item["slug"])}/">{esc(item["title"])}'
+    key = search_key(item["title"], " ".join(item["guests"]), artist, album)
+    return (f'<li data-s="{esc(key)}">'
+            f'<a href="/track/{esc(item["slug"])}/">{esc(item["title"])}'
             f'{_guest_note(item["guests"])}{year}</a></li>')
 
 
@@ -549,19 +567,24 @@ def render_hub(site, data, entries):
         for album in who["albums"]:
             year = (f'<span class="yr">{esc(album["year"])}</span>'
                     if album.get("year") else "")
-            rows = "".join(_track_li(t, show_year=False) for t in album["tracks"])
+            rows = "".join(_track_li(t, show_year=False, artist=artist,
+                                     album=album["title"])
+                           for t in album["tracks"])
             parts.append(
-                f'<div class="alb"><p class="albhead">«{esc(album["title"])}»'
+                f'<div class="alb" data-s="{esc(search_key(album["title"], artist))}">'
+                f'<p class="albhead">«{esc(album["title"])}»'
                 f'{year} <span class="albtag">{esc(w["album_word"])}</span></p>'
                 f'<ul>{rows}</ul></div>')
         if who["singles"]:
             head_line = (f'<p class="subhead">{esc(w["singles_word"])}</p>'
                          if who["albums"] else "")
-            rows = "".join(_track_li(s, show_year=True) for s in who["singles"])
-            parts.append(f'{head_line}<ul>{rows}</ul>')
+            rows = "".join(_track_li(s, show_year=True, artist=artist)
+                           for s in who["singles"])
+            parts.append(f'<div class="sing">{head_line}<ul>{rows}</ul></div>')
         n = who["count"]
         blocks.append(
-            f'<section class="art" id="a-{esc(slugify(artist))}">'
+            f'<section class="art" id="a-{esc(slugify(artist))}" '
+            f'data-s="{esc(search_key(artist))}">'
             f'<h3>{esc(artist)}<span class="cnt">{n}</span></h3>'
             f'{"".join(parts)}</section>')
 
@@ -609,10 +632,20 @@ def render_hub(site, data, entries):
         f'<a class="back" href="/">{esc(w["back"])}</a>'
         f'<h1>{esc(w["hub_title"])}</h1>'
         f'<p class="lead">{lead}</p>'
-        f'<p class="counter">{esc(counter)}</p>'
+                f'<div class="search">'
+        f'<input type="search" id="q" autocomplete="off" '
+        f'placeholder="{esc(w["search_hint"])}" aria-label="{esc(w["search_hint"])}">'
+        f'<button type="button" id="qclear" hidden '
+        f'aria-label="{esc(w["clear"])}">&times;</button></div>'
+        f'<p class="counter" id="counter" data-tpl="{esc(counter)}" '
+        f'data-tw="{esc("|".join(tw))}" data-aw="{esc("|".join(aw))}">'
+        f'{esc(counter)}</p>'
         f'<nav class="alpha" aria-label="{esc(w["by_letter"])}">{nav_letters}</nav>'
-        f'{"".join(blocks)}</div>{footer(site)}'
+        f'{"".join(blocks)}'
+        f'<p class="nothing" id="nohits" hidden>{esc(w["no_hits"])}</p></div>'
+        f'{footer(site)}'
         f'<script type="application/ld+json">{json.dumps(jsonld, ensure_ascii=False)}</script>'
+        f'<script>{(TEMPLATES / "hub.js").read_text(encoding="utf-8")}</script>'
         f'</body></html>')
 
 
