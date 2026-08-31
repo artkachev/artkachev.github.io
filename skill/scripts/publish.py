@@ -49,7 +49,7 @@ def guard_identity(proj):
     if missing:
         raise PublishRefused(
             "не задано " + " и ".join(missing) + ". Выполните один раз:\n"
-            '  git config --global user.name "Артём Ткачев"\n'
+            '  git config --global user.name "Артем Ткачев"\n'
             '  git config --global user.email "вашapochta@example.com"')
 
 

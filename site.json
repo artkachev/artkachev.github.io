@@ -5,7 +5,7 @@
   "lang": "ru",
   "name": "КАССА",
   "tagline": "звукорежиссёр и продюсер",
-  "description": "КАССА — Артём Ткачев, звукорежиссёр и продюсер. Сведение, продакшн и сонграйтинг: Klava Koka, VERBEE, Асия, Ваня Дмитриенко, Mary Gu, Imanbek и другие.",
+  "description": "КАССА — Артем Ткачев, звукорежиссёр и продюсер. Сведение, продакшн и сонграйтинг: Klava Koka, VERBEE, Асия, Ваня Дмитриенко, Mary Gu, Imanbek и другие.",
   "theme": {
     "bg": "#12100f",
     "accent": "#e0a33c",
@@ -72,5 +72,5 @@
     "png": "/assets/favicon-32.png",
     "apple": "/assets/apple-touch-icon.png"
   },
-  "real_name": "Артём Ткачев"
+  "real_name": "Артем Ткачев"
 }
