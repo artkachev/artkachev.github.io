@@ -1,8 +1,11 @@
 """Заливка на GitHub. Сайт живёт в чужом репозитории, поэтому рамки жёсткие:
 только тот репозиторий, что указан в site.json, и только свои файлы.
 """
+import gzip
 import json
+import shutil
 import subprocess
+import tempfile
 import time
 import urllib.error
 import urllib.request
@@ -139,6 +142,40 @@ def publish(proj, site, message, confirmed):
 INDEXNOW_ENDPOINT = "https://api.indexnow.org/indexnow"
 
 
+def fetch(url, timeout=20):
+    """Скачать страницу сайта: (код, тело).
+
+    Через curl, если он есть, и только потом своими силами. Причина не в
+    удобстве: с этой машины urllib читает с Pages ответы примерно до десяти
+    килобайт, а на главной и на карте сайта повисает до таймаута — заголовки
+    приходят, тело не идёт. curl договаривается с сервером по HTTP/2 и берёт
+    те же адреса за треть секунды. Проверка выкладки, которая молча падает по
+    таймауту, хуже отсутствующей: она сообщает «не выложено» про выложенное.
+    """
+    curl = shutil.which("curl")
+    if curl:
+        tmp = Path(tempfile.mkstemp(prefix="publish-fetch-")[1])
+        try:
+            res = subprocess.run(
+                [curl, "-sS", "--compressed", "--max-time", str(timeout),
+                 "-H", "Cache-Control: no-cache", "-o", str(tmp),
+                 "-w", "%{http_code}", url],
+                text=True, capture_output=True)
+            if res.returncode != 0:
+                raise OSError(f"curl: {res.stderr.strip() or res.returncode}")
+            return int(res.stdout.strip() or 0), tmp.read_bytes()
+        finally:
+            tmp.unlink(missing_ok=True)
+    req = urllib.request.Request(url, headers={
+        "User-Agent": "Mozilla/5.0", "Accept": "*/*",
+        "Accept-Encoding": "gzip", "Cache-Control": "no-cache"})
+    with urllib.request.urlopen(req, timeout=timeout) as r:
+        raw = r.read()
+        if r.headers.get("Content-Encoding") == "gzip":
+            raw = gzip.decompress(raw)
+        return r.status, raw
+
+
 def wait_live(proj, site, timeout=210, interval=7):
     """Ждём, пока Pages отдаст свежую сборку.
 
@@ -155,11 +192,9 @@ def wait_live(proj, site, timeout=210, interval=7):
         # на десять минут — без обхода мы всё это время сверяли бы старое
         url = f'{site["url"]}/sitemap.xml?ts={int(time.time())}'
         try:
-            req = urllib.request.Request(
-                url, headers={"User-Agent": "Mozilla/5.0", "Cache-Control": "no-cache"})
-            with urllib.request.urlopen(req, timeout=15) as r:
-                if r.read().decode("utf-8") == local:
-                    return True
+            _, body = fetch(url, timeout=15)
+            if body.decode("utf-8") == local:
+                return True
         except OSError:
             pass
         if time.monotonic() >= deadline:
@@ -211,9 +246,7 @@ def verify_live(site, sample_cover=None, timeout=30):
         targets["обложка"] = f"{site['url']}/covers/{sample_cover}.jpg"
     for name, url in targets.items():
         try:
-            req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-            with urllib.request.urlopen(req, timeout=timeout) as r:
-                checks[name] = r.status
+            checks[name] = fetch(url, timeout=timeout)[0]
         except Exception as exc:
             checks[name] = f"ошибка: {exc}"
     return checks
