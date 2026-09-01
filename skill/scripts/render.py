@@ -304,6 +304,16 @@ def ld_script(*objs):
         for o in objs if o)
 
 
+def caps_line(text):
+    """Заголовок, набранный прописными: длинное тире поднимаем.
+
+    Тире рисуется по центру строчных, а в капители строчных нет — на фоне
+    заглавных оно провисает. Оптически его нужно поднять к середине букв,
+    иначе строка выглядит разорванной по низу.
+    """
+    return '<span class="mdash">—</span>'.join(esc(part) for part in text.split("—"))
+
+
 def crumbs(site, trail):
     """Хлебные крошки: видимая строка и BreadcrumbList к ней.
 
@@ -340,11 +350,16 @@ def footer(site):
     if site.get("facts"):
         facts = ('<ul class="facts">'
                  + "".join(f"<li>{esc(f)}</li>" for f in site["facts"]) + "</ul>")
+    # приписки внизу: сноска про Meta нужна по российскому закону, раз на
+    # сайте есть ссылка на инстаграм. Текст лежит в site.json, а не в коде,
+    # чтобы правился без пересборки скриптов
+    legal = "".join(f'<p class="small legal">{esc(line)}</p>'
+                    for line in site.get("legal") or [])
     return (f'<footer class="foot"><div class="pf">'
             f'<h2>{esc(w["contact"])}</h2>'
             f'<ul class="cts">{items}</ul>{facts}'
             f'<p class="small">{esc(site["name"])} · {date.today().year}</p>'
-            f'</div></footer>')
+            f'{legal}</div></footer>')
 
 
 def player_and_modal(site):
@@ -500,8 +515,7 @@ def render_index(site, data, entries):
         jsonld["alternateName"] = site["real_name"]
     if site.get("og_image"):
         jsonld["image"] = f'{site["url"]}{site["og_image"]}'
-    same_as = [l["url"] for l in (site.get("links") or []) + (site.get("profiles") or [])
-               if l.get("url", "").startswith("http")]
+    same_as = [l["url"] for l in all_links(site)]
     if same_as:
         jsonld["sameAs"] = same_as
     email = next((c["url"][7:] for c in site.get("contacts") or []
@@ -643,7 +657,7 @@ def render_track_page(site, entry):
         f'<div class="coverbox">'
         f'<img class="cover" src="{cover}" alt="{esc(entry["artist"])} — {esc(entry["title"])}" '
         f'width="640" height="640"></div>'
-        f'<div><h1>{esc(title_line)}</h1>'
+        f'<div><h1>{caps_line(title_line)}</h1>'
         + "".join(f'<p class="lead">{esc(part)}</p>'
                   for part in re.split(r"\n\s*\n", lead.strip()) if part.strip())
         + (
@@ -765,12 +779,73 @@ def render_artist_page(site, artist, tracks, alias=None):
         f'{head(site, title=page_title, description=desc, canonical=canonical)}'
         f'<div class="pf">{nav(site)}'
         f'{crumb_html}'
-        f'<div class="hub"><h1>{esc(title_line)}</h1>'
+        f'<div class="hub"><h1>{caps_line(title_line)}</h1>'
         f'<p class="lead">{esc(lead)}</p>'
         f'<ul>{"".join(rows)}</ul></div></div>'
         f'{footer(site)}'
         f'{ld_script(jsonld, crumb_ld)}'
         f'</body></html>')
+
+
+# Значки площадок. Рисуем сами и одним цветом: чужие фирменные файлы —
+# это и лишние запросы, и чужие права. Внутри одной сетки 24×24 и одной
+# толщины линии набор смотрится своим, а не наклейками с разных сайтов.
+SOCIAL_ICONS = {
+    "telegram": '<path d="M21.7 4.3 2.9 11.5c-1 .4-1 1.8.1 2.1l4.6 1.4 1.8 5.4c.3.8 1.3 1 1.9.4'
+                'l2.5-2.4 4.6 3.4c.7.5 1.7.1 1.9-.8l3.3-15.3c.2-1-.8-1.8-1.9-1.4zM9.4 15.2l8.2-5.6'
+                '-6.6 6.6-.2 3.1-1.4-4.1z"/>',
+    "instagram": '<rect x="3.2" y="3.2" width="17.6" height="17.6" rx="5" fill="none" '
+                 'stroke="currentColor" stroke-width="1.7"/>'
+                 '<circle cx="12" cy="12" r="4.1" fill="none" stroke="currentColor" stroke-width="1.7"/>'
+                 '<circle cx="17.2" cy="6.9" r="1.25"/>',
+    "spotify": '<circle cx="12" cy="12" r="9.1" fill="none" stroke="currentColor" stroke-width="1.7"/>'
+               '<path d="M7.3 9.5c3.1-.9 6.7-.5 9.4 1M7.9 12.7c2.6-.7 5.5-.4 7.7.9'
+               'M8.5 15.8c2-.5 4.2-.3 5.9.7" fill="none" stroke="currentColor" '
+               'stroke-width="1.6" stroke-linecap="round"/>',
+    "yandex": '<circle cx="12" cy="12" r="9.1" fill="none" stroke="currentColor" stroke-width="1.7"/>'
+              '<path d="M10.3 15.4V8.7l5-1.3v6" fill="none" stroke="currentColor" '
+              'stroke-width="1.7" stroke-linecap="round"/>'
+              '<circle cx="8.9" cy="15.6" r="1.7"/><circle cx="13.6" cy="14.3" r="1.7"/>',
+    # у VK знак — это буквы в скруглённом квадрате, и квадрат там залит,
+    # а буквы вырезаны. Контурная версия на него не похожа, поэтому здесь
+    # заливка, а буквы цветом фона. Рисуем путями, а не текстом: шрифт
+    # может не подгрузиться, путь нарисуется всегда
+    "vk": '<rect x="2.9" y="2.9" width="18.2" height="18.2" rx="5.4"/>'
+          '<path d="M5.9 8.7h2.15l1.6 4.3 1.6-4.3h2.15l-2.75 6.6h-1.9z" fill="var(--bg)"/>'
+          '<path d="M13.15 8.7h1.95v6.6h-1.95z" fill="var(--bg)"/>'
+          '<path d="M15.1 11.9l1.95-3.2h2.2l-2.35 3.6 2.5 3h-2.25z" fill="var(--bg)"/>',
+}
+
+
+def social_row(site):
+    """Значки площадок. Показываем те профили, для которых есть значок."""
+    parts = []
+    for link in all_links(site):
+        icon = SOCIAL_ICONS.get((link.get("icon") or "").lower())
+        if not icon:
+            continue
+        parts.append(
+            f'<a href="{esc(link["url"])}" target="_blank" rel="me noopener" '
+            f'aria-label="{esc(link["label"])}">'
+            f'<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" '
+            f'aria-hidden="true" focusable="false">{icon}</svg>'
+            f'<span class="sr-only">{esc(link["label"])}</span></a>')
+    return f'<p class="social">{"".join(parts)}</p>' if parts else ""
+
+
+def all_links(site):
+    """Ссылки на себя в других местах: профили плюс то, что в шапке.
+
+    Профили идут первыми, повторы по адресу выкидываются — иначе Telegram,
+    который есть и там, и там, ушёл бы в sameAs дважды.
+    """
+    seen, out = set(), []
+    for link in (site.get("profiles") or []) + (site.get("links") or []):
+        url = (link.get("url") or "").strip()
+        if url.startswith("http") and url not in seen:
+            seen.add(url)
+            out.append(link)
+    return out
 
 
 def person_ld(site, about=None):
@@ -783,8 +858,7 @@ def person_ld(site, about=None):
         who["alternateName"] = site["real_name"]
     photo = (about or {}).get("photo")
     who["image"] = f'{site["url"]}{photo or site.get("og_image", "")}'
-    same_as = [l["url"] for l in (site.get("links") or []) + (site.get("profiles") or [])
-               if l.get("url", "").startswith("http")]
+    same_as = [l["url"] for l in all_links(site)]
     if same_as:
         who["sameAs"] = same_as
     email = next((c["url"][7:] for c in site.get("contacts") or []
@@ -843,23 +917,22 @@ def render_about(site, about, data, entries, groups):
                                                 for e in entries)]
     lead = (about.get("lead") or "").strip()
     body = "".join(f'<p>{inline(par)}</p>' for par in about.get("body") or [])
+    # значки живут под фотографией: там их видно сразу, и они не разрывают
+    # цифры с текстом в правой колонке
+    social = social_row(site)
     photo = ""
     if about.get("photo"):
-        photo = (f'<div class="coverbox"><img class="cover" '
+        photo = (f'<div class="mephoto"><div class="coverbox"><img class="cover" '
                  f'src="{esc(about["photo"])}" '
                  f'alt="{esc(about.get("photo_alt") or site.get("real_name") or site["name"])}" '
-                 f'width="640" height="640" loading="lazy"></div>')
+                 f'width="640" height="640" loading="lazy"></div>{social}</div>')
     rows = []
     for artist, tracks in sorted(groups.items(), key=lambda kv: -len(kv[1])):
         n = len(tracks)
         rows.append(f'<li><a href="/artist/{esc(slugify(artist))}/">{esc(artist)}'
                     f'<span class="yr">{n} {esc(plural(n, w["tracks_word"]))}</span>'
                     f'</a></li>')
-    profiles = "".join(
-        f'<a href="{esc(pr["url"])}" target="_blank" rel="me noopener">{esc(pr["label"])}</a>'
-        for pr in site.get("profiles") or [])
-    profiles_block = (f'<h2>{esc(w["elsewhere"])}</h2>'
-                      f'<p class="profiles">{profiles}</p>') if profiles else ""
+    profiles_block = ""
     cta = about.get("cta") or next(
         (c for c in site.get("contacts") or [] if c.get("primary")), None)
     cta_block = (f'<p><a class="cta" href="{esc(cta["url"])}" target="_blank" '
@@ -879,9 +952,10 @@ def render_about(site, about, data, entries, groups):
         f'<div class="pf">{nav(site)}'
         f'{crumb_html}'
         f'<article class="trk">{photo}'
-        f'<div><h1>{esc(heading)}</h1>'
+        f'<div><h1>{caps_line(heading)}</h1>'
         + (f'<p class="sub">{esc(subhead)}</p>' if subhead else "")
         + (f'<div class="nums">{stats}</div>' if stats else "")
+        + ("" if photo else social)
         + (f'<p class="numsrc">{esc(source)}</p>' if source else "")
         + (f'<p class="lead">{inline(lead)}</p>' if lead else "")
         + body

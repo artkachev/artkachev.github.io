@@ -29,7 +29,7 @@
       "url": "https://t.me/fkacca"
     },
     {
-      "label": "Instagram",
+      "label": "Instagram*",
       "url": "https://www.instagram.com/freekacca/"
     }
   ],
@@ -81,5 +81,35 @@
     "apple": "/assets/apple-touch-icon.png"
   },
   "real_name": "Артем Ткачев",
-  "indexnow_key": "72a1c61ac80b7db4d69747de5c95a657"
+  "indexnow_key": "72a1c61ac80b7db4d69747de5c95a657",
+  "profiles": [
+    {
+      "label": "Яндекс Музыка",
+      "url": "https://music.yandex.ru/artist/23493605",
+      "icon": "yandex"
+    },
+    {
+      "label": "Spotify",
+      "url": "https://open.spotify.com/artist/3zvgnpqkNUpZbIzrLopMqy",
+      "icon": "spotify"
+    },
+    {
+      "label": "ВКонтакте",
+      "url": "https://vk.ru/free.kacca",
+      "icon": "vk"
+    },
+    {
+      "label": "Instagram",
+      "url": "https://www.instagram.com/freekacca/",
+      "icon": "instagram"
+    },
+    {
+      "label": "Telegram",
+      "url": "https://t.me/fkacca",
+      "icon": "telegram"
+    }
+  ],
+  "legal": [
+    "* Instagram принадлежит компании Meta, признанной экстремистской организацией и запрещённой на территории Российской Федерации."
+  ]
 }
