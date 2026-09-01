@@ -49,7 +49,8 @@ WORDS = {
            "nothing": "Работ сразу со всеми этими ролями нет. Снимите один фильтр.",
            "catalog_lead": "Полный каталог работ",
            "among_them": "среди них",
-           "catalog_hint": "Ищите по артисту, альбому или названию трека."},
+           "catalog_hint": "Ищите по артисту, альбому или названию трека.",
+           "crumbs": "Хлебные крошки"},
     "en": {"works": "Works", "all_tracks": "All tracks", "back": "← All works",
            "listen": "Listen", "contact": "Get in touch", "hub_title": "All tracks",
            "tracks_word": ("track", "tracks", "tracks"),
@@ -64,7 +65,8 @@ WORDS = {
            "nothing": "Nothing matches all of these. Remove one filter.",
            "catalog_lead": "Full catalogue of works",
            "among_them": "among them",
-           "catalog_hint": "Search by artist, album or track title."},
+           "catalog_hint": "Search by artist, album or track title.",
+           "crumbs": "Breadcrumb"},
 }
 
 
@@ -285,6 +287,41 @@ def nav(site, *, home=False):
             f'<nav class="navlinks">{links}</nav></header>')
 
 
+def ld_script(*objs):
+    """Блоки JSON-LD подряд. Их может быть несколько на странице —
+    поиск читает все, а держать breadcrumbs отдельно от основной сущности
+    честнее, чем сшивать разнородное в один объект."""
+    return "".join(
+        f'<script type="application/ld+json">{json.dumps(o, ensure_ascii=False)}</script>'
+        for o in objs if o)
+
+
+def crumbs(site, trail):
+    """Хлебные крошки: видимая строка и BreadcrumbList к ней.
+
+    Раньше вверху страницы стояла одна ссылка «назад». Она отвечала, куда
+    уйти, но не показывала, где страница лежит, — ни человеку, ни выдаче,
+    которая рисует этот путь под ссылкой вместо голого адреса.
+
+    trail — список (название, путь) от корня к текущей странице.
+    """
+    w = words(site)
+    parts = []
+    for i, (name, path) in enumerate(trail):
+        last = i == len(trail) - 1
+        parts.append(f'<span aria-current="page">{esc(name)}</span>' if last
+                     else f'<a href="{esc(path)}">{esc(name)}</a>')
+    html = (f'<nav class="crumbs" aria-label="{esc(w["crumbs"])}">'
+            + '<span class="sep" aria-hidden="true">/</span>'.join(parts)
+            + '</nav>')
+    ld = {"@context": "https://schema.org", "@type": "BreadcrumbList",
+          "itemListElement": [
+              {"@type": "ListItem", "position": i + 1, "name": name,
+               "item": f'{site["url"]}{path}'}
+              for i, (name, path) in enumerate(trail)]}
+    return html, ld
+
+
 def footer(site):
     w = words(site)
     items = "".join(
@@ -460,6 +497,19 @@ def render_index(site, data, entries):
                   if c.get("url", "").startswith("mailto:")), None)
     if email:
         jsonld["email"] = email
+    # WebSite отдельно от Person: он про сайт, а не про человека. Здесь же
+    # alternateName — по какому ещё имени этот сайт спрашивают, — и адрес
+    # поиска по каталогу, чтобы выдача могла искать прямо у себя
+    website = {"@context": "https://schema.org", "@type": "WebSite",
+               "name": site["name"], "url": canonical,
+               "inLanguage": site["lang"]}
+    if site.get("real_name"):
+        website["alternateName"] = site["real_name"]
+    website["potentialAction"] = {
+        "@type": "SearchAction",
+        "target": {"@type": "EntryPoint",
+                   "urlTemplate": f'{site["url"]}/track/?q={{search_term_string}}'},
+        "query-input": "required name=search_term_string"}
     body = (
         f'{head(site, title=title, description=desc, canonical=canonical)}'
         f'<div class="pf">{nav(site, home=True)}'
@@ -467,7 +517,7 @@ def render_index(site, data, entries):
         f'<ul class="grid" data-listen="{esc(words(site)["listen"])}" data-pause="{esc(words(site)["pause"])}" data-about="{esc(words(site)["about_track"])}">{"".join(tiles)}</ul>'
         f'<p class="nothing" hidden>{esc(words(site)["nothing"])}</p></div>'
         f'{footer(site)}{player_and_modal(site)}'
-        f'<script type="application/ld+json">{json.dumps(jsonld, ensure_ascii=False)}</script>'
+        f'{ld_script(jsonld, website)}'
         # именно var: const на верхнем уровне не попадает в window,
         # а app.js читает список как window.ALBUMS
         f'<script>var ALBUMS={json.dumps(albums, ensure_ascii=False)};</script>'
@@ -547,7 +597,19 @@ def render_track_page(site, entry):
         "url": canonical,
         "image": f'{site["url"]}{cover}',
         "contributor": person,
+        # тот же трек в Spotify. Идентификатор и раньше лежал в разметке, но
+        # только внутри iframe плеера — для краулера этой связи не было
+        "sameAs": f'https://open.spotify.com/track/{entry["id"]}',
     }
+    # роль общим полем «contributor» видна человеку, но не машине: продюсер
+    # и сведение для неё одно и то же. Что называется в schema.org своим
+    # именем — называем
+    if "prod" in entry["roles"]:
+        jsonld["producer"] = person
+    if "write" in entry["roles"]:
+        jsonld["author"] = person
+    if entry.get("album"):
+        jsonld["inAlbum"] = {"@type": "MusicAlbum", "name": entry["album"]}
     if entry.get("year"):
         jsonld["datePublished"] = str(entry["year"])
     w = words(site)
@@ -558,10 +620,14 @@ def render_track_page(site, entry):
     main = main_artist(entry["artist"])
     artist_link = (f'<p><a class="back" href="/artist/{esc(slugify(main))}/">'
                    f'Все работы с {esc(main)} →</a></p>')
+    crumb_html, crumb_ld = crumbs(site, [
+        (w["works"], "/"), (w["hub_title"], "/track/"),
+        (main, f'/artist/{slugify(main)}/'),
+        (entry["title"], f'/track/{entry["slug"]}/')])
     return (
         f'{head(site, title=page_title, description=clamp(lead), canonical=canonical, image=cover)}'
         f'<div class="pf">{nav(site)}'
-        f'<a class="back" href="/">{esc(w["back"])}</a>'
+        f'{crumb_html}'
         f'<article class="trk">'
         f'<div class="coverbox">'
         f'<img class="cover" src="{cover}" alt="{esc(entry["artist"])} — {esc(entry["title"])}" '
@@ -578,7 +644,7 @@ def render_track_page(site, entry):
         f'<p><a class="back" href="/track/">{esc(w["all_tracks"])} →</a></p>'
         f'</div></article></div>'
         f'{footer(site)}'
-        f'<script type="application/ld+json">{json.dumps(jsonld, ensure_ascii=False)}</script>'
+        f'{ld_script(jsonld, crumb_ld)}'
         f'</body></html>'))
 
 
@@ -681,15 +747,18 @@ def render_artist_page(site, artist, tracks, alias=None):
                 for i, t in enumerate(ordered)],
         },
     }
+    crumb_html, crumb_ld = crumbs(site, [
+        (w["works"], "/"), (w["hub_title"], "/track/"),
+        (display, f'/artist/{slug}/')])
     return (
         f'{head(site, title=page_title, description=desc, canonical=canonical)}'
         f'<div class="pf">{nav(site)}'
-        f'<a class="back" href="/track/">{esc(w["hub_title"])}</a>'
+        f'{crumb_html}'
         f'<div class="hub"><h1>{esc(title_line)}</h1>'
         f'<p class="lead">{esc(lead)}</p>'
         f'<ul>{"".join(rows)}</ul></div></div>'
         f'{footer(site)}'
-        f'<script type="application/ld+json">{json.dumps(jsonld, ensure_ascii=False)}</script>'
+        f'{ld_script(jsonld, crumb_ld)}'
         f'</body></html>')
 
 
@@ -822,10 +891,12 @@ def render_hub(site, data, entries):
                 for i, e in enumerate(entries, 1)],
         },
     }
+    crumb_html, crumb_ld = crumbs(site, [
+        (w["works"], "/"), (w["hub_title"], "/track/")])
     return (
         f'{head(site, title=page_title, description=desc, canonical=canonical)}'
         f'<div class="pf hub">{nav(site)}'
-        f'<a class="back" href="/">{esc(w["back"])}</a>'
+        f'{crumb_html}'
         f'<h1>{esc(w["hub_title"])}</h1>'
         f'<p class="lead">{lead}</p>'
                 f'<div class="search">'
@@ -840,7 +911,7 @@ def render_hub(site, data, entries):
         f'{"".join(blocks)}'
         f'<p class="nothing" id="nohits" hidden>{esc(w["no_hits"])}</p></div>'
         f'{footer(site)}'
-        f'<script type="application/ld+json">{json.dumps(jsonld, ensure_ascii=False)}</script>'
+        f'{ld_script(jsonld, crumb_ld)}'
         f'<script>{(TEMPLATES / "hub.js").read_text(encoding="utf-8")}</script>'
         f'</body></html>')
 
@@ -945,17 +1016,19 @@ def render_faq(site, faq):
                    f'<p class="subhead">{esc(faq.get("summary_label") or "Коротко")}</p>'
                    f'<p>{inline(faq["summary"])}</p></aside>')
 
+    w = words(site)
+    crumb_html, crumb_ld = crumbs(site, [(w["works"], "/"), (w["faq"], "/faq/")])
     return (
         f'{head(site, title=title, description=desc, canonical=canonical)}'
         f'<div class="pf faq">{nav(site)}'
-        f'<a class="back" href="/track/">← {esc(words(site)["hub_title"])}</a>'
+        f'{crumb_html}'
         f'<h1>{esc(faq.get("heading") or "Вопросы и ответы")}</h1>'
         + (f'<p class="lead">{inline(faq["intro"])}</p>' if faq.get("intro") else "")
         + f'{summary}'
         f'<nav class="faqtabs" aria-label="Разделы">{tabs}</nav>'
         f'{"".join(blocks)}{updated}</div>'
         f'{footer(site)}'
-        f'<script type="application/ld+json">{json.dumps(jsonld, ensure_ascii=False)}</script>'
+        f'{ld_script(jsonld, crumb_ld)}'
         f'</body></html>')
 
 

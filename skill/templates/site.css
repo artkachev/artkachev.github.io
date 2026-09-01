@@ -215,6 +215,15 @@ img{max-width:100%;height:auto;display:block}
   font-family:var(--font-head);font-weight:500;text-transform:uppercase;
   letter-spacing:.09em;font-size:12px;padding:12px 0}
 .back:hover{color:var(--accent)}
+/* хлебные крошки на месте прежней ссылки «назад»: тот же размер и цвет,
+   но виден весь путь, а не одна ступенька вверх */
+.crumbs{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin:0 0 6px;
+  padding:12px 0;font-family:var(--font-head);font-weight:500;
+  text-transform:uppercase;letter-spacing:.09em;font-size:12px;color:var(--ink-dim)}
+.crumbs a{color:var(--ink-dim);text-decoration:none}
+.crumbs a:hover{color:var(--accent)}
+.crumbs .sep{opacity:.4}
+.crumbs [aria-current]{color:var(--ink)}
 
 /* ── каталог работ ──────────────────────────────────────────────── */
 .hub h1{font-family:var(--font-head);font-weight:700;text-transform:uppercase;

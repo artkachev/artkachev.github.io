@@ -118,5 +118,10 @@
       apply();
     }
   });
+  // ?q= — на этот адрес указывает SearchAction в разметке главной, и по нему
+  // же удобно дать готовую ссылку на поиск: «/track/?q=клава»
+  var preset = new URLSearchParams(location.search).get("q");
+  if (preset) input.value = preset;
   apply();
+  if (preset) input.focus();
 })();
