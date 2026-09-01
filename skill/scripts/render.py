@@ -434,12 +434,14 @@ def track_entries(site, data):
                     "artist": tr.get("artist") or rel["artist"],
                     "year": rel.get("year"), "cover": rel["cover"],
                     "roles": tr.get("roles") or rel.get("roles") or ["mix"],
+                    "about": tr.get("about") or "",
                     "album": rel["title"]})
         else:
             entries.append({
                 "id": rel["id"], "title": rel["title"], "artist": rel["artist"],
                 "year": rel.get("year"), "cover": rel["cover"],
                 "roles": rel.get("roles") or ["mix"],
+                "about": rel.get("about") or "",
                 "album": rel.get("album"),
                 "feat": rel.get("feat") or []})
     used = {}
@@ -456,6 +458,19 @@ def track_entries(site, data):
     return entries
 
 
+def auto_lead(site, entry):
+    """Строка под заголовком, когда своё описание не задано."""
+    role_words = [site["roles"][r]["word"] for r in config.ROLE_ORDER
+                  if r in entry["roles"] and r in site["roles"]]
+    who = ", ".join(role_words).lower()
+    lead = (f'«{entry["title"]}» — {entry["artist"]}'
+            + (f', {entry["year"]} год' if entry.get("year") else "")
+            + f'. {who.capitalize()}: {credit_name(site)}.')
+    if entry.get("album"):
+        lead += f' Из альбома «{entry["album"]}».'
+    return lead
+
+
 def render_track_page(site, entry):
     role = primary_role(site, entry["roles"])
     verb = site["roles"].get(role, {}).get("verb", "Кто работал над")
@@ -464,12 +479,7 @@ def render_track_page(site, entry):
     title_line = f'{verb} «{entry["title"]}» — {entry["artist"]}'
     canonical = f'{site["url"]}/track/{entry["slug"]}/'
     cover = f'/covers/{entry["cover"]}.jpg'
-    who = ", ".join(role_words).lower()
-    lead = (f'«{entry["title"]}» — {entry["artist"]}'
-            + (f', {entry["year"]} год' if entry.get("year") else "")
-            + f'. {who.capitalize()}: {credit_name(site)}.')
-    if entry.get("album"):
-        lead += f' Из альбома «{entry["album"]}».'
+    lead = (entry.get("about") or "").strip() or auto_lead(site, entry)
     person = {"@type": "Person", "name": site["name"],
               "url": f'{site["url"]}/', "jobTitle": ", ".join(role_words)}
     if site.get("real_name"):
@@ -498,7 +508,9 @@ def render_track_page(site, entry):
         f'<img class="cover" src="{cover}" alt="{esc(entry["artist"])} — {esc(entry["title"])}" '
         f'width="640" height="640"></div>'
         f'<div><h1>{esc(title_line)}</h1>'
-        f'<p class="lead">{esc(lead)}</p>'
+        + "".join(f'<p class="lead">{esc(part)}</p>'
+                  for part in re.split(r"\n\s*\n", lead.strip()) if part.strip())
+        + (
         f'<ul class="roles">{roles_html}</ul>'
         f'<iframe class="embed" title="{esc(entry["title"])} — Spotify" loading="lazy" '
         f'src="https://open.spotify.com/embed/track/{esc(entry["id"])}?theme=0" '
@@ -507,7 +519,7 @@ def render_track_page(site, entry):
         f'</div></article></div>'
         f'{footer(site)}'
         f'<script type="application/ld+json">{json.dumps(jsonld, ensure_ascii=False)}</script>'
-        f'</body></html>')
+        f'</body></html>'))
 
 
 def main_artist(name):

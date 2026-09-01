@@ -14,6 +14,7 @@ import config
 import covers
 import publish as publish_mod
 import render
+import sandbox
 import spotify
 
 
@@ -170,6 +171,15 @@ def cmd_roles(args):
     return 0
 
 
+def cmd_sandbox(args):
+    """Черновик одной страницей — публикуется артефактом, сайт не трогает."""
+    proj = _project(args)
+    site, data = _load(proj)
+    out = args.out or (proj / "sandbox.build.html")
+    _out(sandbox.build(proj, site, data, out), args)
+    return 0
+
+
 def cmd_build(args):
     proj = _project(args)
     site, data = _load(proj)
@@ -228,6 +238,10 @@ def main(argv=None):
     imp.add_argument("--genre")
     imp.add_argument("--force-album", action="store_true")
     imp.set_defaults(func=cmd_import)
+
+    sb = sub.add_parser("sandbox", help="собрать черновик для песочницы")
+    sb.add_argument("--out")
+    sb.set_defaults(func=cmd_sandbox)
 
     rol = sub.add_parser("roles", help="проставить роли пачкой из файла")
     rol.add_argument("file")
