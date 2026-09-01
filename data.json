@@ -1188,8 +1188,9 @@
    "artist": "VOIDCAT",
    "title": "IMBURN",
    "year": "2025",
-   "genre": "ALT",
+   "genre": "ELECTRONIC",
    "roles": [
+    "write",
     "prod",
     "mix",
     "master"
@@ -1204,8 +1205,9 @@
    "artist": "VOIDCAT",
    "title": "SWEATER ON",
    "year": "2025",
-   "genre": "ALT",
+   "genre": "ELECTRONIC",
    "roles": [
+    "write",
     "prod",
     "mix",
     "master"
@@ -1220,8 +1222,9 @@
    "artist": "VOIDCAT",
    "title": "BBBACK",
    "year": "2025",
-   "genre": "ALT",
+   "genre": "ELECTRONIC",
    "roles": [
+    "write",
     "prod",
     "mix",
     "master"
@@ -1236,8 +1239,9 @@
    "artist": "metatka",
    "title": "underwater",
    "year": "2025",
-   "genre": "HIPHOP",
+   "genre": "ALT",
    "roles": [
+    "write",
     "prod",
     "mix",
     "master"
@@ -1252,8 +1256,9 @@
    "artist": "metatka",
    "title": "set me free",
    "year": "2025",
-   "genre": "HIPHOP",
+   "genre": "ALT",
    "roles": [
+    "write",
     "prod",
     "mix",
     "master"
@@ -1268,8 +1273,9 @@
    "artist": "metatka",
    "title": "seventeen",
    "year": "2025",
-   "genre": "HIPHOP",
+   "genre": "ALT",
    "roles": [
+    "write",
     "prod",
     "mix",
     "master"
@@ -1284,8 +1290,9 @@
    "artist": "metatka",
    "title": "underglass",
    "year": "2026",
-   "genre": "HIPHOP",
+   "genre": "ALT",
    "roles": [
+    "write",
     "prod",
     "mix",
     "master"

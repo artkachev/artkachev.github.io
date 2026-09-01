@@ -41,10 +41,10 @@ McGregor — KDDK, SODA LUV — Сведение, Мастеринг
 яд — Mary Gu — Сведение, Мастеринг
 
 # ── metatka ──
-underwater — metatka — Продакшн, Сведение, Мастеринг
-set me free — metatka — Продакшн, Сведение, Мастеринг
-seventeen — metatka — Продакшн, Сведение, Мастеринг
-underglass — metatka — Продакшн, Сведение, Мастеринг
+underwater — metatka — Автор, Продакшн, Сведение, Мастеринг
+set me free — metatka — Автор, Продакшн, Сведение, Мастеринг
+seventeen — metatka — Автор, Продакшн, Сведение, Мастеринг
+underglass — metatka — Автор, Продакшн, Сведение, Мастеринг
 
 # ── Morandi ──
 Miss Cali (Hallelujah) - Imanbek Remix — Morandi, Imanbek — Сведение, Мастеринг
@@ -89,9 +89,9 @@ CLOSER — RARA — Продакшн, Сведение, Мастеринг
 Забуду — VERBEE — Сведение, Мастеринг
 
 # ── VOIDCAT ──
-IMBURN — VOIDCAT — Продакшн, Сведение, Мастеринг
-SWEATER ON — VOIDCAT — Продакшн, Сведение, Мастеринг
-BBBACK — VOIDCAT — Продакшн, Сведение, Мастеринг
+IMBURN — VOIDCAT — Автор, Продакшн, Сведение, Мастеринг
+SWEATER ON — VOIDCAT — Автор, Продакшн, Сведение, Мастеринг
+BBBACK — VOIDCAT — Автор, Продакшн, Сведение, Мастеринг
 
 # ── Wicsur ──
 RockSt4r — Wicsur — Продакшн, Сведение, Мастеринг
