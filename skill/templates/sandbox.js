@@ -6,6 +6,7 @@
   if (!S || typeof S !== "object") S = {};
   if (!S.edits) S.edits = {};
   if (!S.adds) S.adds = [];
+  if (typeof S.ready !== "string") S.ready = null;
 
   var FONTS =
     '<link rel="preconnect" href="https://fonts.googleapis.com">\n' +
@@ -104,13 +105,16 @@
   /* Публикация перезагружает все открытые окна, наше в том числе. Поэтому
      правка копится молча, а записывается в конце — когда закрываешь окно
      трека. Иначе страница перезагружалась прямо посреди набора текста. */
-  function touch() {
+  /* keepReady — только для самой кнопки отдачи: в остальных случаях список
+     изменился, и прежняя отметка «отдано» относится уже не к нему */
+  function touch(keepReady) {
     S.updated = new Date().toISOString();
+    if (!keepReady) S.ready = null;
     pending = true;
     paintDock();
   }
   function mutateQuiet(fn) { fn(); touch(); paint(); }
-  function mutate(fn) { fn(); touch(); paint(); flush(); }
+  function mutate(fn, keepReady) { fn(); touch(keepReady); paint(); flush(); }
 
   /* ── сохранение через публикацию новой версии ───────────── */
   function flush() {
@@ -655,18 +659,51 @@
       if (a.note) c.appendChild(el("p", null, a.note));
       box.appendChild(c);
     });
-    var say = el("div", "say");
-    say.appendChild(el("p", "lbl", "Как выкатить на сайт"));
-    var p = el("p");
-    p.style.margin = "8px 0 0";
-    p.appendChild(document.createTextNode("Песочница ничего не меняет на "));
-    p.appendChild(el("span", "now", "credits.kaccamusic.com"));
-    p.appendChild(document.createTextNode(" сама — она копит правки. Когда список готов, напиши Клоду "));
-    p.appendChild(el("code", null, "забирай правки из песочницы"));
-    p.appendChild(document.createTextNode(": он прочитает эту страницу, применит всё к данным, пересоберёт сайт и зальёт."));
-    say.appendChild(p);
-    box.appendChild(say);
+    box.appendChild(handoff());
     return box;
+  }
+
+  /* ── отдать правки ──────────────────────────────────────── */
+  function handoff() {
+    var say = el("div", "say" + (S.ready ? " sent" : ""));
+    if (S.ready) {
+      say.appendChild(el("p", "lbl", "Отдано Клоду"));
+      var when = "";
+      try {
+        when = new Date(S.ready).toLocaleTimeString("ru-RU",
+          { hour: "2-digit", minute: "2-digit" });
+      } catch (e) { when = ""; }
+      say.appendChild(el("p", "big",
+        "Список отправлен" + (when ? " в " + when : "") +
+        ". Клод заберёт его, применит и выкатит на сайт."));
+      say.appendChild(el("p", "hint",
+        "Правки остаются здесь, пока он их не применит. Тронешь что-нибудь ещё — " +
+        "отметка снимется, нажми кнопку заново."));
+      var back = el("button", "tiny", "Отменить отдачу");
+      back.type = "button";
+      back.addEventListener("click", function () {
+        mutate(function () { S.ready = null; }, true);
+      });
+      var row0 = el("div", "tools");
+      row0.appendChild(back);
+      say.appendChild(row0);
+      return say;
+    }
+    say.appendChild(el("p", "lbl", "Выкатить на сайт"));
+    say.appendChild(el("p", "big",
+      "Песочница не меняет сайт сама. Нажми — и Клод заберёт список, " +
+      "применит к данным, пересоберёт и зальёт."));
+    var go = el("button", "btn on wide", "Отдать правки Клоду");
+    go.type = "button";
+    go.addEventListener("click", function () {
+      mutate(function () { S.ready = new Date().toISOString(); }, true);
+    });
+    say.appendChild(go);
+    say.appendChild(el("p", "hint",
+      "Кнопка работает, пока открыт разговор с Клодом в Claude Code — он видит, " +
+      "что страница сохранилась, и читает отметку. Если разговор закрыт, напиши " +
+      "ему в новом чате: забирай правки из песочницы."));
+    return say;
   }
 
   /* ── сборка страницы ────────────────────────────────────── */
@@ -732,6 +769,7 @@
                 nosave: "только просмотр" }[saveState];
     if (msg) st.appendChild(el("span",
       "saved" + (saveState === "error" || saveState === "conflict" ? " err" : ""), msg));
+    if (n && S.ready) st.appendChild(el("span", "flagged", "отдано Клоду"));
     if (n) {
       var go = el("button", "btn" + (tab === "sum" ? " on" : ""), "Сводка правок");
       go.type = "button";
