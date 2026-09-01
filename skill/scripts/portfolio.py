@@ -258,7 +258,7 @@ def cmd_publish(args):
     # доступно, и только на те адреса, которые правда изменились
     if result.get("status") == "залито" and not args.no_ping:
         live = publish_mod.wait_live(proj, site)
-        result["indexnow"] = (publish_mod.ping_indexnow(site, summary.get("changed") or [])
+        result["indexnow"] = (publish_mod.ping_indexnow(site, result.pop("urls", []))
                               if live else "не звали: сайт ещё не обновился")
     _out({**result, "checks": summary["checks"]}, args)
     return 0

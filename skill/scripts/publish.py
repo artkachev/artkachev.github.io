@@ -101,6 +101,22 @@ def fetch_covers_remotely(proj, site, timeout=300):
     return True
 
 
+def changed_urls(proj, site):
+    """Адреса страниц, которые уехали последним коммитом.
+
+    Считать их по одной сборке нельзя: между публикациями сборка запускается
+    много раз, и та, что идёт внутри publish, обычно не находит уже никаких
+    отличий — всё изменилось раньше. Тогда список для переобхода выходил
+    пустым, хотя страницы поменялись. Коммит же знает точно, что уехало.
+    """
+    res = _git(proj, "show", "--name-only", "--format=", "HEAD")
+    urls = []
+    for name in res.stdout.split():
+        if name.endswith("index.html"):
+            urls.append(f'{site["url"]}/{name[:-len("index.html")]}')
+    return urls
+
+
 def publish(proj, site, message, confirmed):
     proj = Path(proj)
     guard(proj, site)
@@ -137,7 +153,8 @@ def publish(proj, site, message, confirmed):
                     "которые не наложились автоматически. Коммит уже сделан — "
                     "разберите конфликт руками")
     _git_ok(proj, "push", "origin", "HEAD:main")
-    return {"status": "залито", "files": len(staged.splitlines()), "paths": present}
+    return {"status": "залито", "files": len(staged.splitlines()), "paths": present,
+            "urls": changed_urls(proj, site)}
 
 
 INDEXNOW_ENDPOINT = "https://api.indexnow.org/indexnow"
