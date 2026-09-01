@@ -62,7 +62,7 @@
   "analytics": null,
   "verification": {
     "google": null,
-    "yandex": null,
+    "yandex": "eeab4ee03807eb29",
     "bing": null
   },
   "logo": "/assets/logo.svg",
