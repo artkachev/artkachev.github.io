@@ -26,7 +26,7 @@
 - [VASYALISA](https://credits.kaccamusic.com/artist/vasyalisa/): 1 трек
 - [VERBEE](https://credits.kaccamusic.com/artist/verbee/): 17 треков
 - [VOIDCAT](https://credits.kaccamusic.com/artist/voidcat/): 3 трека
-- [Wicsur](https://credits.kaccamusic.com/artist/wicsur/): 3 трека
+- [Wicsur](https://credits.kaccamusic.com/artist/wicsur/): 4 трека
 - [XARISTA](https://credits.kaccamusic.com/artist/xarista/): 8 треков
 - [Анетта](https://credits.kaccamusic.com/artist/anetta/): 4 трека
 - [Асия](https://credits.kaccamusic.com/artist/asiya/): 8 треков
@@ -129,6 +129,7 @@
 - [Wicsur — RockSt4r](https://credits.kaccamusic.com/track/wicsur-rockst4r/): продакшн, сведение, мастеринг, 2024
 - [Wicsur — Ворон](https://credits.kaccamusic.com/track/wicsur-voron/): продакшн, сведение, мастеринг, 2025
 - [Wicsur — Глаза из аниме](https://credits.kaccamusic.com/track/wicsur-glaza-iz-anime/): продакшн, сведение, мастеринг, 2023
+- [Wicsur, CLEXXD — Меня три](https://credits.kaccamusic.com/track/wicsur-clexxd-menya-tri/): продакшн, сведение, мастеринг, 2024
 - [Софа Купер — кроме тебя](https://credits.kaccamusic.com/track/sofa-kuper-krome-tebya/): продакшн, сведение, мастеринг, 2026
 - [Rychovaa — Подарила любовь](https://credits.kaccamusic.com/track/rychovaa-podarila-lyubov/): продакшн, сведение, мастеринг, 2024
 - [Анетта — На работу](https://credits.kaccamusic.com/track/anetta-na-rabotu/): продакшн, сведение, мастеринг, 2026

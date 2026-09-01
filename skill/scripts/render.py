@@ -118,8 +118,21 @@ def primary_role(site, roles):
     return (roles or ["mix"])[0]
 
 
-def order_releases(site, releases):
-    visible = [r for r in releases if not r.get("hidden")]
+def order_releases(site, releases, *, include_hidden=False):
+    """Работы в порядке показа. Скрытые — только там, где их ждут.
+
+    «Спрятать» означает «убрать с витрины», а не «убрать с сайта»: страница
+    работы остаётся, попадает в каталог, в sitemap и в llms.txt и дальше
+    приносит людей из поиска. Витрина — единственное место, где скрытая
+    работа не показывается, поэтому только render_index зовёт это без флажка.
+
+    Раньше фильтр стоял здесь безусловно, и скрытая работа выпадала из
+    track_entries, то есть из всего сразу. Страница при этом оставалась
+    лежать в репозитории от прежней сборки — уже никем не обновляемая и без
+    единой ссылки на себя: ни в каталоге, ни в карте сайта. Ровно то, чего
+    скрытие делать не должно.
+    """
+    visible = [r for r in releases if include_hidden or not r.get("hidden")]
     featured = list(site.get("featured") or [])
 
     def rank(rel):
@@ -467,7 +480,7 @@ def render_index(site, data, entries):
 
 def track_entries(site, data):
     entries = []
-    for rel in order_releases(site, data["releases"]):
+    for rel in order_releases(site, data["releases"], include_hidden=True):
         if rel["type"] == "album":
             for tr in rel.get("tracks", []):
                 entries.append({
@@ -684,7 +697,7 @@ def catalog(site, data, entries):
     """Артисты по алфавиту, у каждого — альбомы и отдельно синглы."""
     slug_of = {e["id"]: e["slug"] for e in entries}
     shelf = {}
-    for rel in order_releases(site, data["releases"]):
+    for rel in order_releases(site, data["releases"], include_hidden=True):
         primary = main_artist(rel["artist"])
         who = shelf.setdefault(primary, {"albums": [], "singles": [], "count": 0})
         if rel["type"] == "album":
@@ -1048,7 +1061,9 @@ def render_site(site, data, out_dir, faq=None, artist_names=None):
     found = checks.run(site, data, faq, _PAGES, out_dir=out,
                        slugs=[e["slug"] for e in entries])
     return {"tracks": len(entries),
-            "releases": len([r for r in data["releases"] if not r.get("hidden")]),
+            # считаем всё собранное: у скрытой работы страница тоже есть
+            "releases": len(data["releases"]),
+            "off_grid": len([r for r in data["releases"] if r.get("hidden")]),
             "faq": sum(len(s.get("items") or []) for s in (faq or {}).get("sections") or []),
             "checks": checks.report(found),
             "blocking": len(checks.blocking(found))}
