@@ -1,4 +1,4 @@
-<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Кто спродюсировал треки — VASYALISA · КАССА</title><meta name="description" content="Кто спродюсировал треки — VASYALISA. КАССА (Артем Ткачев) — Продакшн, сведение, мастеринг: 1 трек."><meta name="author" content="КАССА (Артем Ткачев)"><link rel="canonical" href="https://credits.kaccamusic.com/artist/vasyalisa/"><meta name="robots" content="index, follow"><meta name="yandex-verification" content="eeab4ee03807eb29"><meta property="og:type" content="website"><meta property="og:site_name" content="КАССА"><meta property="og:locale" content="ru_RU"><meta property="og:title" content="Кто спродюсировал треки — VASYALISA · КАССА"><meta property="og:description" content="Кто спродюсировал треки — VASYALISA. КАССА (Артем Ткачев) — Продакшн, сведение, мастеринг: 1 трек."><meta property="og:url" content="https://credits.kaccamusic.com/artist/vasyalisa/"><meta property="og:image" content="https://credits.kaccamusic.com/assets/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"><link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png"><link rel="apple-touch-icon" href="/assets/apple-touch-icon.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Golos%20Text:wght@400;500;700&subset=cyrillic,cyrillic-ext,latin,latin-ext&display=swap"><style>:root{--bg: #12100f;--accent: #e0a33c;--font-head: 'Oswald', 'Arial Narrow', system-ui, sans-serif;--font-body: 'Golos Text', system-ui, -apple-system, sans-serif;}
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Кто спродюсировал треки — VASYALISA · КАССА</title><meta name="description" content="Кто спродюсировал треки — VASYALISA. КАССА (Артем Ткачев) — Продакшн, сведение, мастеринг: 1 трек."><meta name="author" content="КАССА (Артем Ткачев)"><link rel="canonical" href="https://credits.kaccamusic.com/artist/vasyalisa/"><meta name="robots" content="index, follow"><meta name="yandex-verification" content="eeab4ee03807eb29"><meta property="og:type" content="website"><meta property="og:site_name" content="КАССА"><meta property="og:locale" content="ru_RU"><meta property="og:title" content="Кто спродюсировал треки — VASYALISA · КАССА"><meta property="og:description" content="Кто спродюсировал треки — VASYALISA. КАССА (Артем Ткачев) — Продакшн, сведение, мастеринг: 1 трек."><meta property="og:url" content="https://credits.kaccamusic.com/artist/vasyalisa/"><meta property="og:image" content="https://credits.kaccamusic.com/assets/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"><link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png"><link rel="apple-touch-icon" href="/assets/apple-touch-icon.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Golos%20Text:wght@400;500;700&family=Unbounded:wght@400;700;900&subset=cyrillic,cyrillic-ext,latin,latin-ext&display=swap"><style>:root{--bg: #12100f;--accent: #e0a33c;--font-head: 'Oswald', 'Arial Narrow', system-ui, sans-serif;--font-body: 'Golos Text', system-ui, -apple-system, sans-serif;--font-brand: 'Unbounded', 'Arial Narrow', system-ui, sans-serif;--font-tagline: 'Golos Text', system-ui, -apple-system, sans-serif;--font-util: 'Golos Text', system-ui, -apple-system, sans-serif;}
 /* ── основа ─────────────────────────────────────────────────────── */
 *,*::before,*::after{box-sizing:border-box}
 :root{
@@ -35,7 +35,9 @@ img{max-width:100%;height:auto;display:block}
 /* ── шапка ──────────────────────────────────────────────────────── */
 .pfnav{display:flex;align-items:baseline;justify-content:space-between;
   gap:20px;padding:34px 0 6px;flex-wrap:wrap}
-.brand{font-family:var(--font-head);font-weight:700;text-transform:uppercase;
+/* .pf нужен ради веса: правила разделов (.faq h1, .hub h1) перебивают .brand
+   и подменяют шрифт имени в шапке на Oswald */
+.pf .brand{font-family:var(--font-brand);font-weight:700;text-transform:uppercase;
   font-size:clamp(34px,6.4vw,64px);line-height:.9;letter-spacing:.005em;margin:0}
 .brand a{text-decoration:none}
 /* логотип занимает место имени: высота как у набранного текста */
@@ -44,7 +46,8 @@ img{max-width:100%;height:auto;display:block}
 /* встроенный svg красится темой; у него своя заливка на случай,
    если файл откроют отдельно */
 .logomark path{fill:currentColor}
-.tagline{color:var(--ink-dim);font-size:15px;letter-spacing:.01em;margin:10px 0 0}
+.tagline{font-family:var(--font-tagline);color:var(--ink-dim);font-size:15px;
+  letter-spacing:.01em;margin:10px 0 0}
 .facts{display:flex;gap:18px;flex-wrap:wrap;margin:14px 0 0;padding:0;list-style:none;
   font-size:12px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-dim)}
 .facts b{color:var(--ink);font-weight:500}
@@ -76,7 +79,7 @@ img{max-width:100%;height:auto;display:block}
 .fhint{text-transform:none;letter-spacing:.02em;font-size:11px;opacity:.8;
   display:block;font-weight:400}
 .nothing{color:var(--ink-dim);font-size:15px;margin:0 0 70px;padding:26px 0}
-.fc{font-family:var(--font-body);font-size:11px;font-weight:500;
+.fc{font-family:var(--font-util);font-size:11px;font-weight:500;
   letter-spacing:0;vertical-align:super;margin-left:5px;opacity:.65}
 
 /* ── сетка работ ────────────────────────────────────────────────── */
@@ -95,7 +98,8 @@ img{max-width:100%;height:auto;display:block}
 .tartist{font-family:var(--font-head);font-weight:700;text-transform:uppercase;
   font-size:12px;letter-spacing:.08em;color:var(--accent);margin:0 0 3px;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.ttitle{font-size:15px;font-weight:500;line-height:1.25;margin:0;color:#fff;
+.ttitle{font-family:var(--font-head);font-size:15px;font-weight:500;
+  text-transform:uppercase;letter-spacing:.01em;line-height:1.25;margin:0;color:#fff;
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .tbadge{position:absolute;top:11px;right:11px;z-index:1;
   font-family:var(--font-head);font-weight:500;font-size:10px;letter-spacing:.1em;
@@ -256,7 +260,7 @@ img{max-width:100%;height:auto;display:block}
   display:flex;align-items:baseline;gap:9px}
 .art h3 a{color:inherit;text-decoration:none}
 .art h3 a:hover{text-decoration:underline}
-.art .cnt{font-family:var(--font-body);font-weight:500;font-size:11px;
+.art .cnt{font-family:var(--font-util);font-weight:500;font-size:11px;
   letter-spacing:0;color:var(--ink-dim)}
 .hub ul{list-style:none;margin:0;padding:0;
   display:grid;gap:0 26px;grid-template-columns:repeat(auto-fill,minmax(290px,1fr))}

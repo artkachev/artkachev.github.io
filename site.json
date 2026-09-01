@@ -9,7 +9,8 @@
   "theme": {
     "bg": "#12100f",
     "accent": "#e0a33c",
-    "mode": "dark"
+    "mode": "dark",
+    "font_brand": "Unbounded"
   },
   "contacts": [
     {

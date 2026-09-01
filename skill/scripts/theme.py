@@ -12,14 +12,27 @@ FONT_WEIGHTS = {
     "Onest": "400;500;800",
     "Unbounded": "400;700;900",
     "Manrope": "400;600;800",
-    "Wix Madefor Display": "400;700;800",
+    "Wix Madefor Display": "400;500;700",
+    "Inter": "400;500;700",
 }
 DEFAULT_WEIGHTS = "400;700"
 
 
+def _roles(site):
+    """Головной/тело плюс необязательные лого и подпись — с падением на них,
+    если в site.json свои шрифты для лого/подписи не заданы."""
+    t = site["theme"]
+    return {
+        "head": t["font_head"],
+        "body": t["font_body"],
+        "brand": t.get("font_brand") or t["font_head"],
+        "tagline": t.get("font_tagline") or t["font_body"],
+        "util": t.get("font_util") or t["font_body"],
+    }
+
+
 def font_link(site):
-    theme = site["theme"]
-    families = list(dict.fromkeys([theme["font_head"], theme["font_body"]]))
+    families = list(dict.fromkeys(_roles(site).values()))
     parts = "&".join(
         f"family={quote(name)}:wght@{FONT_WEIGHTS.get(name, DEFAULT_WEIGHTS)}"
         for name in families)
@@ -32,12 +45,16 @@ def font_link(site):
 
 def css_variables(site):
     t = site["theme"]
+    r = _roles(site)
     return (
         ":root{"
         f"--bg: {t['bg']};"
         f"--accent: {t['accent']};"
-        f"--font-head: '{t['font_head']}', 'Arial Narrow', system-ui, sans-serif;"
-        f"--font-body: '{t['font_body']}', system-ui, -apple-system, sans-serif;"
+        f"--font-head: '{r['head']}', 'Arial Narrow', system-ui, sans-serif;"
+        f"--font-body: '{r['body']}', system-ui, -apple-system, sans-serif;"
+        f"--font-brand: '{r['brand']}', 'Arial Narrow', system-ui, sans-serif;"
+        f"--font-tagline: '{r['tagline']}', system-ui, -apple-system, sans-serif;"
+        f"--font-util: '{r['util']}', system-ui, -apple-system, sans-serif;"
         "}")
 
 
