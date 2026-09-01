@@ -1,13 +1,17 @@
 """Заливка на GitHub. Сайт живёт в чужом репозитории, поэтому рамки жёсткие:
 только тот репозиторий, что указан в site.json, и только свои файлы.
 """
+import json
 import subprocess
+import time
+import urllib.error
 import urllib.request
 from pathlib import Path
+from urllib.parse import urlparse
 
 MANAGED_PATHS = (
     "index.html", "track", "faq", "artist", "covers", "assets", "sitemap.xml",
-    "robots.txt", "llms.txt", ".nojekyll", "CNAME", ".github/workflows/deploy.yml",
+    "robots.txt", "llms.txt", "feed.xml", "lastmod.json", ".nojekyll", "CNAME", ".github/workflows/deploy.yml",
     ".github/workflows/fetch-covers.yml", "site.json", "data.json", "faq.json",
     "artist_genres.json", "artist_names.json", "roles.txt", "skill", "CLAUDE.md",
     "README.md", ".gitignore",
@@ -102,7 +106,11 @@ def publish(proj, site, message, confirmed):
             "заливка в чужой репозиторий требует явного подтверждения (--confirm)")
     ensure_workflow(proj)
     _git_ok(proj, "fetch", "origin")
-    present = [p for p in MANAGED_PATHS if (proj / p).exists()]
+    managed = list(MANAGED_PATHS)
+    # ключ IndexNow называется по самому ключу, в общий список его не впишешь
+    if site.get("indexnow_key"):
+        managed.append(f'{site["indexnow_key"]}.txt')
+    present = [p for p in managed if (proj / p).exists()]
     if not present:
         raise PublishRefused("нечего заливать: файлы сайта не собраны")
     _git_ok(proj, "add", "--", *present)
@@ -126,6 +134,69 @@ def publish(proj, site, message, confirmed):
                     "разберите конфликт руками")
     _git_ok(proj, "push", "origin", "HEAD:main")
     return {"status": "залито", "files": len(staged.splitlines()), "paths": present}
+
+
+INDEXNOW_ENDPOINT = "https://api.indexnow.org/indexnow"
+
+
+def wait_live(proj, site, timeout=210, interval=7):
+    """Ждём, пока Pages отдаст свежую сборку.
+
+    IndexNow зовёт краулера сразу, а деплой идёт полминуты с лишним. Позвать
+    на старую версию хуже, чем не звать: робот придёт, увидит прежнее и
+    уйдёт. Сверяем живую карту сайта с только что собранной — совпали,
+    значит выложено.
+    """
+    local = (Path(proj) / "sitemap.xml").read_text(encoding="utf-8")
+    url = f'{site["url"]}/sitemap.xml'
+    deadline = time.monotonic() + timeout
+    while True:
+        try:
+            req = urllib.request.Request(
+                url, headers={"User-Agent": "Mozilla/5.0", "Cache-Control": "no-cache"})
+            with urllib.request.urlopen(req, timeout=15) as r:
+                if r.read().decode("utf-8") == local:
+                    return True
+        except OSError:
+            pass
+        if time.monotonic() >= deadline:
+            return False
+        time.sleep(interval)
+
+
+def ping_indexnow(site, urls, timeout=20):
+    """Сказать Bing и Яндексу, какие адреса изменились.
+
+    У Google открытого приёма нет — его Indexing API официально только для
+    вакансий и трансляций, поэтому здесь только участники IndexNow. Ключ
+    лежит файлом в корне сайта: сервис скачивает его и убеждается, что
+    список присылает владелец.
+    """
+    key = site.get("indexnow_key")
+    if not key:
+        return "ключ не задан"
+    urls = list(urls)[:10000]
+    if not urls:
+        return "нечего слать: изменившихся страниц нет"
+    payload = json.dumps({
+        "host": urlparse(site["url"]).netloc,
+        "key": key,
+        "keyLocation": f'{site["url"]}/{key}.txt',
+        "urlList": urls,
+    }, ensure_ascii=False).encode("utf-8")
+    req = urllib.request.Request(
+        INDEXNOW_ENDPOINT, data=payload,
+        headers={"Content-Type": "application/json; charset=utf-8"})
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            code = r.status
+    except urllib.error.HTTPError as e:
+        code = e.code
+    except OSError as e:
+        return f"не отправлено: {e}"
+    # 200 — принято, 202 — принято, ключ ещё проверяется
+    ok = code in (200, 202)
+    return f'{"отправлено" if ok else f"отказ {code}"}, адресов: {len(urls)}'
 
 
 def verify_live(site, sample_cover=None, timeout=30):

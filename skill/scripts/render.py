@@ -3,10 +3,12 @@
 Готовый HTML здесь только пишется и никогда не разбирается обратно —
 источник истины всегда данные, а не вёрстка.
 """
+import hashlib
 import html
 import json
 import re
-from datetime import date
+import subprocess
+from datetime import date, datetime, timezone
 from pathlib import Path
 
 import checks
@@ -206,6 +208,8 @@ def head(site, *, title, description, canonical, image=None, extra=""):
         f'<meta name="description" content="{esc(description)}">'
         f'<meta name="author" content="{esc(credit_name(site))}">'
         f'<link rel="canonical" href="{esc(canonical)}">'
+        f'<link rel="alternate" type="application/rss+xml" '
+        f'title="{esc(site["name"])}" href="/feed.xml">'
         f'<meta name="robots" content="index, follow">'
         f'{verify_tags}'
         f'<meta property="og:type" content="website">'
@@ -1032,16 +1036,112 @@ def render_faq(site, faq):
         f'</body></html>')
 
 
-def render_sitemap(site, entries, extra=()):
+LASTMOD_FILE = "lastmod.json"
+
+
+def _git_date(out, rel_path):
+    """Когда файл менялся по истории репозитория."""
+    try:
+        res = subprocess.run(
+            ["git", "log", "-1", "--format=%cs", "--", str(rel_path)],
+            cwd=str(out), text=True, capture_output=True, timeout=10)
+    except (OSError, subprocess.SubprocessError):
+        return None
+    stamp = res.stdout.strip()
+    return stamp if len(stamp) == 10 else None
+
+
+def update_lastmod(out, pages):
+    """Настоящие даты изменения страниц — для sitemap.
+
+    Раньше в карту сайта шла дата сборки, одна на все страницы. Пересборка
+    из-за запятой в одном ответе объявляла изменившимися все сто тридцать,
+    и поисковику оставалось только перестать верить полю целиком: Google
+    учитывает lastmod, пока тот похож на правду.
+
+    Дата меняется, только когда изменилось содержимое страницы — сверяем
+    хеш с прошлой сборкой. Снимок лежит рядом с сайтом и уезжает в
+    репозиторий: без него сборка на чистой копии объявит новым всё разом.
+
+    Возвращает (даты по адресам, список изменившихся адресов).
+    """
+    out = Path(out)
+    store = out / LASTMOD_FILE
+    try:
+        old = json.loads(store.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        old = {}
     today = date.today().isoformat()
-    urls = [f'{site["url"]}/', f'{site["url"]}/track/']
-    urls += list(extra)
-    urls += [f'{site["url"]}/track/{e["slug"]}/' for e in entries]
+    fresh, changed = {}, []
+    for url, path in pages.items():
+        digest = hashlib.sha1(Path(path).read_bytes()).hexdigest()[:16]
+        was = old.get(url) or {}
+        if was.get("hash") == digest:
+            fresh[url] = was
+            continue
+        # первый запуск: даты берём из истории репозитория, иначе объявим
+        # сегодняшними сто тридцать страниц, которые не менялись месяцами
+        stamp = today if was else (_git_date(out, Path(path).relative_to(out)) or today)
+        fresh[url] = {"hash": digest, "date": stamp}
+        if stamp == today:
+            changed.append(url)
+    store.write_text(json.dumps(fresh, ensure_ascii=False, indent=1, sort_keys=True),
+                     encoding="utf-8")
+    return fresh, changed
+
+
+def render_sitemap(site, urls, dates):
+    today = date.today().isoformat()
     body = "".join(
-        f"<url><loc>{esc(u)}</loc><lastmod>{today}</lastmod></url>" for u in urls)
+        f'<url><loc>{esc(u)}</loc>'
+        f'<lastmod>{esc((dates.get(u) or {}).get("date") or today)}</lastmod></url>'
+        for u in urls)
     return ('<?xml version="1.0" encoding="UTF-8"?>'
             '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
             f"{body}</urlset>")
+
+
+def _rfc822(stamp):
+    """Дата для RSS: там свой формат, ISO не примут."""
+    try:
+        d = datetime.fromisoformat(stamp).replace(tzinfo=timezone.utc)
+    except ValueError:
+        d = datetime.now(timezone.utc)
+    return d.strftime("%a, %d %b %Y %H:%M:%S +0000")
+
+
+def render_feed(site, entries, dates, limit=30):
+    """Лента последних работ: её читают агрегаторы и часть краулеров.
+
+    Порядок — по дате изменения страницы, то есть сверху то, что недавно
+    появилось или переписано. Дат выхода трека с точностью до дня у нас нет,
+    в данных только год, и выдумывать их ради ленты незачем.
+    """
+    rows = []
+    for e in entries:
+        url = f'{site["url"]}/track/{e["slug"]}/'
+        stamp = (dates.get(url) or {}).get("date") or date.today().isoformat()
+        rows.append((stamp, url, e))
+    rows.sort(key=lambda r: (r[0], r[2]["title"]), reverse=True)
+    items = "".join(
+        f'<item><title>{esc(e["artist"])} — {esc(e["title"])}</title>'
+        f'<link>{esc(url)}</link>'
+        f'<guid isPermaLink="true">{esc(url)}</guid>'
+        f'<pubDate>{_rfc822(stamp)}</pubDate>'
+        f'<description>{esc((e.get("about") or "").strip() or auto_lead(site, e))}'
+        f'</description></item>'
+        for stamp, url, e in rows[:limit])
+    desc = site.get("description") or f'{site["name"]} — {site["tagline"]}'
+    return ('<?xml version="1.0" encoding="UTF-8"?>'
+            '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel>'
+            f'<title>{esc(site["name"])} — {esc(words(site)["hub_title"]).lower()}</title>'
+            f'<link>{esc(site["url"])}/</link>'
+            f'<description>{esc(desc)}</description>'
+            f'<language>{esc(site["lang"])}</language>'
+            f'<atom:link href="{esc(site["url"])}/feed.xml" rel="self" '
+            f'type="application/rss+xml"/>'
+            f'<lastBuildDate>{_rfc822(date.today().isoformat())}</lastBuildDate>'
+            f'{items}</channel></rss>')
 
 
 def render_robots(site):
@@ -1095,17 +1195,22 @@ def render_site(site, data, out_dir, faq=None, artist_names=None):
     site = dict(site, has_faq=bool(faq),
                 logo_svg=load_logo_svg(site, out_dir))
     entries = track_entries(site, data)
+    # адрес → файл: по ним считаются даты изменения для карты сайта
+    pages = {}
     (out / "index.html").write_text(
         render_index(site, data, entries), encoding="utf-8")
+    pages[f'{site["url"]}/'] = out / "index.html"
     track_dir = out / "track"
     track_dir.mkdir(exist_ok=True)
     (track_dir / "index.html").write_text(
         render_hub(site, data, entries), encoding="utf-8")
+    pages[f'{site["url"]}/track/'] = track_dir / "index.html"
     for entry in entries:
         page_dir = track_dir / entry["slug"]
         page_dir.mkdir(exist_ok=True)
         (page_dir / "index.html").write_text(
             render_track_page(site, entry), encoding="utf-8")
+        pages[f'{site["url"]}/track/{entry["slug"]}/'] = page_dir / "index.html"
     aliases = artist_names or {}
     groups = artist_groups(entries)
     artist_dir = out / "artist"
@@ -1119,14 +1224,26 @@ def render_site(site, data, out_dir, faq=None, artist_names=None):
             render_artist_page(site, artist, tracks, alias=aliases.get(artist)),
             encoding="utf-8")
         artist_urls.append(f'{site["url"]}/artist/{slug}/')
+        pages[f'{site["url"]}/artist/{slug}/'] = page_dir / "index.html"
     extra = list(artist_urls)
     if faq:
         faq_dir = out / "faq"
         faq_dir.mkdir(exist_ok=True)
         (faq_dir / "index.html").write_text(render_faq(site, faq), encoding="utf-8")
         extra.append(f'{site["url"]}/faq/')
+        pages[f'{site["url"]}/faq/'] = faq_dir / "index.html"
+    dates, changed = update_lastmod(out, pages)
+    sitemap_urls = ([f'{site["url"]}/', f'{site["url"]}/track/'] + extra
+                    + [f'{site["url"]}/track/{e["slug"]}/' for e in entries])
     (out / "sitemap.xml").write_text(
-        render_sitemap(site, entries, extra), encoding="utf-8")
+        render_sitemap(site, sitemap_urls, dates), encoding="utf-8")
+    (out / "feed.xml").write_text(
+        render_feed(site, entries, dates), encoding="utf-8")
+    # ключ IndexNow: сервис скачивает его из корня и убеждается, что список
+    # изменившихся адресов присылает владелец сайта, а не посторонний
+    key = site.get("indexnow_key")
+    if key:
+        (out / f"{key}.txt").write_text(key, encoding="utf-8")
     (out / "robots.txt").write_text(render_robots(site), encoding="utf-8")
     (out / "llms.txt").write_text(
         render_llms(site, data, entries, groups, aliases), encoding="utf-8")
@@ -1134,6 +1251,7 @@ def render_site(site, data, out_dir, faq=None, artist_names=None):
     found = checks.run(site, data, faq, _PAGES, out_dir=out,
                        slugs=[e["slug"] for e in entries])
     return {"tracks": len(entries),
+            "changed": changed,
             # считаем всё собранное: у скрытой работы страница тоже есть
             "releases": len(data["releases"]),
             "off_grid": len([r for r in data["releases"] if r.get("hidden")]),

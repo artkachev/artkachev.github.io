@@ -209,11 +209,16 @@ def cmd_apply(args):
     return 0
 
 
+def _printable(summary):
+    """Список изменившихся адресов нужен публикации, а не глазам."""
+    return {**summary, "changed": len(summary.get("changed") or [])}
+
+
 def cmd_build(args):
     proj = _project(args)
     site, data = _load(proj)
     summary = render.render_site(site, data, proj, faq=_faq(proj), artist_names=_artist_names(proj))
-    _out(summary, args)
+    _out(_printable(summary), args)
     return 0
 
 
@@ -238,6 +243,12 @@ def cmd_publish(args):
               "status": "не залито: сначала почини найденное или --ignore-checks"}, args)
         return 1
     result = publish_mod.publish(proj, site, args.message, confirmed=args.confirm)
+    # переобход зовём только после того, как выложенное действительно
+    # доступно, и только на те адреса, которые правда изменились
+    if result.get("status") == "залито" and not args.no_ping:
+        live = publish_mod.wait_live(proj, site)
+        result["indexnow"] = (publish_mod.ping_indexnow(site, summary.get("changed") or [])
+                              if live else "не звали: сайт ещё не обновился")
     _out({**result, "checks": summary["checks"]}, args)
     return 0
 
@@ -292,6 +303,8 @@ def main(argv=None):
     pub.add_argument("--confirm", action="store_true")
     pub.add_argument("--ignore-checks", action="store_true",
                      help="залить, несмотря на находки уровня «стоп»")
+    pub.add_argument("--no-ping", action="store_true",
+                     help="не звать переобход через IndexNow")
     pub.set_defaults(func=cmd_publish)
 
     args = ap.parse_args(argv)
