@@ -60,6 +60,11 @@
   "featured": [],
   "facts": [],
   "analytics": null,
+  "verification": {
+    "google": null,
+    "yandex": null,
+    "bing": null
+  },
   "logo": "/assets/logo.svg",
   "logo_wordmark": true,
   "og_image": "/assets/og.png",

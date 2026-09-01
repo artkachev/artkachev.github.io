@@ -23,6 +23,8 @@ TRANSLIT = {
     "ъ": "", "ы": "y", "ь": "", "э": "e", "ю": "yu", "я": "ya",
 }
 
+LOCALE = {"ru": "ru_RU", "en": "en_US"}
+
 GENRE_LABELS = {
     "ru": {"ALL": "Все", "POP": "Поп", "HIPHOP": "Хип-хоп", "RAP": "Рэп",
            "INDIE": "Инди", "ROCK": "Рок", "ELECTRONIC": "Электроника",
@@ -167,16 +169,33 @@ def head(site, *, title, description, canonical, image=None, extra=""):
         ico += f'<link rel="icon" href="{esc(icons["png"])}" sizes="32x32" type="image/png">'
     if icons.get("apple"):
         ico += f'<link rel="apple-touch-icon" href="{esc(icons["apple"])}">'
+    # коды подтверждения площадок — Search Console, Вебмастер, Bing.
+    # заполняются в site.json → verification, пока пусто — тегов нет
+    verify = site.get("verification") or {}
+    verify_tags = ""
+    if verify.get("google"):
+        verify_tags += (f'<meta name="google-site-verification" '
+                         f'content="{esc(verify["google"])}">')
+    if verify.get("yandex"):
+        verify_tags += (f'<meta name="yandex-verification" '
+                         f'content="{esc(verify["yandex"])}">')
+    if verify.get("bing"):
+        verify_tags += (f'<meta name="msvalidate.01" '
+                         f'content="{esc(verify["bing"])}">')
+    locale = LOCALE.get(site["lang"], site["lang"])
     return (
         f'<!doctype html><html lang="{esc(site["lang"])}"><head>'
         f'<meta charset="utf-8">'
         f'<meta name="viewport" content="width=device-width,initial-scale=1">'
         f'<title>{esc(title)}</title>'
         f'<meta name="description" content="{esc(description)}">'
+        f'<meta name="author" content="{esc(credit_name(site))}">'
         f'<link rel="canonical" href="{esc(canonical)}">'
         f'<meta name="robots" content="index, follow">'
+        f'{verify_tags}'
         f'<meta property="og:type" content="website">'
         f'<meta property="og:site_name" content="{esc(site["name"])}">'
+        f'<meta property="og:locale" content="{esc(locale)}">'
         f'<meta property="og:title" content="{esc(title)}">'
         f'<meta property="og:description" content="{esc(description)}">'
         f'<meta property="og:url" content="{esc(canonical)}">'
@@ -407,6 +426,23 @@ def render_index(site, data, entries):
     title = f'{site["name"]} — {site["tagline"]}'
     app_js = (TEMPLATES / "app.js").read_text(encoding="utf-8")
     canonical = f"{site['url']}/"
+    # Person на главной — чтобы поиск и ИИ-движки знали, кто такой сайт,
+    # и связывали рабочее имя с настоящим через alternateName и sameAs
+    jsonld = {"@context": "https://schema.org", "@type": "Person",
+              "name": site["name"], "url": canonical, "jobTitle": site["tagline"],
+              "description": desc}
+    if site.get("real_name"):
+        jsonld["alternateName"] = site["real_name"]
+    if site.get("og_image"):
+        jsonld["image"] = f'{site["url"]}{site["og_image"]}'
+    same_as = [l["url"] for l in site.get("links") or []
+               if l.get("url", "").startswith("http")]
+    if same_as:
+        jsonld["sameAs"] = same_as
+    email = next((c["url"][7:] for c in site.get("contacts") or []
+                  if c.get("url", "").startswith("mailto:")), None)
+    if email:
+        jsonld["email"] = email
     body = (
         f'{head(site, title=title, description=desc, canonical=canonical)}'
         f'<div class="pf">{nav(site, home=True)}'
@@ -414,6 +450,7 @@ def render_index(site, data, entries):
         f'<ul class="grid" data-listen="{esc(words(site)["listen"])}" data-pause="{esc(words(site)["pause"])}" data-about="{esc(words(site)["about_track"])}">{"".join(tiles)}</ul>'
         f'<p class="nothing" hidden>{esc(words(site)["nothing"])}</p></div>'
         f'{footer(site)}{player_and_modal(site)}'
+        f'<script type="application/ld+json">{json.dumps(jsonld, ensure_ascii=False)}</script>'
         # именно var: const на верхнем уровне не попадает в window,
         # а app.js читает список как window.ALBUMS
         f'<script>var ALBUMS={json.dumps(albums, ensure_ascii=False)};</script>'
@@ -824,6 +861,37 @@ def render_robots(site):
     return f"User-agent: *\nAllow: /\n\nSitemap: {site['url']}/sitemap.xml\n"
 
 
+def render_llms(site, data, entries):
+    """llms.txt — краткая карта сайта для ИИ-поисковиков (llmstxt.org).
+
+    Не заменяет sitemap.xml для обычного поиска: это отдельный, человеко- и
+    ИИ-читаемый файл с готовым списком «кто над чем работал», без разбора
+    HTML-вёрстки.
+    """
+    lead = site.get("description") or f'{site["name"]} — {site["tagline"]}'
+    lines = [f'# {site["name"]}', "", f'> {lead}', ""]
+    if site.get("real_name"):
+        lines.append(f'Рабочее имя {site["name"]} принадлежит {site["real_name"]}.')
+        lines.append("")
+    lines.append("## Разделы")
+    lines.append(f'- [Все работы]({site["url"]}/): витрина обложек с плеером, '
+                 f'фильтры по жанру и роли')
+    lines.append(f'- [Каталог]({site["url"]}/track/): все работы по алфавиту '
+                 f'артиста, поиск по артисту, альбому или треку')
+    if site.get("has_faq"):
+        lines.append(f'- [Вопросы и ответы]({site["url"]}/faq/)')
+    lines.append("")
+    lines.append("## Треки")
+    for e in entries:
+        role_words = [site["roles"][r]["word"] for r in config.ROLE_ORDER
+                      if r in e["roles"] and r in site["roles"]]
+        roles = ", ".join(role_words).lower()
+        year = f', {e["year"]}' if e.get("year") else ""
+        lines.append(f'- [{e["artist"]} — {e["title"]}]'
+                     f'({site["url"]}/track/{e["slug"]}/): {roles}{year}')
+    return "\n".join(lines) + "\n"
+
+
 def render_site(site, data, out_dir, faq=None):
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
@@ -851,6 +919,7 @@ def render_site(site, data, out_dir, faq=None):
     (out / "sitemap.xml").write_text(
         render_sitemap(site, entries, extra), encoding="utf-8")
     (out / "robots.txt").write_text(render_robots(site), encoding="utf-8")
+    (out / "llms.txt").write_text(render_llms(site, data, entries), encoding="utf-8")
     (out / ".nojekyll").write_text("", encoding="utf-8")
     found = checks.run(site, data, faq, _PAGES, out_dir=out,
                        slugs=[e["slug"] for e in entries])

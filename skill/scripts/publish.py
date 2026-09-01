@@ -7,10 +7,13 @@ from pathlib import Path
 
 MANAGED_PATHS = (
     "index.html", "track", "faq", "covers", "assets", "sitemap.xml", "robots.txt",
-    ".nojekyll", "CNAME", ".github/workflows/deploy.yml",
+    "llms.txt", ".nojekyll", "CNAME", ".github/workflows/deploy.yml",
     ".github/workflows/fetch-covers.yml", "site.json", "data.json", "faq.json",
     "artist_genres.json", "roles.txt", "skill", "CLAUDE.md", "README.md",
     ".gitignore",
+    # файл-подтверждение Google Search Console — кладётся в корень руками,
+    # сборщик его не создаёт и не трогает; см. CLAUDE.md → «Поисковые панели»
+    "googlee22777088d24875d.html",
 )
 
 TEMPLATES = Path(__file__).resolve().parent.parent / "templates"
