@@ -148,9 +148,12 @@ def wait_live(proj, site, timeout=210, interval=7):
     значит выложено.
     """
     local = (Path(proj) / "sitemap.xml").read_text(encoding="utf-8")
-    url = f'{site["url"]}/sitemap.xml'
     deadline = time.monotonic() + timeout
     while True:
+        # к каждому опросу свой хвост в адресе: Pages отдают файл с
+        # max-age=600, и первый же запрос до выкладки залипает в кеше CDN
+        # на десять минут — без обхода мы всё это время сверяли бы старое
+        url = f'{site["url"]}/sitemap.xml?ts={int(time.time())}'
         try:
             req = urllib.request.Request(
                 url, headers={"User-Agent": "Mozilla/5.0", "Cache-Control": "no-cache"})
