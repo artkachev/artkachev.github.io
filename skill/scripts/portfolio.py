@@ -38,6 +38,14 @@ def _faq(proj):
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def _about(proj):
+    """Страница «о себе» — необязательный файл, без него страницы нет."""
+    path = proj / "about.json"
+    if not path.exists():
+        return None
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
 def _genre_map(proj):
     path = proj / "artist_genres.json"
     if not path.exists():
@@ -217,7 +225,8 @@ def _printable(summary):
 def cmd_build(args):
     proj = _project(args)
     site, data = _load(proj)
-    summary = render.render_site(site, data, proj, faq=_faq(proj), artist_names=_artist_names(proj))
+    summary = render.render_site(site, data, proj, faq=_faq(proj), artist_names=_artist_names(proj),
+                                  about=_about(proj))
     _out(_printable(summary), args)
     return 0
 
@@ -226,7 +235,8 @@ def cmd_check(args):
     """Только проверки: сборка без заливки, чтобы посмотреть находки."""
     proj = _project(args)
     site, data = _load(proj)
-    summary = render.render_site(site, data, proj, faq=_faq(proj), artist_names=_artist_names(proj))
+    summary = render.render_site(site, data, proj, faq=_faq(proj), artist_names=_artist_names(proj),
+                                  about=_about(proj))
     _out({"checks": summary["checks"] or ["чисто"],
           "blocking": summary["blocking"]}, args)
     return 1 if summary["blocking"] else 0
@@ -235,7 +245,8 @@ def cmd_check(args):
 def cmd_publish(args):
     proj = _project(args)
     site, data = _load(proj)
-    summary = render.render_site(site, data, proj, faq=_faq(proj), artist_names=_artist_names(proj))
+    summary = render.render_site(site, data, proj, faq=_faq(proj), artist_names=_artist_names(proj),
+                                  about=_about(proj))
     # находки уровня «стоп» — это то, что уже один раз уехало на живой сайт
     # (кириллическая «В» в «Вonus», описание, обрезанное посреди имени)
     if summary["blocking"] and not args.ignore_checks:

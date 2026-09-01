@@ -13,10 +13,11 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 MANAGED_PATHS = (
-    "index.html", "track", "faq", "artist", "covers", "assets", "sitemap.xml",
+    "index.html", "track", "faq", "artist", "about", "covers", "assets", "sitemap.xml",
     "robots.txt", "llms.txt", "feed.xml", "lastmod.json", ".nojekyll", "CNAME", ".github/workflows/deploy.yml",
     ".github/workflows/fetch-covers.yml", "site.json", "data.json", "faq.json",
-    "artist_genres.json", "artist_names.json", "roles.txt", "skill", "CLAUDE.md",
+    "artist_genres.json", "artist_names.json", "about.json", "roles.txt", "skill",
+    "CLAUDE.md",
     "README.md", ".gitignore",
     # файл-подтверждение Google Search Console — кладётся в корень руками,
     # сборщик его не создаёт и не трогает; см. CLAUDE.md → «Поисковые панели»

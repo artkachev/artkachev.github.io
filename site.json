@@ -59,7 +59,9 @@
     "ROCK"
   ],
   "featured": [],
-  "facts": [],
+  "facts": [
+    "На сайте представлена только часть каталога"
+  ],
   "analytics": null,
   "verification": {
     "google": null,

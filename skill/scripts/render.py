@@ -49,10 +49,11 @@ WORDS = {
            "search_hint": "Поиск по артисту, альбому или треку",
            "clear": "Очистить", "no_hits": "Ничего не нашлось. Попробуйте короче или по-другому.",
            "nothing": "Работ сразу со всеми этими ролями нет. Снимите один фильтр.",
-           "catalog_lead": "Полный каталог работ",
+           "catalog_lead": "Каталог работ",
            "among_them": "среди них",
            "catalog_hint": "Ищите по артисту, альбому или названию трека.",
-           "crumbs": "Хлебные крошки"},
+           "crumbs": "Хлебные крошки", "about": "О себе",
+           "worked_with": "С кем работал", "elsewhere": "Где ещё"},
     "en": {"works": "Works", "all_tracks": "All tracks", "back": "← All works",
            "listen": "Listen", "contact": "Get in touch", "hub_title": "All tracks",
            "tracks_word": ("track", "tracks", "tracks"),
@@ -65,10 +66,11 @@ WORDS = {
            "search_hint": "Search by artist, album or track",
            "clear": "Clear", "no_hits": "Nothing found. Try a shorter query.",
            "nothing": "Nothing matches all of these. Remove one filter.",
-           "catalog_lead": "Full catalogue of works",
+           "catalog_lead": "Catalogue of works",
            "among_them": "among them",
            "catalog_hint": "Search by artist, album or track title.",
-           "crumbs": "Breadcrumb"},
+           "crumbs": "Breadcrumb", "about": "About",
+           "worked_with": "Worked with", "elsewhere": "Elsewhere"},
 }
 
 
@@ -281,6 +283,8 @@ def nav(site, *, home=False):
         f'<a href="{esc(l["url"])}" target="_blank" rel="noopener">{esc(l["label"])}</a>'
         for l in site.get("links") or [])
     inner = f'<a href="/track/">{esc(w["hub_title"])}</a>'
+    if site.get("has_about"):
+        inner += f'<a href="/about/">{esc(w["about"])}</a>'
     if site.get("has_faq"):
         inner += f'<a href="/faq/">{esc(w["faq"])}</a>'
     if not home:
@@ -487,13 +491,16 @@ def render_index(site, data, entries):
     # Person на главной — чтобы поиск и ИИ-движки знали, кто такой сайт,
     # и связывали рабочее имя с настоящим через alternateName и sameAs
     jsonld = {"@context": "https://schema.org", "@type": "Person",
+              # тот же идентификатор стоит у Person на /about/: для поиска это
+              # один человек, описанный в двух местах, а не два похожих
+              "@id": f'{site["url"]}/#person',
               "name": site["name"], "url": canonical, "jobTitle": site["tagline"],
               "description": desc}
     if site.get("real_name"):
         jsonld["alternateName"] = site["real_name"]
     if site.get("og_image"):
         jsonld["image"] = f'{site["url"]}{site["og_image"]}'
-    same_as = [l["url"] for l in site.get("links") or []
+    same_as = [l["url"] for l in (site.get("links") or []) + (site.get("profiles") or [])
                if l.get("url", "").startswith("http")]
     if same_as:
         jsonld["sameAs"] = same_as
@@ -761,6 +768,130 @@ def render_artist_page(site, artist, tracks, alias=None):
         f'<div class="hub"><h1>{esc(title_line)}</h1>'
         f'<p class="lead">{esc(lead)}</p>'
         f'<ul>{"".join(rows)}</ul></div></div>'
+        f'{footer(site)}'
+        f'{ld_script(jsonld, crumb_ld)}'
+        f'</body></html>')
+
+
+def person_ld(site, about=None):
+    """Person для разметки. Один и тот же @id на главной и на /about/."""
+    who = {"@context": "https://schema.org", "@type": "Person",
+           "@id": f'{site["url"]}/#person',
+           "name": site["name"], "url": f'{site["url"]}/',
+           "jobTitle": site["tagline"]}
+    if site.get("real_name"):
+        who["alternateName"] = site["real_name"]
+    photo = (about or {}).get("photo")
+    who["image"] = f'{site["url"]}{photo or site.get("og_image", "")}'
+    same_as = [l["url"] for l in (site.get("links") or []) + (site.get("profiles") or [])
+               if l.get("url", "").startswith("http")]
+    if same_as:
+        who["sameAs"] = same_as
+    email = next((c["url"][7:] for c in site.get("contacts") or []
+                  if c.get("url", "").startswith("mailto:")), None)
+    if email:
+        who["email"] = email
+    return who
+
+
+def render_about(site, about, data, entries, groups):
+    """Страница про человека, а не про каталог.
+
+    До неё настоящее имя жило только в мета-тегах и разметке: в видимом
+    тексте сайта «Артем Ткачев» не встречался ни разу, и запросу по имени
+    приземляться было некуда. Здесь у имени есть заголовок, абзац и адрес,
+    на который ссылаются профили на других площадках.
+
+    Цифры не пишутся руками: треки, артисты и годы считаются из данных,
+    поэтому устареть после следующего релиза им негде.
+    """
+    w = words(site)
+    canonical = f'{site["url"]}/about/'
+    heading = about.get("heading") or (
+        f'{site.get("real_name") or site["name"]} — {site["tagline"]}')
+    subhead = about.get("subhead") or (
+        f'Работает под именем {site["name"]}' if site.get("real_name") else "")
+    years = sorted(int(e["year"]) for e in entries if e.get("year"))
+    # альбомы считаем так же, как каталог: релизами, а не названиями из
+    # треков. Иначе сингл, вышедший в чужой альбом, добавляет шестой
+    albums = len([r for r in data["releases"] if r["type"] == "album"])
+    # плитки с цифрами: сначала то, что нельзя посчитать из данных
+    # (прослушивания приходят с площадок и указываются руками, с источником),
+    # потом наше — оно пересчитывается на каждой сборке и устареть не может
+    manual = [(str(n.get("value", "")), n.get("label", ""))
+              for n in about.get("numbers") or []]
+    auto = [(str(len(entries)), "треков"), (str(len(groups)), "артистов")]
+    if albums:
+        auto.append((str(albums), "альбомов"))
+    if years:
+        auto.append((f'{years[0]}—{years[-1]}', "годы работ"))
+    # заданные руками цифры отменяют автоматические целиком: если человек
+    # перечислил, что показывать, дописывать к этому своё — спорить с ним.
+    # Ряд держим в четыре плитки, пятая уезжает на вторую строку и висит
+    # там одна
+    tiles = (manual or auto)[:4]
+    # длинное значение («2021—2026») крупным кеглем не влезает в свою колонку
+    # и переносится посреди диапазона — такому набираем помельче
+    def tile(value, label):
+        cls = ' class="long"' if len(value) > 7 else ""
+        return f'<div{cls}><b>{esc(value)}</b><span>{esc(label)}</span></div>'
+
+    stats = "".join(tile(v, label) for v, label in tiles if v)
+    source = about.get("numbers_note") or ""
+    role_words = [site["roles"][r]["word"] for r in config.ROLE_ORDER
+                  if r in site["roles"] and any(r in (e.get("roles") or [])
+                                                for e in entries)]
+    lead = (about.get("lead") or "").strip()
+    body = "".join(f'<p>{inline(par)}</p>' for par in about.get("body") or [])
+    photo = ""
+    if about.get("photo"):
+        photo = (f'<div class="coverbox"><img class="cover" '
+                 f'src="{esc(about["photo"])}" '
+                 f'alt="{esc(about.get("photo_alt") or site.get("real_name") or site["name"])}" '
+                 f'width="640" height="640" loading="lazy"></div>')
+    rows = []
+    for artist, tracks in sorted(groups.items(), key=lambda kv: -len(kv[1])):
+        n = len(tracks)
+        rows.append(f'<li><a href="/artist/{esc(slugify(artist))}/">{esc(artist)}'
+                    f'<span class="yr">{n} {esc(plural(n, w["tracks_word"]))}</span>'
+                    f'</a></li>')
+    profiles = "".join(
+        f'<a href="{esc(pr["url"])}" target="_blank" rel="me noopener">{esc(pr["label"])}</a>'
+        for pr in site.get("profiles") or [])
+    profiles_block = (f'<h2>{esc(w["elsewhere"])}</h2>'
+                      f'<p class="profiles">{profiles}</p>') if profiles else ""
+    cta = about.get("cta") or next(
+        (c for c in site.get("contacts") or [] if c.get("primary")), None)
+    cta_block = (f'<p><a class="cta" href="{esc(cta["url"])}" target="_blank" '
+                 f'rel="noopener">{esc(cta.get("label") or w["contact"])} →</a></p>'
+                 if cta else "")
+    # в тексте работает мини-разметка, в описании для поиска её быть не должно
+    desc = clamp(plain(lead) if lead else f'{heading}. {subhead}')
+    page_title = f'{heading} · {site["name"]}'
+    crumb_html, crumb_ld = crumbs(site, [(w["works"], "/"), (w["about"], "/about/")])
+    who = person_ld(site, about)
+    who.pop("@context", None)
+    jsonld = {"@context": "https://schema.org", "@type": "ProfilePage",
+              "url": canonical, "name": page_title, "description": desc,
+              "inLanguage": site["lang"], "mainEntity": who}
+    return (
+        f'{head(site, title=page_title, description=desc, canonical=canonical, image=about.get("photo"))}'
+        f'<div class="pf">{nav(site)}'
+        f'{crumb_html}'
+        f'<article class="trk">{photo}'
+        f'<div><h1>{esc(heading)}</h1>'
+        + (f'<p class="sub">{esc(subhead)}</p>' if subhead else "")
+        + (f'<div class="nums">{stats}</div>' if stats else "")
+        + (f'<p class="numsrc">{esc(source)}</p>' if source else "")
+        + (f'<p class="lead">{inline(lead)}</p>' if lead else "")
+        + body
+        + (f'<ul class="roles">'
+           + "".join(f"<li>{esc(word)}</li>" for word in role_words)
+           + '</ul>' if role_words else "")
+        + f'{cta_block}</div></article>'
+        f'<div class="hub me"><h2>{esc(w["worked_with"])}</h2>'
+        f'<ul>{"".join(rows)}</ul>'
+        f'{profiles_block}</div></div>'
         f'{footer(site)}'
         f'{ld_script(jsonld, crumb_ld)}'
         f'</body></html>')
@@ -1162,10 +1293,15 @@ def render_llms(site, data, entries, groups=None, aliases=None):
         lines.append(f'Рабочее имя {site["name"]} принадлежит {site["real_name"]}.')
         lines.append("")
     lines.append("## Разделы")
-    lines.append(f'- [Все работы]({site["url"]}/): витрина обложек с плеером, '
+    lines.append(f'- [Работы]({site["url"]}/): витрина обложек с плеером, '
                  f'фильтры по жанру и роли')
-    lines.append(f'- [Каталог]({site["url"]}/track/): все работы по алфавиту '
+    lines.append(f'- [Каталог]({site["url"]}/track/): работы по алфавиту '
                  f'артиста, поиск по артисту, альбому или треку')
+    lines.append("")
+    lines.append("Каталог неполный: на сайте собрана только часть работ.")
+    if site.get("has_about"):
+        lines.append(f'- [О себе]({site["url"]}/about/): кто это, чем занимается, '
+                     f'профили на других площадках')
     if site.get("has_faq"):
         lines.append(f'- [Вопросы и ответы]({site["url"]}/faq/)')
     lines.append("")
@@ -1188,11 +1324,11 @@ def render_llms(site, data, entries, groups=None, aliases=None):
     return "\n".join(lines) + "\n"
 
 
-def render_site(site, data, out_dir, faq=None, artist_names=None):
+def render_site(site, data, out_dir, faq=None, artist_names=None, about=None):
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     _PAGES.clear()
-    site = dict(site, has_faq=bool(faq),
+    site = dict(site, has_faq=bool(faq), has_about=bool(about),
                 logo_svg=load_logo_svg(site, out_dir))
     entries = track_entries(site, data)
     # адрес → файл: по ним считаются даты изменения для карты сайта
@@ -1226,6 +1362,13 @@ def render_site(site, data, out_dir, faq=None, artist_names=None):
         artist_urls.append(f'{site["url"]}/artist/{slug}/')
         pages[f'{site["url"]}/artist/{slug}/'] = page_dir / "index.html"
     extra = list(artist_urls)
+    if about:
+        about_dir = out / "about"
+        about_dir.mkdir(exist_ok=True)
+        (about_dir / "index.html").write_text(
+            render_about(site, about, data, entries, groups), encoding="utf-8")
+        extra.append(f'{site["url"]}/about/')
+        pages[f'{site["url"]}/about/'] = about_dir / "index.html"
     if faq:
         faq_dir = out / "faq"
         faq_dir.mkdir(exist_ok=True)
