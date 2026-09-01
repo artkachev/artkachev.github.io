@@ -536,6 +536,11 @@ def render_track_page(site, entry):
     w = words(site)
     roles_html = "".join(f"<li>{esc(word)}</li>" for word in role_words)
     page_title = f'{title_line} · {site["name"]}'
+    # ссылка на всех работах с этим артистом — усиливает страницу артиста
+    # внутренними ссылками с каждого его трека
+    main = main_artist(entry["artist"])
+    artist_link = (f'<p><a class="back" href="/artist/{esc(slugify(main))}/">'
+                   f'Все работы с {esc(main)} →</a></p>')
     return (
         f'{head(site, title=page_title, description=clamp(lead), canonical=canonical, image=cover)}'
         f'<div class="pf">{nav(site)}'
@@ -552,6 +557,7 @@ def render_track_page(site, entry):
         f'<iframe class="embed" title="{esc(entry["title"])} — Spotify" loading="lazy" '
         f'src="https://open.spotify.com/embed/track/{esc(entry["id"])}?theme=0" '
         f'allow="encrypted-media"></iframe>'
+        f'{artist_link}'
         f'<p><a class="back" href="/track/">{esc(w["all_tracks"])} →</a></p>'
         f'</div></article></div>'
         f'{footer(site)}'
@@ -578,6 +584,89 @@ def letter_of(name):
     if "А" <= ch <= "Я" or ch == "Ё":
         return (1, "Е" if ch == "Ё" else ch)
     return (2, "#")
+
+
+def artist_groups(entries):
+    """Треки по главному артисту — та же группировка, что и в catalog().
+
+    Гость дуэта своей страницы не получает, только упоминание у главного —
+    так уже устроен каталог, страница артиста продолжает то же правило.
+    """
+    groups = {}
+    for e in entries:
+        groups.setdefault(main_artist(e["artist"]), []).append(e)
+    return groups
+
+
+def render_artist_page(site, artist, tracks, alias=None):
+    """Страница артиста: прямой ответ на «кто сводит/продюсирует <артист>».
+
+    Точечные страницы треков отвечают на запрос про конкретную песню,
+    а вот кто вообще работает с артистом — искали и не находили: ни у одной
+    страницы не было заголовка и тела текста именно под такой вопрос.
+    """
+    w = words(site)
+    slug = slugify(artist)
+    canonical = f'{site["url"]}/artist/{slug}/'
+    roles_all = set()
+    for t in tracks:
+        roles_all |= set(t.get("roles") or [])
+    role = primary_role(site, list(roles_all))
+    verb = site["roles"].get(role, {}).get("verb") or "Кто работал с"
+    # алиас кириллицей рядом с рабочим именем — так текст страницы совпадает
+    # и с латинским, и с русским написанием одного и того же артиста
+    display = f'{artist} ({alias})' if alias else artist
+    # имя после тире, не как дополнение глагола: «Асию» вместо «Асия» никто
+    # не посчитает для полусотни артистов, а тире снимает вопрос падежа —
+    # тот же приём уже работает в заголовке страницы трека
+    title_line = f'{verb} треки — {display}'
+    role_words = [site["roles"][r]["word"] for r in config.ROLE_ORDER
+                  if r in roles_all and r in site["roles"]]
+    who = ", ".join(role_words).lower()
+    n = len(tracks)
+    lead = (f'{credit_name(site)} — {who.capitalize()}: {n} '
+            f'{plural(n, w["tracks_word"])}.')
+    ordered = sorted(
+        tracks, key=lambda t: (-(int(t["year"]) if t.get("year") else 0), t["title"]))
+    rows = []
+    for t in ordered:
+        t_roles = ", ".join(
+            site["roles"][r]["word"] for r in config.ROLE_ORDER
+            if r in (t.get("roles") or []) and r in site["roles"]).lower()
+        year = f' · {esc(t["year"])}' if t.get("year") else ""
+        rows.append(f'<li><a href="/track/{esc(t["slug"])}/">{esc(t["title"])}'
+                    f'<span class="yr">{esc(t_roles)}{year}</span></a></li>')
+    page_title = f'{title_line} · {site["name"]}'
+    desc = clamp(f'{title_line}. {lead}')
+    about = {"@type": "Person", "name": site["name"], "url": f'{site["url"]}/'}
+    if site.get("real_name"):
+        about["alternateName"] = site["real_name"]
+    jsonld = {
+        "@context": "https://schema.org",
+        "@type": "ProfilePage",
+        "url": canonical,
+        "name": page_title,
+        "description": desc,
+        "about": about,
+        "mainEntity": {
+            "@type": "ItemList",
+            "numberOfItems": n,
+            "itemListElement": [
+                {"@type": "ListItem", "position": i + 1,
+                 "url": f'{site["url"]}/track/{t["slug"]}/', "name": t["title"]}
+                for i, t in enumerate(ordered)],
+        },
+    }
+    return (
+        f'{head(site, title=page_title, description=desc, canonical=canonical)}'
+        f'<div class="pf">{nav(site)}'
+        f'<a class="back" href="/track/">{esc(w["hub_title"])}</a>'
+        f'<div class="hub"><h1>{esc(title_line)}</h1>'
+        f'<p class="lead">{esc(lead)}</p>'
+        f'<ul>{"".join(rows)}</ul></div></div>'
+        f'{footer(site)}'
+        f'<script type="application/ld+json">{json.dumps(jsonld, ensure_ascii=False)}</script>'
+        f'</body></html>')
 
 
 def catalog(site, data, entries):
@@ -666,7 +755,8 @@ def render_hub(site, data, entries):
         blocks.append(
             f'<section class="art" id="a-{esc(slugify(artist))}" '
             f'data-s="{esc(search_key(artist))}">'
-            f'<h3>{esc(artist)}<span class="cnt">{n}</span></h3>'
+            f'<h3><a href="/artist/{esc(slugify(artist))}/">{esc(artist)}</a>'
+            f'<span class="cnt">{n}</span></h3>'
             f'{"".join(parts)}</section>')
 
     nav_letters = "".join(
@@ -861,13 +951,14 @@ def render_robots(site):
     return f"User-agent: *\nAllow: /\n\nSitemap: {site['url']}/sitemap.xml\n"
 
 
-def render_llms(site, data, entries):
+def render_llms(site, data, entries, groups=None, aliases=None):
     """llms.txt — краткая карта сайта для ИИ-поисковиков (llmstxt.org).
 
     Не заменяет sitemap.xml для обычного поиска: это отдельный, человеко- и
     ИИ-читаемый файл с готовым списком «кто над чем работал», без разбора
     HTML-вёрстки.
     """
+    aliases = aliases or {}
     lead = site.get("description") or f'{site["name"]} — {site["tagline"]}'
     lines = [f'# {site["name"]}', "", f'> {lead}', ""]
     if site.get("real_name"):
@@ -881,6 +972,14 @@ def render_llms(site, data, entries):
     if site.get("has_faq"):
         lines.append(f'- [Вопросы и ответы]({site["url"]}/faq/)')
     lines.append("")
+    if groups:
+        lines.append("## Артисты")
+        for artist in sorted(groups, key=str.upper):
+            alias = f' / {aliases[artist]}' if aliases.get(artist) else ""
+            lines.append(f'- [{artist}{alias}]'
+                         f'({site["url"]}/artist/{slugify(artist)}/): '
+                         f'{len(groups[artist])} {plural(len(groups[artist]), words(site)["tracks_word"])}')
+        lines.append("")
     lines.append("## Треки")
     for e in entries:
         role_words = [site["roles"][r]["word"] for r in config.ROLE_ORDER
@@ -892,7 +991,7 @@ def render_llms(site, data, entries):
     return "\n".join(lines) + "\n"
 
 
-def render_site(site, data, out_dir, faq=None):
+def render_site(site, data, out_dir, faq=None, artist_names=None):
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     _PAGES.clear()
@@ -910,7 +1009,20 @@ def render_site(site, data, out_dir, faq=None):
         page_dir.mkdir(exist_ok=True)
         (page_dir / "index.html").write_text(
             render_track_page(site, entry), encoding="utf-8")
-    extra = []
+    aliases = artist_names or {}
+    groups = artist_groups(entries)
+    artist_dir = out / "artist"
+    artist_dir.mkdir(exist_ok=True)
+    artist_urls = []
+    for artist, tracks in groups.items():
+        slug = slugify(artist)
+        page_dir = artist_dir / slug
+        page_dir.mkdir(exist_ok=True)
+        (page_dir / "index.html").write_text(
+            render_artist_page(site, artist, tracks, alias=aliases.get(artist)),
+            encoding="utf-8")
+        artist_urls.append(f'{site["url"]}/artist/{slug}/')
+    extra = list(artist_urls)
     if faq:
         faq_dir = out / "faq"
         faq_dir.mkdir(exist_ok=True)
@@ -919,7 +1031,8 @@ def render_site(site, data, out_dir, faq=None):
     (out / "sitemap.xml").write_text(
         render_sitemap(site, entries, extra), encoding="utf-8")
     (out / "robots.txt").write_text(render_robots(site), encoding="utf-8")
-    (out / "llms.txt").write_text(render_llms(site, data, entries), encoding="utf-8")
+    (out / "llms.txt").write_text(
+        render_llms(site, data, entries, groups, aliases), encoding="utf-8")
     (out / ".nojekyll").write_text("", encoding="utf-8")
     found = checks.run(site, data, faq, _PAGES, out_dir=out,
                        slugs=[e["slug"] for e in entries])
