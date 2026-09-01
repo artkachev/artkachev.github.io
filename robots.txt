@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://artkachev.github.io/sitemap.xml
+Sitemap: https://credits.kaccamusic.com/sitemap.xml
