@@ -19,7 +19,7 @@
 
   var root = document.getElementById("root");
   var tab = "cat", q = "", onlyChanged = false, open = null;
-  var api = null, apiReady = false, saveState = "", timer = null;
+  var api = null, apiReady = false, saveState = "", pending = false;
   var lastFocus = null, sheetFocused = false;
 
   if (typeof claude !== "undefined" && claude.use) {
@@ -101,30 +101,31 @@
   }
 
   /* правка без перерисовки всей страницы — чтобы окно не прыгало */
+  /* Публикация перезагружает все открытые окна, наше в том числе. Поэтому
+     правка копится молча, а записывается в конце — когда закрываешь окно
+     трека. Иначе страница перезагружалась прямо посреди набора текста. */
   function touch() {
     S.updated = new Date().toISOString();
+    pending = true;
     paintDock();
-    schedule();
   }
-  function mutate(fn) { fn(); S.updated = new Date().toISOString(); paint(); schedule(); }
+  function mutateQuiet(fn) { fn(); touch(); paint(); }
+  function mutate(fn) { fn(); touch(); paint(); flush(); }
 
   /* ── сохранение через публикацию новой версии ───────────── */
-  function schedule() {
+  function flush() {
+    if (!pending) return;
     if (!api) { saveState = "nosave"; paintDock(); return; }
-    if (timer) clearTimeout(timer);
-    saveState = "wait";
+    pending = false;
+    saveState = "saving";
     paintDock();
-    timer = setTimeout(function () {
-      timer = null;
-      saveState = "saving";
+    api.publish(buildDoc()).then(function () {
+      saveState = "saved"; paintDock();
+    }, function (err) {
+      pending = true;
+      saveState = (err && err.code === "conflict") ? "conflict" : "error";
       paintDock();
-      api.publish(buildDoc()).then(function () {
-        saveState = "saved"; paintDock();
-      }, function (err) {
-        saveState = (err && err.code === "conflict") ? "conflict" : "error";
-        paintDock();
-      });
-    }, 1200);
+    });
   }
 
   function esc(s) { return s.replace(/</g, "\\u003c"); }
@@ -335,6 +336,7 @@
     paint();
     if (lastFocus && lastFocus.focus) lastFocus.focus();
     lastFocus = null;
+    flush();
   }
   var FOCUSABLE = "button:not([disabled]),select,input,a[href],[tabindex]:not([tabindex='-1'])";
 
@@ -474,11 +476,11 @@
     undo = el("button", "btn dim", "Отменить правку");
     undo.type = "button";
     undo.addEventListener("click", function () {
-      mutate(function () { delete S.edits[it.slug]; });
+      mutateQuiet(function () { delete S.edits[it.slug]; });
     });
     refreshUndo();
     row.appendChild(undo);
-    var done = el("button", "btn on", "Готово");
+    var done = el("button", "btn on", "Сохранить и закрыть");
     done.type = "button";
     done.addEventListener("click", close);
     row.appendChild(done);
@@ -722,7 +724,9 @@
     } else c.textContent = "правок нет";
     w.appendChild(c);
     var st = el("div", "state");
-    var msg = { wait: "сохраняю…", saving: "сохраняю…", saved: "сохранено",
+    if (pending && saveState !== "nosave") saveState = "dirty";
+    var msg = { dirty: "запишется, когда закроешь окно", saving: "сохраняю…",
+                saved: "сохранено",
                 error: "не сохранилось — правка живёт только в этом окне",
                 conflict: "страницу изменили в другом окне, обнови",
                 nosave: "только просмотр" }[saveState];
@@ -744,6 +748,10 @@
 
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape" && open) closeSheet();
+  });
+  // ушёл со вкладки, не закрыв окно — записываем, чтобы не потерять
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "hidden") flush();
   });
 
   paint();

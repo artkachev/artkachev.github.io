@@ -176,7 +176,11 @@ def cmd_sandbox(args):
     proj = _project(args)
     site, data = _load(proj)
     out = args.out or (proj / "sandbox.build.html")
-    _out(sandbox.build(proj, site, data, out), args)
+    # правки, которые уже накопились в песочнице, переносим в новую версию
+    state = None
+    if args.state:
+        state = json.loads(Path(args.state).read_text(encoding="utf-8"))
+    _out(sandbox.build(proj, site, data, out, state), args)
     return 0
 
 
@@ -241,6 +245,7 @@ def main(argv=None):
 
     sb = sub.add_parser("sandbox", help="собрать черновик для песочницы")
     sb.add_argument("--out")
+    sb.add_argument("--state", help="файл с накопленными правками")
     sb.set_defaults(func=cmd_sandbox)
 
     rol = sub.add_parser("roles", help="проставить роли пачкой из файла")
