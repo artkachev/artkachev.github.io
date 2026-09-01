@@ -14,6 +14,7 @@ import config
 import covers
 import publish as publish_mod
 import render
+import apply_sandbox
 import sandbox
 import spotify
 
@@ -184,6 +185,17 @@ def cmd_sandbox(args):
     return 0
 
 
+def cmd_apply(args):
+    """Перенести правки из песочницы в данные. Роли — в roles.txt."""
+    proj = _project(args)
+    site, data = _load(proj)
+    state = json.loads(Path(args.state).read_text(encoding="utf-8"))
+    result = apply_sandbox.apply(proj, site, data, state)
+    config.save_data(proj / "data.json", data)
+    _out(result, args)
+    return 0
+
+
 def cmd_build(args):
     proj = _project(args)
     site, data = _load(proj)
@@ -247,6 +259,10 @@ def main(argv=None):
     sb.add_argument("--out")
     sb.add_argument("--state", help="файл с накопленными правками")
     sb.set_defaults(func=cmd_sandbox)
+
+    apl = sub.add_parser("apply", help="перенести правки из песочницы в данные")
+    apl.add_argument("state")
+    apl.set_defaults(func=cmd_apply)
 
     rol = sub.add_parser("roles", help="проставить роли пачкой из файла")
     rol.add_argument("file")
