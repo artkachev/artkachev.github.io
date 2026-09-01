@@ -17,6 +17,13 @@ def _targets(site, data):
     by_id = {e["id"]: e["slug"] for e in render.track_entries(site, data)}
     out = {}
     for rel in data["releases"]:
+        # Запасной ключ по названию — ровно тем же slugify, что и в песочнице.
+        # Он нужен там, где страницы нет и by_id пуст: у альбома (своей
+        # страницы нет вовсе) и у скрытой работы (order_releases выбрасывает
+        # её из обхода). Без него правки на таких плитках уходили в unmatched,
+        # а спрятанную работу нельзя было вернуть обратно.
+        out.setdefault(render.slugify(f'{rel["artist"]} {rel["title"]}'),
+                       (rel, None))
         if rel["type"] == "album":
             for tr in rel.get("tracks") or []:
                 slug = by_id.get(tr.get("id"))

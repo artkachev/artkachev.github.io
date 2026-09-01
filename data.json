@@ -347,7 +347,7 @@
    "artist": "ARYUNA",
    "title": "Guilty Pleasure",
    "year": "2026",
-   "genre": "POP",
+   "genre": "HIPHOP",
    "roles": [
     "prod",
     "mix",
@@ -363,7 +363,7 @@
    "artist": "ARYUNA",
    "title": "Relapse",
    "year": "2026",
-   "genre": "POP",
+   "genre": "HIPHOP",
    "roles": [
     "prod",
     "mix",
@@ -933,7 +933,7 @@
    "artist": "VERBEE",
    "title": "Простой. Часть 2",
    "year": "2024",
-   "genre": "POP",
+   "genre": "HIPHOP",
    "roles": [
     "mix",
     "master"
@@ -1002,7 +1002,7 @@
    "artist": "VERBEE",
    "title": "ЭТО МОЙ СТИЛЬ",
    "year": "2026",
-   "genre": "POP",
+   "genre": "HIPHOP",
    "roles": [
     "mix",
     "master"
@@ -1078,7 +1078,7 @@
    "artist": "XARISTA, ANAZED",
    "title": "Камеры",
    "year": "2022",
-   "genre": "POP",
+   "genre": "HIPHOP",
    "roles": [
     "prod",
     "mix",
@@ -1124,7 +1124,7 @@
    "artist": "XARISTA",
    "title": "Я запуталась",
    "year": "2023",
-   "genre": "POP",
+   "genre": "HIPHOP",
    "roles": [
     "prod",
     "mix",
@@ -1339,7 +1339,7 @@
    "artist": "Wicsur, CLEXXD",
    "title": "Меня три",
    "year": "2024",
-   "genre": "HIPHOP",
+   "genre": "ELECTRONIC",
    "roles": [
     "prod",
     "mix",
@@ -1347,7 +1347,7 @@
    ],
    "cover": "b2b7c48de39bf0b74a24984d",
    "feat": [],
-   "hidden": false
+   "hidden": true
   },
   {
    "type": "single",
@@ -1355,7 +1355,7 @@
    "artist": "Wicsur",
    "title": "Глаза из аниме",
    "year": "2023",
-   "genre": "HIPHOP",
+   "genre": "ELECTRONIC",
    "roles": [
     "prod",
     "mix",
