@@ -10,6 +10,7 @@ MANAGED_PATHS = (
     ".nojekyll", "CNAME", ".github/workflows/deploy.yml",
     ".github/workflows/fetch-covers.yml", "site.json", "data.json", "faq.json",
     "artist_genres.json", "roles.txt", "skill", "CLAUDE.md", "README.md",
+    ".gitignore",
 )
 
 TEMPLATES = Path(__file__).resolve().parent.parent / "templates"
@@ -106,17 +107,20 @@ def publish(proj, site, message, confirmed):
     if not staged:
         return {"status": "нечего публиковать", "paths": present}
     _git_ok(proj, "commit", "-m", message)
-    # Ребейз только после коммита: до него в дереве всегда лежит несохранённая
-    # сборка, и git отказывается ребейзить, жалуясь на unstaged changes.
-    # Раньше это происходило до add и выдавалось за «чужие изменения»,
-    # хотя чужого в репозитории могло не быть вовсе.
+    # Ребейз только если реально отстали. Иначе git всё равно откажется —
+    # в дереве почти всегда лежит что-то несохранённое (файл не из
+    # MANAGED_PATHS, свежая сборка) — и пожалуется на unstaged changes,
+    # а мы выдадим это за чужие изменения, которых нет.
     if _git(proj, "rev-parse", "--verify", "-q", "origin/main").returncode == 0:
-        res = _git(proj, "rebase", "origin/main")
-        if res.returncode != 0:
-            _git(proj, "rebase", "--abort")
-            raise PublishRefused(
-                "в репозитории есть чужие изменения, которые не наложились "
-                "автоматически. Коммит уже сделан — разберите конфликт руками")
+        behind = _git(proj, "rev-list", "--count", "HEAD..origin/main").stdout.strip()
+        if behind not in ("", "0"):
+            res = _git(proj, "rebase", "origin/main")
+            if res.returncode != 0:
+                _git(proj, "rebase", "--abort")
+                raise PublishRefused(
+                    f"в репозитории есть чужие изменения ({behind} коммит(ов)), "
+                    "которые не наложились автоматически. Коммит уже сделан — "
+                    "разберите конфликт руками")
     _git_ok(proj, "push", "origin", "HEAD:main")
     return {"status": "залито", "files": len(staged.splitlines()), "paths": present}
 
