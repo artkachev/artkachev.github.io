@@ -254,6 +254,10 @@ def nav(site, *, home=False):
     w = words(site)
     brand = brand_mark(site)
     title = brand if home else f'<a href="/">{brand}</a>'
+    # На главной имя — единственный заголовок, ему h1 и положен. На остальных
+    # h1 занят темой страницы («Кто спродюсировал…»), и второй h1 с брендом
+    # её только размывал.
+    tag = "h1" if home else "p"
     links = "".join(
         f'<a href="{esc(l["url"])}" target="_blank" rel="noopener">{esc(l["label"])}</a>'
         for l in site.get("links") or [])
@@ -263,7 +267,7 @@ def nav(site, *, home=False):
     if not home:
         inner = f'<a href="/">{esc(w["works"])}</a>' + inner
     links = inner + links
-    return (f'<header class="pfnav"><div><h1 class="brand">{title}</h1>'
+    return (f'<header class="pfnav"><div><{tag} class="brand">{title}</{tag}>'
             f'<p class="tagline">{esc(site["tagline"])}</p></div>'
             f'<nav class="navlinks">{links}</nav></header>')
 
@@ -292,7 +296,7 @@ def player_and_modal(site):
         'loading="lazy" src="about:blank"></iframe></div></div>'
         '<div id="amodal" role="dialog" aria-modal="true" aria-labelledby="atitle">'
         '<div class="box"><button class="close" aria-label="Закрыть">&times;</button>'
-        '<header><img id="acover" alt="" src="" width="64" height="64">'
+        '<header><img id="acover" alt="" width="64" height="64">'
         '<div><p class="who" id="awho"></p><h2 id="atitle"></h2></div></header>'
         '<ol id="alist"></ol></div></div>')
 
@@ -586,6 +590,13 @@ def letter_of(name):
     return (2, "#")
 
 
+def letter_id(group, ch):
+    """Якорь буквы указателя. Группа в id обязательна: slugify латинизирует
+    кириллицу, и «А» без неё получала тот же id, что «A», — ссылка уводила
+    в чужую секцию."""
+    return f'l-{group}-{slugify(ch) or "n"}'
+
+
 def artist_groups(entries):
     """Треки по главному артисту — та же группировка, что и в catalog().
 
@@ -730,8 +741,8 @@ def render_hub(site, data, entries):
         group, ch = letter_of(artist)
         if ch != seen_letter:
             seen_letter = ch
-            letters.append(ch)
-            blocks.append(f'<h2 class="ltr" id="l-{esc(slugify(ch) or "n")}">'
+            letters.append((group, ch))
+            blocks.append(f'<h2 class="ltr" id="{esc(letter_id(group, ch))}">'
                           f'{esc(ch)}</h2>')
         parts = []
         for album in who["albums"]:
@@ -760,7 +771,7 @@ def render_hub(site, data, entries):
             f'{"".join(parts)}</section>')
 
     nav_letters = "".join(
-        f'<a href="#l-{esc(slugify(ch) or "n")}">{esc(ch)}</a>' for ch in letters)
+        f'<a href="#{esc(letter_id(g, ch))}">{esc(ch)}</a>' for g, ch in letters)
 
     n_tracks, n_artists = len(entries), len(shelf)
     n_albums = sum(len(v["albums"]) for v in shelf.values())
