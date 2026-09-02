@@ -14,7 +14,8 @@ from urllib.parse import urlparse
 
 MANAGED_PATHS = (
     "index.html", "track", "faq", "artist", "about", "covers", "assets", "sitemap.xml",
-    "robots.txt", "llms.txt", "feed.xml", "lastmod.json", ".nojekyll", "CNAME", ".github/workflows/deploy.yml",
+    "robots.txt", "llms.txt", "feed.xml", "lastmod.json", "favicon.ico",
+    ".nojekyll", "CNAME", ".github/workflows/deploy.yml",
     ".github/workflows/fetch-covers.yml", "site.json", "data.json", "faq.json",
     "artist_genres.json", "artist_names.json", "about.json", "roles.txt", "skill",
     "CLAUDE.md",

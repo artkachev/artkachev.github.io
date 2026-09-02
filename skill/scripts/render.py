@@ -182,10 +182,17 @@ def head(site, *, title, description, canonical, image=None, extra=""):
     tw = "summary_large_image" if img_abs else "summary"
     icons = site.get("icons") or {}
     ico = ""
+    # favicon.ico в корне — первым: Яндекс ищет иконку именно там, и без
+    # этого файла в выдаче остаётся серый шарик. Google берёт любой из
+    # объявленных, но требует квадрат, кратный 48 пикселям, — 32 ему мало
+    if icons.get("ico"):
+        ico += f'<link rel="icon" href="{esc(icons["ico"])}" sizes="48x48">'
     if icons.get("svg"):
         ico += f'<link rel="icon" href="{esc(icons["svg"])}" type="image/svg+xml">'
     if icons.get("png"):
-        ico += f'<link rel="icon" href="{esc(icons["png"])}" sizes="32x32" type="image/png">'
+        size = int(icons.get("png_size") or 32)
+        ico += (f'<link rel="icon" href="{esc(icons["png"])}" '
+                f'sizes="{size}x{size}" type="image/png">')
     if icons.get("apple"):
         ico += f'<link rel="apple-touch-icon" href="{esc(icons["apple"])}">'
     # коды подтверждения площадок — Search Console, Вебмастер, Bing.
